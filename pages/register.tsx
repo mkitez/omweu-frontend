@@ -5,18 +5,21 @@ import { useState } from 'react';
 import { API_URL } from '../utils/constants';
 import { saveTokens } from '../utils/commonUtils';
 
-const Login: NextPage = () => {
+const Register: NextPage = () => {
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [repeatedPassword, setRepeatedPassword] = useState('');
 
   const handleSubmit: FormEventHandler = async (e) => {
     e.preventDefault();
-    const data = {
-      username,
-      password,
-    };
-    const response = await fetch(`${API_URL}/token/`, {
+    if (username === '' || password === '' || repeatedPassword === '') {
+      return;
+    }
+    if (password !== repeatedPassword) {
+      return;
+    }
+    const response = await fetch(`${API_URL}/users/`, {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',
@@ -24,10 +27,10 @@ const Login: NextPage = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ username, password }),
     });
     const responseJson = await response.json();
-    saveTokens(responseJson);
+    saveTokens(responseJson.token);
     router.push('/');
   };
 
@@ -35,27 +38,33 @@ const Login: NextPage = () => {
     <div>
       <form onSubmit={handleSubmit}>
         <label>
-          Username:{' '}
+          Username:
           <input
+            type="text"
             value={username}
             onInput={(e) => setUsername(e.currentTarget.value)}
-            placeholder="username"
-            type="text"
           />
         </label>
         <label>
-          Password:{' '}
+          Password:
           <input
+            type="password"
             value={password}
             onInput={(e) => setPassword(e.currentTarget.value)}
-            placeholder="*****"
-            type="password"
-          ></input>
+          />
         </label>
-        <input type="submit" value="Login" />
+        <label>
+          Confirm password:
+          <input
+            type="password"
+            value={repeatedPassword}
+            onInput={(e) => setRepeatedPassword(e.currentTarget.value)}
+          />
+        </label>
+        <input type="submit" value="Register" />
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Register;
