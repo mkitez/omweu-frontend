@@ -2,8 +2,7 @@ import { useRouter } from 'next/router';
 import type { NextPage } from 'next';
 import type { FormEventHandler } from 'react';
 import { useState } from 'react';
-import { API_URL } from '../utils/constants';
-import { saveTokens } from '../utils/commonUtils';
+import AuthService from '../services/auth.service';
 
 const Login: NextPage = () => {
   const router = useRouter();
@@ -12,23 +11,12 @@ const Login: NextPage = () => {
 
   const handleSubmit: FormEventHandler = async (e) => {
     e.preventDefault();
-    const data = {
-      username,
-      password,
-    };
-    const response = await fetch(`${API_URL}/token/`, {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    const responseJson = await response.json();
-    saveTokens(responseJson);
-    router.push('/');
+    await AuthService.logIn(username, password);
+    let returnUrl = router.query.returnUrl || '/';
+    if (typeof returnUrl === 'object') {
+      returnUrl = returnUrl[0];
+    }
+    router.push(returnUrl);
   };
 
   return (

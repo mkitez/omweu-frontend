@@ -14,6 +14,7 @@ const Home: NextPage = () => {
       </Head>
       <Link href="/login">Login</Link>
       <Link href="/register">Register</Link>
+      <Link href="/dashboard">Dashboard</Link>
       <DestinationSearch />
     </div>
   );

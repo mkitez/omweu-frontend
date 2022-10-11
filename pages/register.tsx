@@ -2,8 +2,8 @@ import { useRouter } from 'next/router';
 import type { NextPage } from 'next';
 import type { FormEventHandler } from 'react';
 import { useState } from 'react';
-import { API_URL } from '../utils/constants';
-import { saveTokens } from '../utils/commonUtils';
+import AuthService from '../services/auth.service';
+import TokenService from '../services/token.service';
 
 const Register: NextPage = () => {
   const router = useRouter();
@@ -19,18 +19,9 @@ const Register: NextPage = () => {
     if (password !== repeatedPassword) {
       return;
     }
-    const response = await fetch(`${API_URL}/users/`, {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password }),
-    });
-    const responseJson = await response.json();
-    saveTokens(responseJson.token);
+    const authResponse: any = await AuthService.register(username, password);
+    const { access, refresh } = authResponse.token;
+    TokenService.setLocalTokens(access, refresh);
     router.push('/');
   };
 

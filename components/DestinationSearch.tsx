@@ -3,7 +3,7 @@ import type { FormEventHandler } from 'react';
 import { debounce } from '../utils/commonUtils';
 import { API_URL } from '../utils/constants';
 
-interface Destination {
+export interface Destination {
   id: string;
   name: string;
   country: {
