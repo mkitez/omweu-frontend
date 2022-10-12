@@ -55,7 +55,7 @@ const Trips = () => {
         <ul>
           {trips.map((trip) => (
             <li key={trip.id}>
-              {trip.origin.name} - {trip.dest.name}
+              {trip.id} {trip.origin.name} - {trip.dest.name} ({trip.date})
             </li>
           ))}
         </ul>

@@ -5,13 +5,18 @@ const getCurrentUserTrips = async () => {
   return response.data;
 };
 
-const viewTripDetails = async (tripId: number) => {
-  const response = await api.get(`/trips/${tripId}`);
+const getTripDetails = async (tripId: any) => {
+  const response = await api.get(`/trips/${tripId}/`);
   return response.data;
 };
 
 const createTrip = async (tripData: any) => {
-  const response = await api.post(`/trips/`, tripData);
+  const response = await api.post('/trips/', tripData);
+  return response.data;
+};
+
+const updateTrip = async (tripId: any, tripData: any) => {
+  const response = await api.put(`/trips/${tripId}/`, tripData);
   return response.data;
 };
 
@@ -24,8 +29,9 @@ const searchDestinations = async (query: string) => {
 
 const TripService = {
   getCurrentUserTrips,
-  viewTripDetails,
+  getTripDetails,
   createTrip,
+  updateTrip,
   searchDestinations,
 };
 
