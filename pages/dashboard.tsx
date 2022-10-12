@@ -25,10 +25,9 @@ const Dashboard: NextPage = () => {
         const tripsResponse = await TripService.getCurrentUserTrips();
         setTrips(tripsResponse);
       } catch (error: any) {
-        if ([401, 403].includes(error?.response.status)) {
+        if ([401, 403].includes(error.response?.status)) {
           AuthService.logOut();
-          router.push('/login');
-          return;
+          return router.push('/login');
         }
         setError(error.message);
       }
