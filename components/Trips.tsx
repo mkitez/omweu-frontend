@@ -55,7 +55,15 @@ const Trips = () => {
         <ul>
           {trips.map((trip) => (
             <li key={trip.id}>
-              {trip.id} {trip.origin.name} - {trip.dest.name} ({trip.date})
+              {trip.id} {trip.origin.name} - {trip.dest.name} ({trip.date}){' '}
+              <button
+                onClick={async () => {
+                  TripService.deleteTrip(trip.id);
+                  setTrips(trips.filter((t) => t.id !== trip.id));
+                }}
+              >
+                Delete
+              </button>
             </li>
           ))}
         </ul>

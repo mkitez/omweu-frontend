@@ -20,6 +20,11 @@ const updateTrip = async (tripId: any, tripData: any) => {
   return response.data;
 };
 
+const deleteTrip = async (tripId: any) => {
+  const response = await api.delete(`/trips/${tripId}/`);
+  return response.data;
+};
+
 const searchDestinations = async (query: string) => {
   const response = await api.get('/destinations/search', {
     params: { query },
@@ -32,6 +37,7 @@ const TripService = {
   getTripDetails,
   createTrip,
   updateTrip,
+  deleteTrip,
   searchDestinations,
 };
 
