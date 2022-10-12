@@ -1,32 +1,23 @@
-import { useState } from 'react';
-import type { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
+import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
+import TripService from '../services/trip.service';
+import type { Destination } from '../components/DestinationSearch';
 import { debounce } from '../utils/commonUtils';
-import { API_URL } from '../utils/constants';
 
-export interface Destination {
-  id: number;
-  name: string;
-  country: {
-    name: string;
-  };
-}
+const NewTrip: NextPage = () => {
+  const router = useRouter();
 
-const DestinationSearch = () => {
   const [date, setDate] = useState('');
   const [originOptions, setOriginOptions] = useState<Destination[]>([]);
   const [destOptions, setDestOptions] = useState<Destination[]>([]);
   const [selectedOrigin, selectOrigin] = useState('');
   const [selectedDest, selectDest] = useState('');
+  const [error, setError] = useState('');
 
-  const destSearch = async (
-    query: string,
-    callback: typeof setOriginOptions
-  ) => {
-    const response = await fetch(
-      `${API_URL}/destinations/search?query=${query}`
-    );
-    const responseJson = await response.json();
-    callback(responseJson);
+  const destSearch = async (query: string, callback: Function) => {
+    const searchResults = await TripService.searchDestinations(query);
+    callback(searchResults);
   };
   const debouncedSearch = debounce(destSearch, 500);
   const handleOriginInput: FormEventHandler<HTMLInputElement> = async (e) => {
@@ -40,11 +31,17 @@ const DestinationSearch = () => {
 
   const handleSubmit: FormEventHandler = async (e) => {
     e.preventDefault();
-    const response = await fetch(
-      `${API_URL}/trips/search/?origin=${selectedOrigin}&dest=${selectedDest}&date=${date}`
-    );
-    const responseJson = await response.json();
-    console.log(responseJson);
+    const data = {
+      origin: { name: selectedOrigin },
+      dest: { name: selectedDest },
+      date,
+    };
+    try {
+      const response = await TripService.createTrip(data);
+      router.push('/dashboard');
+    } catch (error: any) {
+      setError(error.message);
+    }
   };
   return (
     <div>
@@ -87,10 +84,11 @@ const DestinationSearch = () => {
             onInput={(e) => setDate(e.currentTarget.value)}
           ></input>
         </label>
-        <input type="submit" value="Search" />
+        <input type="submit" value="Create" />
       </form>
+      {error && <div>Error: {error}</div>}
     </div>
   );
 };
 
-export default DestinationSearch;
+export default NewTrip;
