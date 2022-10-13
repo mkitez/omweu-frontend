@@ -56,6 +56,9 @@ const Trips = () => {
           {trips.map((trip) => (
             <li key={trip.id}>
               {trip.id} {trip.origin.name} - {trip.dest.name} ({trip.date}){' '}
+              <button onClick={() => router.push(`/tripedit/${trip.id}`)}>
+                Edit
+              </button>
               <button
                 onClick={async () => {
                   TripService.deleteTrip(trip.id);

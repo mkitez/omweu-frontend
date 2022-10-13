@@ -36,8 +36,8 @@ const TripEditForm = ({
   const handleSubmit: FormEventHandler = async (e) => {
     e.preventDefault();
     const data = {
-      origin: { name: selectedOrigin },
-      dest: { name: selectedDest },
+      origin_id: selectedOrigin,
+      dest_id: selectedDest,
       date,
     };
     try {
