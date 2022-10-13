@@ -1,6 +1,16 @@
 import api from './api';
 import TokenService from './token.service';
 
+const getAuthHeaders = () => {
+  const accessToken = TokenService.getLocalAccessToken();
+  if (!accessToken) {
+    return {};
+  }
+  return {
+    Authorization: `Bearer ${accessToken}`,
+  };
+};
+
 const register = async (username: string, password: string) => {
   const response = await api.post('/users/', {
     username,
@@ -26,6 +36,7 @@ const logOut = () => {
 };
 
 const AuthService = {
+  getAuthHeaders,
   register,
   logIn,
   logOut,
