@@ -35,11 +35,17 @@ const logOut = () => {
   TokenService.removeLocalTokens();
 };
 
+const vkAuth = async (code: any) => {
+  const response = await api.post('/users/vkauth', { code });
+  return response.data;
+};
+
 const AuthService = {
   getAuthHeaders,
   register,
   logIn,
   logOut,
+  vkAuth,
 };
 
 export default AuthService;
