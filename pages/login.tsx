@@ -12,10 +12,7 @@ const Login: NextPage = () => {
   const handleSubmit: FormEventHandler = async (e) => {
     e.preventDefault();
     await AuthService.logIn(username, password);
-    let returnUrl = router.query.returnUrl || '/';
-    if (typeof returnUrl === 'object') {
-      returnUrl = returnUrl[0];
-    }
+    const returnUrl = (router.query.returnUrl as string) || '/';
     router.push(returnUrl);
   };
 

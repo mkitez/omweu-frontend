@@ -1,9 +1,15 @@
-import jwt_decode, { JwtPayload } from 'jwt-decode';
+import jwtDecode, { JwtPayload } from 'jwt-decode';
+import { store } from '../redux/store';
+import {
+  setAuthTokens,
+  clearAuthTokens,
+  updateAccessToken,
+} from '../redux/authSlice';
 
 const ACCESS_TOKEN_FIELD = 'accessToken';
 const REFRESH_TOKEN_FIELD = 'refreshToken';
 
-interface JwtUserPayload extends JwtPayload {
+export interface JwtUserPayload extends JwtPayload {
   user_id: string;
 }
 
@@ -15,35 +21,71 @@ const getLocalRefreshToken = () => {
   return localStorage.getItem(REFRESH_TOKEN_FIELD);
 };
 
+const getLocalTokens = () => {
+  return {
+    accessToken: localStorage.getItem(ACCESS_TOKEN_FIELD),
+    refreshToken: localStorage.getItem(REFRESH_TOKEN_FIELD),
+  };
+};
+
 const updateLocalAccessToken = (token: string) => {
   localStorage.setItem(ACCESS_TOKEN_FIELD, token);
+
+  store.dispatch(updateAccessToken(jwtDecode<JwtUserPayload>(token)));
 };
 
 const setLocalTokens = (accessToken: string, refreshToken: string) => {
   localStorage.setItem(ACCESS_TOKEN_FIELD, accessToken);
   localStorage.setItem(REFRESH_TOKEN_FIELD, refreshToken);
+
+  setExpiringTokenData(accessToken, refreshToken);
+};
+
+const restoreTokenDataFromLocalStorage = () => {
+  const { accessToken, refreshToken } = getLocalTokens();
+  if (!accessToken || !refreshToken) {
+    return;
+  }
+  setExpiringTokenData(accessToken, refreshToken);
 };
 
 const removeLocalTokens = () => {
   localStorage.removeItem(ACCESS_TOKEN_FIELD);
   localStorage.removeItem(REFRESH_TOKEN_FIELD);
+
+  const timer = store.getState().auth.timer;
+  if (timer) {
+    clearTimeout(timer);
+  }
+  store.dispatch(clearAuthTokens());
 };
 
-const getUserId = () => {
-  const token = window.localStorage.getItem(ACCESS_TOKEN_FIELD);
-  if (!token) {
-    return null;
+const setExpiringTokenData = (accessToken: string, refreshToken: string) => {
+  const accessTokenData = jwtDecode<JwtUserPayload>(accessToken);
+  const refreshTokenData = jwtDecode<JwtUserPayload>(refreshToken);
+
+  const { exp } = refreshTokenData;
+  let timer = null;
+  if (exp) {
+    const expDate = new Date(exp * 1000);
+    const expiresIn = expDate.valueOf() - Date.now();
+    if (expiresIn <= 0) {
+      removeLocalTokens();
+      return;
+    }
+    timer = setTimeout(removeLocalTokens, expiresIn);
   }
-  const tokenData = jwt_decode<JwtUserPayload>(token);
-  return tokenData.user_id;
+  store.dispatch(setAuthTokens({ accessTokenData, refreshTokenData, timer }));
 };
 
 const TokenService = {
   getLocalRefreshToken,
   getLocalAccessToken,
+  getLocalTokens,
   updateLocalAccessToken,
+  setExpiringTokenData,
+  restoreTokenDataFromLocalStorage,
   removeLocalTokens,
-  getUserId,
   setLocalTokens,
 };
 
