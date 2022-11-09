@@ -3,6 +3,7 @@ import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import TripEditForm from '../../components/TripEditForm';
 import TripService from '../../services/trip.service';
+import withAuth from '../../components/withAuthHOC';
 
 const TripEdit: NextPage = () => {
   const router = useRouter();
@@ -57,4 +58,4 @@ const TripEdit: NextPage = () => {
   );
 };
 
-export default TripEdit;
+export default withAuth(TripEdit);

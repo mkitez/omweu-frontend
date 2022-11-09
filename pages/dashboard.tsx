@@ -3,13 +3,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import AuthService from '../services/auth.service';
 import Trips from '../components/Trips';
+import withAuth from '../components/withAuthHOC';
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await router.push('/');
     AuthService.logOut();
-    router.push('/');
   };
 
   return (
@@ -22,4 +23,4 @@ const Dashboard: NextPage = () => {
   );
 };
 
-export default Dashboard;
+export default withAuth(Dashboard);

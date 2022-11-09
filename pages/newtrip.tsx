@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import TripService from '../services/trip.service';
 import TripEditForm from '../components/TripEditForm';
+import withAuth from '../components/withAuthHOC';
 
 const NewTrip: NextPage = () => {
   const router = useRouter();
@@ -14,4 +15,4 @@ const NewTrip: NextPage = () => {
   return <TripEditForm submitValue="Create" submit={handleSubmit} />;
 };
 
-export default NewTrip;
+export default withAuth(NewTrip);

@@ -44,6 +44,13 @@ const setLocalTokens = (accessToken: string, refreshToken: string) => {
 const restoreTokenDataFromLocalStorage = () => {
   const { accessToken, refreshToken } = getLocalTokens();
   if (!accessToken || !refreshToken) {
+    store.dispatch(
+      setAuthTokens({
+        accessTokenData: null,
+        refreshTokenData: null,
+        timer: null,
+      })
+    );
     return;
   }
   setExpiringTokenData(accessToken, refreshToken);
