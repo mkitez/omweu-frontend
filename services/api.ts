@@ -1,6 +1,7 @@
 import axios from 'axios';
 import TokenService from './token.service';
 import { API_URL } from '../utils/constants';
+import { store } from '../redux/store';
 
 const instance = axios.create({
   baseURL: API_URL,
@@ -24,7 +25,7 @@ instance.interceptors.response.use(
         originalConfig._retry = true;
         try {
           const refreshResponse = await instance.post('/token/refresh/', {
-            refresh: TokenService.getLocalRefreshToken(),
+            refresh: store.getState().auth.tokens?.refresh,
           });
           const { access } = refreshResponse.data;
           TokenService.updateLocalAccessToken(access);
@@ -33,7 +34,7 @@ instance.interceptors.response.use(
         }
         originalConfig.headers = {
           ...originalConfig.headers,
-          Authorization: `Bearer ${TokenService.getLocalAccessToken()}`,
+          Authorization: `Bearer ${store.getState().auth.tokens?.access}`,
         };
         return axios(originalConfig);
       }

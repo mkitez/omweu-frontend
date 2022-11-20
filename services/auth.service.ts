@@ -1,8 +1,9 @@
+import { store } from '../redux/store';
 import api from './api';
 import TokenService from './token.service';
 
 const getAuthHeaders = () => {
-  const accessToken = TokenService.getLocalAccessToken();
+  const accessToken = store.getState().auth.tokens?.access;
   if (!accessToken) {
     return {};
   }
