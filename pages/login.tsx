@@ -1,31 +1,16 @@
-import { useRouter } from 'next/router';
 import type { NextPage } from 'next';
-import { FormEventHandler, useEffect } from 'react';
+import { FormEventHandler } from 'react';
 import { useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import {
-  logIn,
-  selectAuthLoadStatus,
-  selectUserData,
-} from '../redux/authSlice';
+import { useAppDispatch, useAppSelector, useAuth } from '../redux/hooks';
+import { logIn, selectAuthLoadStatus } from '../redux/authSlice';
 
 const Login: NextPage = () => {
-  const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useAppDispatch();
   const authLoadStatus = useAppSelector(selectAuthLoadStatus());
-  const userData = useAppSelector(selectUserData());
 
-  useEffect(() => {
-    if (!router.isReady) {
-      return;
-    }
-    if (userData) {
-      const returnUrl = (router.query.returnUrl as string) || '/';
-      router.push(returnUrl);
-    }
-  }, [router, userData]);
+  useAuth({ redirectTo: '/dashboard ' });
 
   const handleSubmit: FormEventHandler = async (e) => {
     e.preventDefault();
