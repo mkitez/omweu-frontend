@@ -1,19 +1,35 @@
 import { useRouter } from 'next/router';
 import type { NextPage } from 'next';
-import type { FormEventHandler } from 'react';
+import { FormEventHandler, useEffect } from 'react';
 import { useState } from 'react';
-import AuthService from '../services/auth.service';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import {
+  logIn,
+  selectAuthLoadStatus,
+  selectUserData,
+} from '../redux/authSlice';
 
 const Login: NextPage = () => {
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useAppDispatch();
+  const authLoadStatus = useAppSelector(selectAuthLoadStatus());
+  const userData = useAppSelector(selectUserData());
+
+  useEffect(() => {
+    if (!router.isReady) {
+      return;
+    }
+    if (userData) {
+      const returnUrl = (router.query.returnUrl as string) || '/';
+      router.push(returnUrl);
+    }
+  }, [router, userData]);
 
   const handleSubmit: FormEventHandler = async (e) => {
     e.preventDefault();
-    await AuthService.logIn(username, password);
-    const returnUrl = (router.query.returnUrl as string) || '/';
-    router.push(returnUrl);
+    dispatch(logIn({ username, password }));
   };
 
   return (
@@ -37,7 +53,11 @@ const Login: NextPage = () => {
             type="password"
           ></input>
         </label>
-        <input type="submit" value="Login" />
+        <input
+          type="submit"
+          value="Login"
+          disabled={authLoadStatus === 'loading'}
+        />
       </form>
     </div>
   );

@@ -2,13 +2,13 @@ import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { NextComponentType, NextPageContext } from 'next/types';
 import { useEffect } from 'react';
-import { selectAuthStatus, selectRefreshTokenData } from '../redux/authSlice';
+import { selectUserData, selectAuthInitStatus } from '../redux/authSlice';
 import { useAppSelector } from '../redux/hooks';
 
 const withAuth = (Component: NextComponentType<NextPageContext, any, any>) => {
   const Auth = (props: AppProps['pageProps']) => {
-    const authReady = useAppSelector(selectAuthStatus());
-    const userData = useAppSelector(selectRefreshTokenData());
+    const authReady = useAppSelector(selectAuthInitStatus());
+    const userData = useAppSelector(selectUserData());
     const router = useRouter();
     useEffect(() => {
       if (!router.isReady) {

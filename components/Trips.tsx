@@ -4,9 +4,11 @@ import type { Destination } from '../components/DestinationSearch';
 import AuthService from '../services/auth.service';
 import TripService from '../services/trip.service';
 
-interface User {
+export interface User {
   id: number;
   username: string;
+  first_name: string;
+  last_name: string;
 }
 
 interface Trip {

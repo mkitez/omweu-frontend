@@ -5,10 +5,10 @@ import DestinationSearch from '../components/DestinationSearch';
 import { useAppSelector } from '../redux/hooks';
 import { vkRedirectUrl, vkClientId } from '../utils/constants';
 import styles from '../styles/Home.module.css';
-import { selectRefreshTokenData } from '../redux/authSlice';
+import { selectUserData } from '../redux/authSlice';
 
 const Home: NextPage = () => {
-  const userData = useAppSelector(selectRefreshTokenData());
+  const userData = useAppSelector(selectUserData());
   return (
     <div className={styles.container}>
       <Head>

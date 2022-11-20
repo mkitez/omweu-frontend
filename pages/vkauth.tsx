@@ -1,8 +1,8 @@
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import AuthService from '../services/auth.service';
-import TokenService from '../services/token.service';
+import { selectUserData, vkLogin } from '../redux/authSlice';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 interface QueryParams {
   code?: string;
@@ -13,9 +13,15 @@ interface QueryParams {
 
 const VkAuth: NextPage = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const userData = useAppSelector(selectUserData());
   const [error, setError] = useState('');
   useEffect(() => {
     if (!router.isReady) {
+      return;
+    }
+    if (userData) {
+      router.push('/dashboard');
       return;
     }
     const { code, error, error_description } = router.query as QueryParams;
@@ -23,15 +29,12 @@ const VkAuth: NextPage = () => {
       setError(error_description);
       return;
     }
-
-    const vkAuth = async () => {
-      const response = await AuthService.vkAuth(code);
-      const { access, refresh } = response;
-      TokenService.setLocalTokens(access, refresh);
-      router.push('/dashboard');
-    };
-    vkAuth();
-  }, [router]);
+    if (!code) {
+      setError('Code is not provided.');
+      return;
+    }
+    dispatch(vkLogin(code));
+  }, [router, dispatch, userData]);
 
   if (error) {
     return <div>{error}</div>;

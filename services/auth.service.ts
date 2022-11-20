@@ -16,6 +16,11 @@ const register = async (username: string, password: string) => {
     username,
     password,
   });
+  if (response.data) {
+    const { access, refresh } = response.data.tokens;
+    TokenService.setLocalTokens(access, refresh);
+    TokenService.setLocalUserData(response.data.user);
+  }
   return response.data;
 };
 
@@ -25,18 +30,24 @@ const logIn = async (username: string, password: string) => {
     password,
   });
   if (response.data) {
-    const { access, refresh } = response.data;
+    const { access, refresh } = response.data.tokens;
     TokenService.setLocalTokens(access, refresh);
+    TokenService.setLocalUserData(response.data.user);
   }
   return response.data;
 };
 
 const logOut = () => {
-  TokenService.removeLocalTokens();
+  TokenService.removeLocalAuthData();
 };
 
-const vkAuth = async (code: any) => {
+const vkAuth = async (code: string) => {
   const response = await api.post('/users/vkauth', { code });
+  if (response.data) {
+    const { access, refresh } = response.data.tokens;
+    TokenService.setLocalTokens(access, refresh);
+    TokenService.setLocalUserData(response.data.user);
+  }
   return response.data;
 };
 

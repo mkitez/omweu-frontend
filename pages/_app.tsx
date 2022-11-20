@@ -7,7 +7,7 @@ import type { AppProps } from 'next/app';
 
 const AuthWrapper: FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
-    TokenService.restoreTokenDataFromLocalStorage();
+    TokenService.restoreAuthDataFromLocalStorage();
   }, []);
   return <>{children}</>;
 };

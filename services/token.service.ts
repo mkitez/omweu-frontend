@@ -1,13 +1,15 @@
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { store } from '../redux/store';
 import {
-  setAuthTokens,
-  clearAuthTokens,
+  setAuthData,
+  clearAuthData,
   updateAccessToken,
 } from '../redux/authSlice';
+import { User } from '../components/Trips';
 
 const ACCESS_TOKEN_FIELD = 'accessToken';
 const REFRESH_TOKEN_FIELD = 'refreshToken';
+const USER_DATA_FIELD = 'userData';
 
 export interface JwtUserPayload extends JwtPayload {
   user_id: string;
@@ -28,47 +30,69 @@ const getLocalTokens = () => {
   };
 };
 
+const getLocalUserData = () => {
+  const userDataJson = localStorage.getItem(USER_DATA_FIELD);
+  if (!userDataJson) {
+    return null;
+  }
+  let userData;
+  try {
+    userData = JSON.parse(userDataJson);
+  } catch {
+    return null;
+  }
+  return userData;
+};
+
 const updateLocalAccessToken = (token: string) => {
   localStorage.setItem(ACCESS_TOKEN_FIELD, token);
 
-  store.dispatch(updateAccessToken(jwtDecode<JwtUserPayload>(token)));
+  store.dispatch(updateAccessToken(token));
 };
 
 const setLocalTokens = (accessToken: string, refreshToken: string) => {
   localStorage.setItem(ACCESS_TOKEN_FIELD, accessToken);
   localStorage.setItem(REFRESH_TOKEN_FIELD, refreshToken);
-
-  setExpiringTokenData(accessToken, refreshToken);
 };
 
-const restoreTokenDataFromLocalStorage = () => {
+const restoreAuthDataFromLocalStorage = () => {
   const { accessToken, refreshToken } = getLocalTokens();
-  if (!accessToken || !refreshToken) {
-    store.dispatch(
-      setAuthTokens({
-        accessTokenData: null,
-        refreshTokenData: null,
-        timer: null,
-      })
-    );
+  const userData = getLocalUserData();
+  if (!accessToken || !refreshToken || !userData) {
+    removeLocalAuthData();
     return;
   }
-  setExpiringTokenData(accessToken, refreshToken);
+  const timer = getExpirationTimer(refreshToken);
+  if (!timer) {
+    return;
+  }
+  store.dispatch(
+    setAuthData({
+      userData,
+      tokens: { access: accessToken, refresh: refreshToken },
+      timer,
+    })
+  );
 };
 
-const removeLocalTokens = () => {
+const setLocalUserData = (userData: User) => {
+  const userDataJson = JSON.stringify(userData);
+  localStorage.setItem(USER_DATA_FIELD, userDataJson);
+};
+
+const removeLocalAuthData = () => {
   localStorage.removeItem(ACCESS_TOKEN_FIELD);
   localStorage.removeItem(REFRESH_TOKEN_FIELD);
+  localStorage.removeItem(USER_DATA_FIELD);
 
   const timer = store.getState().auth.timer;
   if (timer) {
     clearTimeout(timer);
   }
-  store.dispatch(clearAuthTokens());
+  store.dispatch(clearAuthData());
 };
 
-const setExpiringTokenData = (accessToken: string, refreshToken: string) => {
-  const accessTokenData = jwtDecode<JwtUserPayload>(accessToken);
+const getExpirationTimer = (refreshToken: string) => {
   const refreshTokenData = jwtDecode<JwtUserPayload>(refreshToken);
 
   const { exp } = refreshTokenData;
@@ -77,12 +101,12 @@ const setExpiringTokenData = (accessToken: string, refreshToken: string) => {
     const expDate = new Date(exp * 1000);
     const expiresIn = expDate.valueOf() - Date.now();
     if (expiresIn <= 0) {
-      removeLocalTokens();
-      return;
+      removeLocalAuthData();
+      return null;
     }
-    timer = setTimeout(removeLocalTokens, expiresIn);
+    timer = setTimeout(removeLocalAuthData, expiresIn);
   }
-  store.dispatch(setAuthTokens({ accessTokenData, refreshTokenData, timer }));
+  return timer;
 };
 
 const TokenService = {
@@ -90,10 +114,12 @@ const TokenService = {
   getLocalAccessToken,
   getLocalTokens,
   updateLocalAccessToken,
-  setExpiringTokenData,
-  restoreTokenDataFromLocalStorage,
-  removeLocalTokens,
+  getExpirationTimer,
+  removeLocalAuthData,
   setLocalTokens,
+  getLocalUserData,
+  setLocalUserData,
+  restoreAuthDataFromLocalStorage,
 };
 
 export default TokenService;
