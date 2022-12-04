@@ -1,14 +1,11 @@
-import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import DestinationSearch from '../components/DestinationSearch';
-import { useAppSelector } from '../redux/hooks';
-import { vkRedirectUrl, vkClientId } from '../utils/constants';
 import styles from '../styles/Home.module.css';
-import { selectUserData } from '../redux/authSlice';
+import { signIn, useSession } from 'next-auth/react';
 
-const Home: NextPage = () => {
-  const userData = useAppSelector(selectUserData());
+const Home = () => {
+  const { data: session, status } = useSession();
   return (
     <div className={styles.container}>
       <Head>
@@ -16,16 +13,16 @@ const Home: NextPage = () => {
         <meta name="description" content="omw EU" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {userData && <Link href="/dashboard">Dashboard</Link>}
-      {!userData && (
+      {status === 'loading' && null}
+      {status === 'authenticated' && <Link href="/dashboard">Dashboard</Link>}
+      {status === 'unauthenticated' && (
         <>
-          <Link href="/login">Login</Link>{' '}
-          <Link href="/register">Register</Link>{' '}
-          <a
-            href={`https://oauth.vk.com/authorize?client_id=${vkClientId}&redirect_uri=${vkRedirectUrl}&scope=email`}
+          <button
+            onClick={() => signIn(undefined, { callbackUrl: '/dashboard' })}
           >
-            VK Auth
-          </a>
+            Sign in
+          </button>
+          <Link href="/register">Register</Link>{' '}
         </>
       )}
       <DestinationSearch />

@@ -1,24 +1,17 @@
 import '../styles/globals.css';
-import { Provider } from 'react-redux';
-import { useEffect, FC, PropsWithChildren } from 'react';
-import { store as appStore } from '../redux/store';
-import TokenService from '../services/token.service';
 import type { AppProps } from 'next/app';
+import { SessionProvider } from 'next-auth/react';
+import { Session } from 'next-auth';
 
-const AuthWrapper: FC<PropsWithChildren> = ({ children }) => {
-  useEffect(() => {
-    TokenService.restoreAuthDataFromLocalStorage();
-  }, []);
-  return <>{children}</>;
-};
+interface MyAppProps {
+  session: Session;
+}
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps<MyAppProps>) {
   return (
-    <Provider store={appStore}>
-      <AuthWrapper>
-        <Component {...pageProps} />
-      </AuthWrapper>
-    </Provider>
+    <SessionProvider session={pageProps.session}>
+      <Component {...pageProps} />
+    </SessionProvider>
   );
 }
 
