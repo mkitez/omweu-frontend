@@ -1,12 +1,12 @@
-import type { NextPage } from 'next';
-import { FormEventHandler } from 'react';
-import { useState } from 'react';
+import { FormEventHandler, useState } from 'react';
+import { signIn } from 'next-auth/react';
 import AuthService from '../services/auth.service';
 
-const Register: NextPage = () => {
+const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [repeatedPassword, setRepeatedPassword] = useState('');
 
   const handleSubmit: FormEventHandler = async (e) => {
@@ -15,12 +15,21 @@ const Register: NextPage = () => {
       return;
     }
     if (password !== repeatedPassword) {
+      setError("Passwords don't match");
       return;
     }
     setLoading(true);
-    const authResponse = await AuthService.register(username, password);
+    try {
+      await AuthService.signUp(username, password);
+    } catch {
+      setError('Registration error');
+    }
+    signIn('credentials', {
+      callbackUrl: '/dashboard',
+      username,
+      password,
+    });
     setLoading(false);
-    // TBD
   };
 
   return (
@@ -50,8 +59,9 @@ const Register: NextPage = () => {
             onInput={(e) => setRepeatedPassword(e.currentTarget.value)}
           />
         </label>
-        <input type="submit" value="Register" disabled={isLoading} />
+        <input type="submit" value="Sign up" disabled={isLoading} />
       </form>
+      <div>{error}</div>
     </div>
   );
 };

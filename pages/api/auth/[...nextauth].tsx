@@ -1,5 +1,5 @@
 import api from '../../../services/api';
-import NextAuth, { NextAuthOptions, Session } from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import VkProvider from 'next-auth/providers/vk';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { isJwtExpired } from '../../../utils/commonUtils';
@@ -11,7 +11,6 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.VK_CLIENT_SECRET as string,
     }),
     CredentialsProvider({
-      id: 'omweu',
       name: 'Django',
       credentials: {
         username: { label: 'Username', type: 'text' },
@@ -41,7 +40,7 @@ export const authOptions: NextAuthOptions = {
           token.refreshToken = refresh;
           // token.user = response.data.user;
         }
-        if (account.provider === 'omweu') {
+        if (account.provider === 'credentials') {
           const { access, refresh } = user.tokens;
           token.accessToken = access;
           token.refreshToken = refresh;

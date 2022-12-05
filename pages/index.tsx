@@ -22,7 +22,7 @@ const Home = () => {
           >
             Sign in
           </button>
-          <Link href="/register">Register</Link>{' '}
+          <Link href="/signup">Sign up</Link>{' '}
         </>
       )}
       <DestinationSearch />

@@ -6,20 +6,17 @@ const getAuthHeaders = (accessToken: string) => {
   };
 };
 
-const register = async (username: string, password: string) => {
+const signUp = async (username: string, password: string) => {
   const response = await api.post('/users/', {
     username,
     password,
   });
-  if (response.data) {
-    const { access, refresh } = response.data.tokens;
-  }
   return response.data;
 };
 
 const AuthService = {
   getAuthHeaders,
-  register,
+  signUp,
 };
 
 export default AuthService;
