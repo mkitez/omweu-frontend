@@ -1,19 +1,13 @@
-import type { NextPage } from 'next';
-import { FormEventHandler } from 'react';
-import { useState } from 'react';
+import { FormEventHandler, useState } from 'react';
+import { signIn } from 'next-auth/react';
 import AuthService from '../services/auth.service';
-import TokenService from '../services/token.service';
-import { AuthResponse, setAuthData } from '../redux/authSlice';
-import { useAppDispatch, useAuth } from '../redux/hooks';
 
-const Register: NextPage = () => {
-  const dispatch = useAppDispatch();
+const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [repeatedPassword, setRepeatedPassword] = useState('');
-
-  useAuth({ redirectTo: '/dashboard ' });
 
   const handleSubmit: FormEventHandler = async (e) => {
     e.preventDefault();
@@ -21,22 +15,21 @@ const Register: NextPage = () => {
       return;
     }
     if (password !== repeatedPassword) {
+      setError("Passwords don't match");
       return;
     }
     setLoading(true);
-    const authResponse: AuthResponse = await AuthService.register(
+    try {
+      await AuthService.signUp(username, password);
+    } catch {
+      setError('Registration error');
+    }
+    signIn('credentials', {
+      callbackUrl: '/dashboard',
       username,
-      password
-    );
+      password,
+    });
     setLoading(false);
-    const timer = TokenService.getExpirationTimer(authResponse.tokens.refresh);
-    dispatch(
-      setAuthData({
-        userData: authResponse.user,
-        tokens: authResponse.tokens,
-        timer,
-      })
-    );
   };
 
   return (
@@ -66,8 +59,9 @@ const Register: NextPage = () => {
             onInput={(e) => setRepeatedPassword(e.currentTarget.value)}
           />
         </label>
-        <input type="submit" value="Register" disabled={isLoading} />
+        <input type="submit" value="Sign up" disabled={isLoading} />
       </form>
+      <div>{error}</div>
     </div>
   );
 };

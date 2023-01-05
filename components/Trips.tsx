@@ -1,7 +1,7 @@
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import type { Destination } from '../components/DestinationSearch';
-import AuthService from '../services/auth.service';
 import TripService from '../services/trip.service';
 
 export interface User {
@@ -25,22 +25,20 @@ const Trips = () => {
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [trips, setTrips] = useState<Trip[]>([]);
+
+  const { data: session } = useSession({ required: true });
+
   useEffect(() => {
-    const getTrips = async () => {
-      try {
-        const tripsResponse = await TripService.getCurrentUserTrips();
-        setTrips(tripsResponse);
-      } catch (error: any) {
-        if ([401, 403].includes(error.response?.status)) {
-          AuthService.logOut();
-          return router.push('/login');
-        }
-        setError(error.message);
-      }
-      setLoading(false);
-    };
     getTrips();
-  }, [router]);
+  }, []);
+
+  const getTrips = async () => {
+    const tripsResponse = await TripService.getCurrentUserTrips(
+      session.accessToken
+    );
+    setTrips(tripsResponse);
+    setLoading(false);
+  };
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -53,6 +51,9 @@ const Trips = () => {
   return (
     <div>
       <h3>My trips</h3>
+      <div>
+        <button onClick={getTrips}>Reload</button>
+      </div>
       {trips.length > 0 ? (
         <ul>
           {trips.map((trip) => (
@@ -63,7 +64,7 @@ const Trips = () => {
               </button>
               <button
                 onClick={async () => {
-                  TripService.deleteTrip(trip.id);
+                  TripService.deleteTrip(trip.id, session.accessToken);
                   setTrips(trips.filter((t) => t.id !== trip.id));
                 }}
               >

@@ -1,28 +1,21 @@
+import { signOut, useSession } from 'next-auth/react';
 import { AppProps } from 'next/app';
-import { useRouter } from 'next/router';
 import { NextComponentType, NextPageContext } from 'next/types';
 import { useEffect } from 'react';
-import { selectUserData, selectAuthInitStatus } from '../redux/authSlice';
-import { useAppSelector } from '../redux/hooks';
 
 const withAuth = (Component: NextComponentType<NextPageContext, any, any>) => {
   const Auth = (props: AppProps['pageProps']) => {
-    const authReady = useAppSelector(selectAuthInitStatus());
-    const userData = useAppSelector(selectUserData());
-    const router = useRouter();
+    const { data: session, status } = useSession({ required: true });
     useEffect(() => {
-      if (!router.isReady) {
+      if (status === 'loading') {
         return;
       }
-      if (authReady && userData === null) {
-        router.push({
-          pathname: '/login',
-          query: { returnUrl: router.pathname },
-        });
+      if (session === null || session?.error) {
+        signOut({ callbackUrl: '/' });
       }
-    }, [router, authReady, userData]);
+    });
 
-    if (!authReady || userData === null) {
+    if (status === 'loading' || session?.error) {
       return null;
     }
 

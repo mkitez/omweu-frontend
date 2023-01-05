@@ -1,7 +1,11 @@
 import axios from 'axios';
-import TokenService from './token.service';
 import { API_URL } from '../utils/constants';
-import { store } from '../redux/store';
+import { getSession } from 'next-auth/react';
+
+const reloadSession = () => {
+  const event = new Event('visibilitychange');
+  document.dispatchEvent(event);
+};
 
 const instance = axios.create({
   baseURL: API_URL,
@@ -23,18 +27,19 @@ instance.interceptors.response.use(
         !originalConfig._retry
       ) {
         originalConfig._retry = true;
+        let session;
         try {
-          const refreshResponse = await instance.post('/token/refresh/', {
-            refresh: store.getState().auth.tokens?.refresh,
-          });
-          const { access } = refreshResponse.data;
-          TokenService.updateLocalAccessToken(access);
-        } catch (refreshError) {
-          return Promise.reject(refreshError);
+          session = await getSession();
+          reloadSession(); // workaround for NextAuth issue: https://github.com/nextauthjs/next-auth/pull/4744
+        } catch (getSessionError) {
+          return Promise.reject(getSessionError);
+        }
+        if (session?.error) {
+          return Promise.reject(session.error);
         }
         originalConfig.headers = {
           ...originalConfig.headers,
-          Authorization: `Bearer ${store.getState().auth.tokens?.access}`,
+          Authorization: `Bearer ${session?.accessToken}`,
         };
         return axios(originalConfig);
       }

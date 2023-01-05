@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import TripEditForm from '../../components/TripEditForm';
 import TripService from '../../services/trip.service';
+import { getServerSideProps } from '../dashboard';
+import { Session } from 'next-auth';
 import withAuth from '../../components/withAuthHOC';
 
-const TripEdit: NextPage = () => {
+const TripEdit = ({ session }: { session: Session }) => {
   const router = useRouter();
 
   const [isLoading, setLoading] = useState(false);
@@ -50,7 +51,11 @@ const TripEdit: NextPage = () => {
         initialDate={tripData.date}
         submitValue="Save"
         submit={async (data: any) => {
-          await TripService.updateTrip(router.query.tripId, data);
+          await TripService.updateTrip(
+            router.query.tripId,
+            data,
+            session.accessToken
+          );
           router.push('/dashboard');
         }}
       />
@@ -59,3 +64,5 @@ const TripEdit: NextPage = () => {
 };
 
 export default withAuth(TripEdit);
+
+export { getServerSideProps };
