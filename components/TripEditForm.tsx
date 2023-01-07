@@ -32,14 +32,14 @@ const TripEditForm = ({
       <form onSubmit={handleSubmit}>
         <PlaceInput
           label="From:"
-          initialPlace={initialOrigin?.id || ''}
-          initialValue=""
+          initialPlace={initialOrigin?.place_id || ''}
+          initialValue={initialOrigin?.name || ''}
           onSelect={selectOrigin}
         />
         <PlaceInput
           label="To:"
           initialPlace={initialDest?.id || ''}
-          initialValue=""
+          initialValue={initialDest?.name || ''}
           onSelect={selectDest}
         />
         <label>

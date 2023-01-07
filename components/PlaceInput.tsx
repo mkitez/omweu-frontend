@@ -1,6 +1,6 @@
 import { FormEventHandler, useState } from 'react';
 import useGoogle from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
-import { GOOGLE_API_KEY } from '../../utils/constants';
+import { GOOGLE_API_KEY } from '../utils/constants';
 
 interface Props {
   label: string;

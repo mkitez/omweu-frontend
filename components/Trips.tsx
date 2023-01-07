@@ -1,7 +1,6 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import type { Destination } from '../components/DestinationSearch';
 import TripService from '../services/trip.service';
 
 export interface User {
@@ -9,6 +8,12 @@ export interface User {
   username: string;
   first_name: string;
   last_name: string;
+}
+
+interface Destination {
+  place_id: string;
+  name: string;
+  country_name: string;
 }
 
 interface Trip {
@@ -34,7 +39,7 @@ const Trips = () => {
 
   const getTrips = async () => {
     const tripsResponse = await TripService.getCurrentUserTrips(
-      session.accessToken
+      session?.accessToken as string
     );
     setTrips(tripsResponse);
     setLoading(false);
@@ -64,7 +69,10 @@ const Trips = () => {
               </button>
               <button
                 onClick={async () => {
-                  TripService.deleteTrip(trip.id, session.accessToken);
+                  TripService.deleteTrip(
+                    trip.id,
+                    session?.accessToken as string
+                  );
                   setTrips(trips.filter((t) => t.id !== trip.id));
                 }}
               >
