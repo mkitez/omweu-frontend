@@ -34,20 +34,12 @@ const deleteTrip = async (tripId: any, accessToken: string) => {
   return response.data;
 };
 
-const searchDestinations = async (query: string) => {
-  const response = await api.get('/destinations/search', {
-    params: { query },
-  });
-  return response.data;
-};
-
 const TripService = {
   getCurrentUserTrips,
   getTripDetails,
   createTrip,
   updateTrip,
   deleteTrip,
-  searchDestinations,
 };
 
 export default TripService;

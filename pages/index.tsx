@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import DestinationSearch from '../components/DestinationSearch';
+import TripSearch from '../components/TripSearch';
 import styles from '../styles/Home.module.css';
 import { signIn, useSession } from 'next-auth/react';
 
@@ -25,7 +25,7 @@ const Home = () => {
           <Link href="/signup">Sign up</Link>{' '}
         </>
       )}
-      <DestinationSearch />
+      <TripSearch />
     </div>
   );
 };
