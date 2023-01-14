@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import { Button } from 'antd';
 import TripSearch from '../components/TripSearch';
 import styles from '../styles/Home.module.css';
 import { signIn, useSession } from 'next-auth/react';
@@ -17,11 +18,12 @@ const Home = () => {
       {status === 'authenticated' && <Link href="/dashboard">Dashboard</Link>}
       {status === 'unauthenticated' && (
         <>
-          <button
+          <Button
+            type="primary"
             onClick={() => signIn(undefined, { callbackUrl: '/dashboard' })}
           >
             Sign in
-          </button>
+          </Button>
           <Link href="/signup">Sign up</Link>{' '}
         </>
       )}
