@@ -1,16 +1,13 @@
-import { FormEventHandler, useState } from 'react';
+import { Select, Form } from 'antd';
 import useGoogle from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 import { GOOGLE_API_KEY } from '../utils/constants';
 
 interface Props {
-  label: string;
-  initialValue: string;
-  initialPlace: string;
-  onSelect(placeId: string): void;
+  name: string;
+  label?: string;
 }
 
-const PlaceInput = ({ label, initialValue, initialPlace, onSelect }: Props) => {
-  const [selectedPlace, selectPlace] = useState(initialPlace);
+const PlaceInput = ({ name, label }: Props) => {
   const { placePredictions, getPlacePredictions, isPlacePredictionsLoading } =
     useGoogle({
       apiKey: GOOGLE_API_KEY,
@@ -19,33 +16,34 @@ const PlaceInput = ({ label, initialValue, initialPlace, onSelect }: Props) => {
       },
     });
 
-  const handleInput: FormEventHandler<HTMLInputElement> = async (e) => {
-    const value = e.currentTarget.value;
-    getPlacePredictions({ input: value });
+  const handleSearch = async (newValue: string) => {
+    getPlacePredictions({ input: newValue });
   };
 
   return (
-    <>
-      <label>
-        {label}
-        <input type="text" onInput={handleInput} defaultValue={initialValue} />
-      </label>
-      <select
-        value={selectedPlace}
-        onChange={(e) => {
-          selectPlace(e.target.value);
-          onSelect(e.target.value);
-        }}
-      >
-        <option value=""></option>
-        {!isPlacePredictionsLoading &&
-          placePredictions.map((place) => (
-            <option key={place.place_id} value={place.place_id}>
-              {place.description}
-            </option>
-          ))}
-      </select>
-    </>
+    <Form.Item
+      name={name}
+      label={label}
+      rules={[{ required: true, message: 'Please select a place' }]}
+    >
+      <Select
+        showSearch
+        placeholder={label}
+        loading={isPlacePredictionsLoading}
+        defaultActiveFirstOption
+        filterOption={false}
+        onSearch={handleSearch}
+        showArrow={false}
+        style={{ width: '200px' }}
+        notFoundContent={null}
+        options={placePredictions.map((place) => {
+          return {
+            value: place.place_id,
+            label: place.description,
+          };
+        })}
+      />
+    </Form.Item>
   );
 };
 
