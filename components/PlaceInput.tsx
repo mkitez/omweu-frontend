@@ -1,4 +1,5 @@
 import { Select, Form } from 'antd';
+import type { DefaultOptionType } from 'antd/es/select';
 import useGoogle from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 import { GOOGLE_API_KEY } from '../utils/constants';
 
@@ -36,12 +37,13 @@ const PlaceInput = ({ name, label }: Props) => {
         showArrow={false}
         style={{ width: '200px' }}
         notFoundContent={null}
-        options={placePredictions.map((place) => {
-          return {
+        labelInValue={true}
+        options={placePredictions.map(
+          (place): DefaultOptionType => ({
             value: place.place_id,
             label: place.description,
-          };
-        })}
+          })
+        )}
       />
     </Form.Item>
   );
