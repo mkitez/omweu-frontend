@@ -1,15 +1,13 @@
 import { PropsWithChildren } from 'react';
-import { Layout, theme } from 'antd';
+import { Layout } from 'antd';
+import AppHeader from './AppHeader';
 
-const { Header, Content, Footer } = Layout;
+const { Content, Footer } = Layout;
 
 const AppLayout = ({ children }: PropsWithChildren) => {
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
   return (
     <Layout>
-      <Header style={{ backgroundColor: colorBgContainer }}>Header</Header>
+      <AppHeader />
       <Content style={{ height: '800px' }}>{children}</Content>
       <Footer>Footer</Footer>
     </Layout>

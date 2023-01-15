@@ -1,6 +1,5 @@
 import type { GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
-import { signOut } from 'next-auth/react';
 import { authOptions } from './api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth/next';
 import { Session } from 'next-auth';
@@ -10,8 +9,6 @@ import withAuth from '../components/withAuthHOC';
 const Dashboard = ({ session }: { session: Session }) => {
   return (
     <div>
-      <Link href="/">Home</Link>
-      <button onClick={() => signOut({ callbackUrl: '/' })}>Sign out</button>
       <Trips />
       <Link href="/newtrip">Add trip</Link>
     </div>
