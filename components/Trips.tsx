@@ -1,7 +1,9 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
+import { Typography, Button, List } from 'antd';
 import TripService from '../services/trip.service';
+import Link from 'next/link';
 
 export interface User {
   id: number;
@@ -10,7 +12,7 @@ export interface User {
   last_name: string;
 }
 
-interface Destination {
+export interface Destination {
   place_id: string;
   name: string;
   country_name: string;
@@ -55,32 +57,39 @@ const Trips = () => {
 
   return (
     <div>
-      <h3>My trips</h3>
-      <div>
-        <button onClick={getTrips}>Reload</button>
-      </div>
+      <Typography.Title level={3}>My trips</Typography.Title>
+      <Button onClick={getTrips}>Reload</Button>
       {trips.length > 0 ? (
-        <ul>
-          {trips.map((trip) => (
-            <li key={trip.id}>
-              {trip.id} {trip.origin.name} - {trip.dest.name} ({trip.date}){' '}
-              <button onClick={() => router.push(`/tripedit/${trip.id}`)}>
-                Edit
-              </button>
-              <button
-                onClick={async () => {
-                  TripService.deleteTrip(
-                    trip.id,
-                    session?.accessToken as string
-                  );
-                  setTrips(trips.filter((t) => t.id !== trip.id));
-                }}
-              >
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
+        <List
+          itemLayout="horizontal"
+          dataSource={trips}
+          renderItem={(trip) => (
+            <List.Item
+              actions={[
+                <Link key="trip-edit" href={`/tripedit/${trip.id}`}>
+                  edit
+                </Link>,
+                <Button
+                  key="trip-delete"
+                  onClick={async () => {
+                    TripService.deleteTrip(
+                      trip.id,
+                      session?.accessToken as string
+                    );
+                    setTrips(trips.filter((t) => t.id !== trip.id));
+                  }}
+                >
+                  delete
+                </Button>,
+              ]}
+            >
+              <List.Item.Meta
+                title={`${trip.origin.name} - ${trip.dest.name}`}
+                description={trip.date}
+              />
+            </List.Item>
+          )}
+        />
       ) : (
         <div>No trips found</div>
       )}

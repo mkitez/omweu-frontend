@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import PlaceInput from './PlaceInput';
 import DateTimeInput from './DateTimeInput';
 import type { DefaultOptionType } from 'antd/es/select';
+import { Destination } from './Trips';
 
 export interface FormData {
   from: DefaultOptionType;
@@ -11,7 +12,7 @@ export interface FormData {
   date: dayjs.Dayjs;
 }
 
-const getInitialPlaceValue = (place: any): DefaultOptionType | null => {
+const getInitialPlaceValue = (place: Destination): DefaultOptionType | null => {
   if (!place) {
     return null;
   }

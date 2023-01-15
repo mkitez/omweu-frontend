@@ -18,7 +18,11 @@ const getItems = (status: string) => {
       },
       {
         key: 'signout',
-        label: <Button onClick={() => signOut()}>Sign out</Button>,
+        label: (
+          <Button onClick={() => signOut({ callbackUrl: '/' })}>
+            Sign out
+          </Button>
+        ),
       },
     ];
   }
