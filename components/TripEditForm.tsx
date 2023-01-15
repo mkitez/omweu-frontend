@@ -5,7 +5,7 @@ import PlaceInput from './PlaceInput';
 import DateTimeInput from './DateTimeInput';
 import type { DefaultOptionType } from 'antd/es/select';
 
-interface FormData {
+export interface FormData {
   from: DefaultOptionType;
   to: DefaultOptionType;
   date: dayjs.Dayjs;
@@ -33,11 +33,11 @@ const TripEditForm = ({
   const initialValues = {
     from: getInitialPlaceValue(initialOrigin),
     to: getInitialPlaceValue(initialDest),
-    date: initialDate ? dayjs(initialDate, 'YYYY-MM-DD') : null,
+    date: initialDate ? dayjs(initialDate, 'YYYY-MM-DD HH:mm') : null,
   };
 
   const handleSubmit = async (formData: FormData) => {
-    const date = formData.date.format('YYYY-MM-DD');
+    const date = formData.date.format();
 
     const data = {
       origin_id: formData.from.value,
@@ -59,7 +59,7 @@ const TripEditForm = ({
     >
       <PlaceInput label="From" name="from" />
       <PlaceInput label="To" name="to" />
-      <DateTimeInput name="date" label="Date" />
+      <DateTimeInput name="date" label="Date" showTime />
       <Form.Item>
         <Button type="primary" htmlType="submit">
           {submitValue}
