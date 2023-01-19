@@ -1,5 +1,26 @@
-import { FormEventHandler, useState } from 'react';
+import { useState } from 'react';
+import { Button, Form } from 'antd';
+import dayjs from 'dayjs';
 import PlaceInput from './PlaceInput';
+import DateTimeInput from './DateTimeInput';
+import type { DefaultOptionType } from 'antd/es/select';
+import { Destination } from './Trips';
+
+export interface FormData {
+  from: DefaultOptionType;
+  to: DefaultOptionType;
+  date: dayjs.Dayjs;
+}
+
+const getInitialPlaceValue = (place: Destination): DefaultOptionType | null => {
+  if (!place) {
+    return null;
+  }
+  return {
+    value: place.place_id,
+    label: `${place.name}, ${place.country_name}`,
+  };
+};
 
 const TripEditForm = ({
   initialOrigin,
@@ -8,17 +29,20 @@ const TripEditForm = ({
   submitValue,
   submit,
 }: any) => {
-  const [selectedOrigin, selectOrigin] = useState(initialOrigin?.id || '');
-  const [selectedDest, selectDest] = useState(initialDest?.id || '');
-  const [date, setDate] = useState(initialDate || '');
-
   const [error, setError] = useState('');
 
-  const handleSubmit: FormEventHandler = async (e) => {
-    e.preventDefault();
+  const initialValues = {
+    from: getInitialPlaceValue(initialOrigin),
+    to: getInitialPlaceValue(initialDest),
+    date: initialDate ? dayjs(initialDate, 'YYYY-MM-DD HH:mm') : null,
+  };
+
+  const handleSubmit = async (formData: FormData) => {
+    const date = formData.date.format();
+
     const data = {
-      origin_id: selectedOrigin,
-      dest_id: selectedDest,
+      origin_id: formData.from.value,
+      dest_id: formData.to.value,
       date,
     };
     try {
@@ -28,32 +52,21 @@ const TripEditForm = ({
     }
   };
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <PlaceInput
-          label="From:"
-          initialPlace={initialOrigin?.place_id || ''}
-          initialValue={initialOrigin?.name || ''}
-          onSelect={selectOrigin}
-        />
-        <PlaceInput
-          label="To:"
-          initialPlace={initialDest?.id || ''}
-          initialValue={initialDest?.name || ''}
-          onSelect={selectDest}
-        />
-        <label>
-          Date:
-          <input
-            value={date}
-            type="text"
-            onInput={(e) => setDate(e.currentTarget.value)}
-          ></input>
-        </label>
-        <input type="submit" value={submitValue} />
-      </form>
-      {error && <div>Error: {error}</div>}
-    </div>
+    <Form
+      initialValues={initialValues}
+      layout="inline"
+      requiredMark={false}
+      onFinish={handleSubmit}
+    >
+      <PlaceInput label="From" name="from" />
+      <PlaceInput label="To" name="to" />
+      <DateTimeInput name="date" label="Date" showTime />
+      <Form.Item>
+        <Button type="primary" htmlType="submit">
+          {submitValue}
+        </Button>
+      </Form.Item>
+    </Form>
   );
 };
 

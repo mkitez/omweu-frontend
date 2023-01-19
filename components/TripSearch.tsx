@@ -1,47 +1,31 @@
-import { useState } from 'react';
-import type { FormEventHandler } from 'react';
+import { Form, Button } from 'antd';
 import { API_URL } from '../utils/constants';
 import PlaceInput from './PlaceInput';
+import DateTimeInput from './DateTimeInput';
+import type { FormData } from './TripEditForm';
 
 const TripSearch = () => {
-  const [date, setDate] = useState('');
-  const [selectedOrigin, selectOrigin] = useState('');
-  const [selectedDest, selectDest] = useState('');
+  const onFinish = async (formData: FormData) => {
+    const date = formData.date.format('YYYY-MM-DD');
 
-  const handleSubmit: FormEventHandler = async (e) => {
-    e.preventDefault();
     const response = await fetch(
-      `${API_URL}/trips/search/?origin_id=${selectedOrigin}&dest_id=${selectedDest}&date=${date}`
+      `${API_URL}/trips/search/?origin_id=${formData.from.value}&dest_id=${formData.to.value}&date=${date}`
     );
     const responseJson = await response.json();
     console.log(responseJson);
   };
+
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <PlaceInput
-          label="From:"
-          initialPlace={selectedOrigin}
-          initialValue=""
-          onSelect={selectOrigin}
-        />
-        <PlaceInput
-          label="To:"
-          initialPlace={selectedDest}
-          initialValue=""
-          onSelect={selectDest}
-        />
-        <label>
-          Date:
-          <input
-            value={date}
-            type="text"
-            onInput={(e) => setDate(e.currentTarget.value)}
-          ></input>
-        </label>
-        <input type="submit" value="Search" />
-      </form>
-    </div>
+    <Form onFinish={onFinish} layout="inline" requiredMark={false}>
+      <PlaceInput name="from" label="From" />
+      <PlaceInput name="to" label="To" />
+      <DateTimeInput name="date" label="Date" />
+      <Form.Item>
+        <Button type="primary" htmlType="submit">
+          Search
+        </Button>
+      </Form.Item>
+    </Form>
   );
 };
 
