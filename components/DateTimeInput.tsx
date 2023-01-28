@@ -18,6 +18,7 @@ const DateTimeInput = ({ name, label, showTime }: Props) => {
         allowClear={false}
         format={format}
         showTime={showTime ? { minuteStep: 15, format: 'HH:mm' } : false}
+        showNow={false}
       />
     </Form.Item>
   );

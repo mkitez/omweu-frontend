@@ -1,7 +1,6 @@
 import { Select, Form } from 'antd';
 import type { DefaultOptionType } from 'antd/es/select';
-import useGoogle from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
-import { GOOGLE_API_KEY } from '../utils/constants';
+import { useHereAutocomplete } from '../hooks/useHereAutocomplete';
 
 interface Props {
   name: string;
@@ -9,16 +8,10 @@ interface Props {
 }
 
 const PlaceInput = ({ name, label }: Props) => {
-  const { placePredictions, getPlacePredictions, isPlacePredictionsLoading } =
-    useGoogle({
-      apiKey: GOOGLE_API_KEY,
-      options: {
-        types: ['(cities)'],
-      },
-    });
+  const { suggestions, getSuggestions } = useHereAutocomplete();
 
   const handleSearch = async (newValue: string) => {
-    getPlacePredictions({ input: newValue });
+    getSuggestions(newValue);
   };
 
   return (
@@ -30,7 +23,6 @@ const PlaceInput = ({ name, label }: Props) => {
       <Select
         showSearch
         placeholder={label}
-        loading={isPlacePredictionsLoading}
         defaultActiveFirstOption
         filterOption={false}
         onSearch={handleSearch}
@@ -38,10 +30,10 @@ const PlaceInput = ({ name, label }: Props) => {
         style={{ width: '200px' }}
         notFoundContent={null}
         labelInValue={true}
-        options={placePredictions.map(
+        options={suggestions.map(
           (place): DefaultOptionType => ({
-            value: place.place_id,
-            label: place.description,
+            value: place.id,
+            label: place.address.label,
           })
         )}
       />

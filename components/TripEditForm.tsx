@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Button, Form } from 'antd';
-import dayjs from 'dayjs';
 import PlaceInput from './PlaceInput';
 import DateTimeInput from './DateTimeInput';
 import type { DefaultOptionType } from 'antd/es/select';
 import { Destination } from './Trips';
+import dayjs from 'dayjs';
 
 export interface FormData {
   from: DefaultOptionType;
@@ -38,7 +38,7 @@ const TripEditForm = ({
   };
 
   const handleSubmit = async (formData: FormData) => {
-    const date = formData.date.format();
+    const date = formData.date.format('YYYY-MM-DDTHH:mm:00');
 
     const data = {
       origin_id: formData.from.value,
