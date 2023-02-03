@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { SessionProvider } from 'next-auth/react';
 import { Session } from 'next-auth';
+import { appWithTranslation } from 'next-i18next';
 import AppLayout from '../components/AppLayout';
 import 'antd/dist/reset.css';
 
@@ -19,4 +20,4 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>) {
   );
 }
 
-export default MyApp;
+export default appWithTranslation(MyApp);

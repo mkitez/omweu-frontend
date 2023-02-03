@@ -40,14 +40,14 @@ const fetchData = async (q: string, lang: string) => {
 };
 
 interface HookParams {
-  lang: string;
+  lang?: string;
 }
 
-export const useHereAutocomplete = (params: HookParams = { lang: 'en' }) => {
+export const useHereAutocomplete = ({ lang = 'en' }: HookParams) => {
   const [data, setData] = useState<Suggestion[]>([]);
 
   const _getSuggestions = async (query: string) => {
-    const data = await fetchData(query, params.lang);
+    const data = await fetchData(query, lang);
     setData(data);
   };
   const getSuggestions = debounce(_getSuggestions, 300);

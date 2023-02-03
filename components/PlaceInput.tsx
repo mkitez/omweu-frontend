@@ -1,4 +1,5 @@
 import { Select, Form } from 'antd';
+import { useTranslation } from 'next-i18next';
 import type { DefaultOptionType } from 'antd/es/select';
 import { useHereAutocomplete } from '../hooks/useHereAutocomplete';
 
@@ -8,7 +9,10 @@ interface Props {
 }
 
 const PlaceInput = ({ name, label }: Props) => {
-  const { suggestions, getSuggestions } = useHereAutocomplete();
+  const { i18n } = useTranslation();
+  const { suggestions, getSuggestions } = useHereAutocomplete({
+    lang: i18n.language,
+  });
 
   const handleSearch = async (newValue: string) => {
     getSuggestions(newValue);
