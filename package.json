@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^1.9.0",
     "antd": "^5.1.4",
     "axios": "^1.1.2",
     "i18next": "^22.4.9",
@@ -20,8 +19,7 @@
     "next-i18next": "^13.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-i18next": "^12.1.4",
-    "react-redux": "^8.0.5"
+    "react-i18next": "^12.1.4"
   },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.7",
