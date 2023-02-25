@@ -11,9 +11,9 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.VK_CLIENT_SECRET as string,
     }),
     CredentialsProvider({
-      name: 'Django',
+      name: 'credentials',
       credentials: {
-        username: { label: 'Username', type: 'text' },
+        email: { label: 'Email', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
@@ -38,7 +38,6 @@ export const authOptions: NextAuthOptions = {
           const { access, refresh } = response.data.tokens;
           token.accessToken = access;
           token.refreshToken = refresh;
-          // token.user = response.data.user;
         }
         if (account.provider === 'credentials') {
           const { access, refresh } = user.tokens;
@@ -72,7 +71,6 @@ export const authOptions: NextAuthOptions = {
 
     async session({ session, token }: any) {
       session.accessToken = token.accessToken;
-      // session.user = token.user;
       session.user!.email = null;
       session.error = token.error || null;
       return session;
