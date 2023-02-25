@@ -1,5 +1,4 @@
 import useSWR from 'swr';
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
@@ -20,12 +19,6 @@ const Search = () => {
       return await response.json();
     }
   );
-
-  useEffect(() => {
-    if (!router.isReady) {
-      return;
-    }
-  }, [router.isReady, router.query]);
 
   if (isLoading) {
     return <div>Searching...</div>;
