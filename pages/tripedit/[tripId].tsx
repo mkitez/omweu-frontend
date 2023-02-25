@@ -1,39 +1,21 @@
-import { useState, useEffect } from 'react';
+import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import TripEditForm from '../../components/TripEditForm';
 import TripService from '../../services/trip.service';
 import { getServerSideProps } from '../dashboard';
 import { Session } from 'next-auth';
 import withAuth from '../../components/withAuthHOC';
+import api from '../../services/api';
 
 const TripEdit = ({ session }: { session: Session }) => {
   const router = useRouter();
-
-  const [isLoading, setLoading] = useState(false);
-  const [tripData, setTripData] = useState<any>(null);
-  const [error, setError] = useState('');
-  useEffect(() => {
-    if (!router.isReady) {
-      return;
+  const { data, error, isLoading } = useSWR(
+    router.isReady ? `/trips/${router.query.tripId}/` : null,
+    async (url) => {
+      const response = await api.get(url);
+      return response.data;
     }
-    const fetchData = async () => {
-      const { tripId } = router.query;
-      setLoading(true);
-      try {
-        const tripData = await TripService.getTripDetails(tripId);
-        setLoading(false);
-        setTripData(tripData);
-      } catch (error: any) {
-        setLoading(false);
-        setError(error.message);
-      }
-    };
-    fetchData();
-  }, [router]);
-
-  if (tripData === null) {
-    return null;
-  }
+  );
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -43,11 +25,15 @@ const TripEdit = ({ session }: { session: Session }) => {
     return <div>Error: {error}</div>;
   }
 
+  if (!data) {
+    return null;
+  }
+
   return (
     <TripEditForm
-      initialOrigin={tripData.origin}
-      initialDest={tripData.dest}
-      initialDate={tripData.date}
+      initialOrigin={data.origin}
+      initialDest={data.dest}
+      initialDate={data.date}
       submitValue="Save"
       submit={async (data: any) => {
         await TripService.updateTrip(
