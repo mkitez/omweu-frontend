@@ -1,16 +1,16 @@
 import type { GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
-import { authOptions } from './api/auth/[...nextauth]';
+import { authOptions } from '../api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth/next';
-import { Session } from 'next-auth';
 import { Typography } from 'antd';
-import Trips from '../components/Trips';
-import withAuth from '../components/withAuthHOC';
+import Trips from '../../components/Trips';
+import withAuth from '../../components/withAuthHOC';
 
-const Dashboard = ({ session }: { session: Session }) => {
+const TripsPage = () => {
   return (
     <div>
-      <Typography.Title level={2}>User Dashboard</Typography.Title>
+      <Link href="/dashboard/profile">To user profile</Link>
+      <Typography.Title level={2}>User Trips</Typography.Title>
       <Trips />
       <Link href="/newtrip">Add trip</Link>
     </div>
@@ -40,4 +40,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-export default withAuth(Dashboard);
+export default withAuth(TripsPage);

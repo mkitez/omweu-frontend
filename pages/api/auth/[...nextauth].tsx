@@ -22,7 +22,7 @@ export const authOptions: NextAuthOptions = {
         return {
           id: user.id,
           name: `${user.first_name} ${user.last_name}`,
-          email: user?.email || '',
+          email: user.email,
           image: '',
           tokens,
         };
@@ -38,11 +38,13 @@ export const authOptions: NextAuthOptions = {
           const { access, refresh } = response.data.tokens;
           token.accessToken = access;
           token.refreshToken = refresh;
+          token.id = response.data.user.id;
         }
         if (account.provider === 'credentials') {
           const { access, refresh } = user.tokens;
           token.accessToken = access;
           token.refreshToken = refresh;
+          token.id = user.id;
         }
       }
 
@@ -71,6 +73,7 @@ export const authOptions: NextAuthOptions = {
 
     async session({ session, token }: any) {
       session.accessToken = token.accessToken;
+      session.user!.id = token.id;
       session.user!.email = null;
       session.error = token.error || null;
       return session;

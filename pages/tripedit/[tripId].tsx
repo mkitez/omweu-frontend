@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import TripEditForm from '../../components/TripEditForm';
 import TripService from '../../services/trip.service';
-import { getServerSideProps } from '../dashboard';
+import { getServerSideProps } from '../dashboard/trips';
 import { Session } from 'next-auth';
 import withAuth from '../../components/withAuthHOC';
 import api from '../../services/api';
