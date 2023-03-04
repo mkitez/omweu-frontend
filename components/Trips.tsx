@@ -18,7 +18,7 @@ export interface Destination {
   country_name: string;
 }
 
-interface Trip {
+export interface Trip {
   id: number;
   origin: Destination;
   dest: Destination;

@@ -1,35 +1,50 @@
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { Form, Button } from 'antd';
-import { API_URL } from '../utils/constants';
 import PlaceInput from './PlaceInput';
 import DateTimeInput from './DateTimeInput';
 import type { FormData } from './TripEditForm';
+import dayjs from 'dayjs';
 
 const TripSearch = () => {
-  const { t, i18n } = useTranslation('common');
+  const router = useRouter();
+  const { t } = useTranslation('common');
+
+  const { from_input, to_input, from, to, date } = router.query;
+  const initialValues = {
+    from: from_input ? { label: from_input, value: from } : undefined,
+    to: to_input ? { label: to_input, value: to } : undefined,
+    date: date ? dayjs(date as string, 'YYYY-MM-DD') : undefined,
+  };
 
   const onFinish = async (formData: FormData) => {
-    const date = formData.date.format('YYYY-MM-DD');
-
-    const response = await fetch(
-      `${API_URL}/trips/search/?origin_id=${formData.from.value}&dest_id=${formData.to.value}&date=${date}`,
-      { headers: { 'Accept-Language': i18n.language } }
+    const { from, to, date } = formData;
+    const formattedDate = date.format('YYYY-MM-DD');
+    router.push(
+      `/search?from=${from.value}&to=${to.value}&date=${formattedDate}&from_input=${from.label}&to_input=${to.label}`,
+      undefined,
+      { shallow: true }
     );
-    const responseJson = await response.json();
-    console.log(responseJson);
   };
 
   return (
-    <Form onFinish={onFinish} layout="inline" requiredMark={false}>
-      <PlaceInput name="from" label="From" />
-      <PlaceInput name="to" label="To" />
-      <DateTimeInput name="date" label="Date" />
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          {t('search')}
-        </Button>
-      </Form.Item>
-    </Form>
+    <div style={{ marginBottom: 15 }}>
+      <Form
+        onFinish={onFinish}
+        layout="inline"
+        requiredMark={false}
+        initialValues={initialValues}
+      >
+        <PlaceInput name="from" label="From" />
+        <PlaceInput name="to" label="To" />
+        <DateTimeInput name="date" label="Date" />
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            {t('search')}
+          </Button>
+        </Form.Item>
+      </Form>
+    </div>
   );
 };
 
