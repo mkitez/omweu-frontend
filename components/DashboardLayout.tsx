@@ -1,7 +1,12 @@
 import { PropsWithChildren } from 'react';
-import { Layout, Menu } from 'antd';
-import { UserOutlined, CalendarOutlined } from '@ant-design/icons';
+import { Button, Layout, Menu } from 'antd';
+import {
+  UserOutlined,
+  CalendarOutlined,
+  LogoutOutlined,
+} from '@ant-design/icons';
 import Link from 'next/link';
+import { signOut } from 'next-auth/react';
 import AppHeader from './AppHeader';
 import styles from '../styles/Content.module.css';
 import { useRouter } from 'next/router';
@@ -28,13 +33,22 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
       <AppHeader />
       <Content className={styles.container}>
         <Layout>
-          <Sider>
+          <Sider style={{ background: 'none' }}>
             <Menu
               mode="inline"
               defaultSelectedKeys={[selectedKey]}
-              style={{ height: '100%' }}
               items={items}
             />
+            <div style={{ padding: '5px 12px' }}>
+              <Button
+                type="text"
+                icon={<LogoutOutlined />}
+                style={{ width: '100%', textAlign: 'left' }}
+                onClick={() => signOut({ callbackUrl: '/' })}
+              >
+                Log out
+              </Button>
+            </div>
           </Sider>
           <Content style={{ padding: '0px 20px' }}>{children}</Content>
         </Layout>
