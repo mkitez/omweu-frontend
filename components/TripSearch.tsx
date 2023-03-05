@@ -23,7 +23,7 @@ const TripSearch = () => {
     router.push(
       `/search?from=${from.value}&to=${to.value}&date=${formattedDate}&from_input=${from.label}&to_input=${to.label}`,
       undefined,
-      { shallow: true }
+      { shallow: router.pathname === '/search' }
     );
   };
 

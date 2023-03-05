@@ -8,8 +8,10 @@ const getCurrentUserTrips = async (accessToken: string) => {
   return response.data;
 };
 
-const getTripDetails = async (tripId: any) => {
-  const response = await api.get(`/trips/${tripId}/`);
+const getTripDetails = async (tripId: any, accessToken: string) => {
+  const response = await api.get(`/trips/${tripId}/`, {
+    headers: AuthService.getAuthHeaders(accessToken),
+  });
   return response.data;
 };
 
