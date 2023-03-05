@@ -54,7 +54,7 @@ const Trips = () => {
   }
 
   return (
-    <div>
+    <div style={{ marginBottom: 10 }}>
       {trips.length > 0 ? (
         <List
           itemLayout="horizontal"

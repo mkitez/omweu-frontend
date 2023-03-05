@@ -1,6 +1,8 @@
 import type { ReactElement } from 'react';
 import type { GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
+import { Button } from 'antd';
+import { PlusCircleOutlined } from '@ant-design/icons';
 import { authOptions } from '../api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth/next';
 import Trips from '../../components/Trips';
@@ -12,7 +14,9 @@ const TripsPage = () => {
     <div>
       <h2>User Trips</h2>
       <Trips />
-      <Link href="/newtrip">Add trip</Link>
+      <Link href="/newtrip" passHref legacyBehavior>
+        <Button icon={<PlusCircleOutlined />}>Add trip</Button>
+      </Link>
     </div>
   );
 };
