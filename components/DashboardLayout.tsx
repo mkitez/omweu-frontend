@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useState, useEffect } from 'react';
 import { Button, Layout, Menu } from 'antd';
 import {
   UserOutlined,
@@ -15,7 +15,11 @@ const { Content, Footer, Sider } = Layout;
 
 const DashboardLayout = ({ children }: PropsWithChildren) => {
   const router = useRouter();
-  const selectedKey = router.pathname.split('/').slice(-1)[0];
+  const [selectedKey, setSelectedKey] = useState<string>();
+  useEffect(() => {
+    setSelectedKey(router.pathname.split('/').slice(-1)[0]);
+  }, [router.pathname]);
+
   const items = [
     {
       key: 'trips',
@@ -32,11 +36,11 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
     <Layout>
       <AppHeader />
       <Content className={styles.container}>
-        <Layout>
+        <Layout hasSider>
           <Sider style={{ background: 'none' }}>
             <Menu
               mode="inline"
-              defaultSelectedKeys={[selectedKey]}
+              selectedKeys={selectedKey ? [selectedKey] : []}
               items={items}
             />
             <div style={{ padding: '5px 12px' }}>
