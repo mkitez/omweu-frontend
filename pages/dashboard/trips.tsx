@@ -1,20 +1,24 @@
+import type { ReactElement } from 'react';
 import type { GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
 import { authOptions } from '../api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth/next';
-import { Typography } from 'antd';
 import Trips from '../../components/Trips';
 import withAuth from '../../components/withAuthHOC';
+import DashboardLayout from '../../components/DashboardLayout';
 
 const TripsPage = () => {
   return (
     <div>
-      <Link href="/dashboard/profile">To user profile</Link>
-      <Typography.Title level={2}>User Trips</Typography.Title>
+      <h2>User Trips</h2>
       <Trips />
       <Link href="/newtrip">Add trip</Link>
     </div>
   );
+};
+
+TripsPage.getLayout = function getLayout(page: ReactElement) {
+  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
