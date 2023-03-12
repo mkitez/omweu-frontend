@@ -1,5 +1,5 @@
 import { PropsWithChildren, useState, useEffect } from 'react';
-import { Button, Layout, Menu } from 'antd';
+import { Button, Layout, Menu, theme } from 'antd';
 import {
   UserOutlined,
   CalendarOutlined,
@@ -14,6 +14,9 @@ import { useRouter } from 'next/router';
 const { Content, Footer, Sider } = Layout;
 
 const DashboardLayout = ({ children }: PropsWithChildren) => {
+  const {
+    token: { borderRadius },
+  } = theme.useToken();
   const router = useRouter();
   const [selectedKey, setSelectedKey] = useState<string>();
   useEffect(() => {
@@ -42,6 +45,7 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
               mode="inline"
               selectedKeys={selectedKey ? [selectedKey] : []}
               items={items}
+              style={{ borderRadius }}
             />
             <div style={{ padding: '5px 12px' }}>
               <Button
@@ -54,7 +58,7 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
               </Button>
             </div>
           </Sider>
-          <Content style={{ padding: '0px 20px' }}>{children}</Content>
+          <Content style={{ padding: '5px 20px' }}>{children}</Content>
         </Layout>
       </Content>
       <Footer>Footer</Footer>
