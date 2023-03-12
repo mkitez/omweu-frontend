@@ -2,17 +2,20 @@ import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import TripEditForm from '../../components/TripEditForm';
 import TripService from '../../services/trip.service';
-import { getServerSideProps } from '../dashboard';
+import { getServerSideProps } from '../dashboard/trips';
 import { Session } from 'next-auth';
 import withAuth from '../../components/withAuthHOC';
 import api from '../../services/api';
+import AuthService from '../../services/auth.service';
 
 const TripEdit = ({ session }: { session: Session }) => {
   const router = useRouter();
   const { data, error, isLoading } = useSWR(
     router.isReady ? `/trips/${router.query.tripId}/` : null,
     async (url) => {
-      const response = await api.get(url);
+      const response = await api.get(url, {
+        headers: AuthService.getAuthHeaders(session.accessToken as string),
+      });
       return response.data;
     }
   );
@@ -22,7 +25,7 @@ const TripEdit = ({ session }: { session: Session }) => {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Error: {error.message}</div>;
   }
 
   if (!data) {

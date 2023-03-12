@@ -1,9 +1,8 @@
 import { signOut, useSession } from 'next-auth/react';
 import { AppProps } from 'next/app';
-import { NextComponentType, NextPageContext } from 'next/types';
 import { useEffect } from 'react';
 
-const withAuth = (Component: NextComponentType<NextPageContext, any, any>) => {
+const withAuth = (Component: any) => {
   const Auth = (props: AppProps['pageProps']) => {
     const { data: session, status } = useSession({ required: true });
     useEffect(() => {
@@ -22,8 +21,8 @@ const withAuth = (Component: NextComponentType<NextPageContext, any, any>) => {
     return <Component {...props} />;
   };
 
-  if (Component.getInitialProps) {
-    Auth.getInitialProps = Component.getInitialProps;
+  if (Component.getLayout) {
+    Auth.getLayout = Component.getLayout;
   }
 
   return Auth;
