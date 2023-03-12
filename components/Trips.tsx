@@ -1,7 +1,6 @@
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import { Typography, Button, List } from 'antd';
+import { Button, List } from 'antd';
 import TripService from '../services/trip.service';
 import Link from 'next/link';
 
@@ -28,7 +27,6 @@ export interface Trip {
 }
 
 const Trips = () => {
-  const router = useRouter();
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [trips, setTrips] = useState<Trip[]>([]);
@@ -56,9 +54,7 @@ const Trips = () => {
   }
 
   return (
-    <div>
-      <Typography.Title level={3}>My trips</Typography.Title>
-      <Button onClick={getTrips}>Reload</Button>
+    <div style={{ marginBottom: 10 }}>
       {trips.length > 0 ? (
         <List
           itemLayout="horizontal"
