@@ -56,7 +56,9 @@ const Trips = () => {
       {trips && trips.length > 0 ? (
         <List
           itemLayout="horizontal"
-          dataSource={trips}
+          dataSource={trips
+            .slice()
+            .sort((tripA, tripB) => dayjs(tripB.date).diff(dayjs(tripA.date)))}
           renderItem={(trip) => (
             <List.Item
               actions={
