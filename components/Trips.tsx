@@ -1,8 +1,10 @@
+import useSWR from 'swr';
 import { useSession } from 'next-auth/react';
-import { useState, useEffect } from 'react';
 import { Button, List } from 'antd';
-import TripService from '../services/trip.service';
 import Link from 'next/link';
+import TripService from '../services/trip.service';
+import { API_URL } from '../utils/constants';
+import api from '../services/api';
 
 export interface User {
   id: number;
@@ -27,23 +29,18 @@ export interface Trip {
 }
 
 const Trips = () => {
-  const [isLoading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [trips, setTrips] = useState<Trip[]>([]);
-
   const { data: session } = useSession({ required: true });
-
-  useEffect(() => {
-    getTrips();
-  }, []);
-
-  const getTrips = async () => {
-    const tripsResponse = await TripService.getCurrentUserTrips(
-      session?.accessToken as string
-    );
-    setTrips(tripsResponse);
-    setLoading(false);
-  };
+  const {
+    data: trips,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR<Trip[]>(`${API_URL}/trips/`, async (url) => {
+    const response = await api.get(url, {
+      headers: { Authorization: `Bearer ${session?.accessToken}` },
+    });
+    return response.data;
+  });
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -55,7 +52,7 @@ const Trips = () => {
 
   return (
     <div style={{ marginBottom: 10 }}>
-      {trips.length > 0 ? (
+      {trips && trips.length > 0 ? (
         <List
           itemLayout="horizontal"
           dataSource={trips}
@@ -68,11 +65,11 @@ const Trips = () => {
                 <Button
                   key="trip-delete"
                   onClick={async () => {
-                    TripService.deleteTrip(
+                    await TripService.deleteTrip(
                       trip.id,
                       session?.accessToken as string
                     );
-                    setTrips(trips.filter((t) => t.id !== trip.id));
+                    await mutate();
                   }}
                 >
                   delete
