@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { DatePicker, Form } from 'antd';
 
 interface Props {
@@ -19,6 +20,7 @@ const DateTimeInput = ({ name, label, showTime }: Props) => {
         format={format}
         showTime={showTime ? { minuteStep: 30, format: 'HH:mm' } : false}
         showNow={false}
+        disabledDate={(current) => current && current < dayjs().startOf('day')}
       />
     </Form.Item>
   );
