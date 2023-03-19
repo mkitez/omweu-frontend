@@ -4,11 +4,13 @@ import { Form, Button } from 'antd';
 import PlaceInput from './PlaceInput';
 import DateTimeInput from './DateTimeInput';
 import type { FormData } from './TripEditForm';
+import SwapButton from './SwapButton';
 import dayjs from 'dayjs';
 
 const TripSearch = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
+  const [form] = Form.useForm();
 
   const { from_input, to_input, from, to, date } = router.query;
   const initialValues = {
@@ -27,15 +29,24 @@ const TripSearch = () => {
     );
   };
 
+  const swapInput = () => {
+    form.setFieldsValue({
+      to: form.getFieldValue('from'),
+      from: form.getFieldValue('to'),
+    });
+  };
+
   return (
     <div style={{ marginBottom: 15 }}>
       <Form
+        form={form}
         onFinish={onFinish}
         layout="inline"
         requiredMark={false}
         initialValues={initialValues}
       >
         <PlaceInput name="from" label="From" />
+        <SwapButton onClick={swapInput} />
         <PlaceInput name="to" label="To" />
         <DateTimeInput name="date" label="Date" />
         <Form.Item>
