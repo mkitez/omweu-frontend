@@ -2,6 +2,7 @@ import useSWR from 'swr';
 import { useSession } from 'next-auth/react';
 import { Button, List } from 'antd';
 import Link from 'next/link';
+import dayjs from 'dayjs';
 import TripService from '../services/trip.service';
 import { API_URL } from '../utils/constants';
 import api from '../services/api';
@@ -58,23 +59,27 @@ const Trips = () => {
           dataSource={trips}
           renderItem={(trip) => (
             <List.Item
-              actions={[
-                <Link key="trip-edit" href={`/tripedit/${trip.id}`}>
-                  edit
-                </Link>,
-                <Button
-                  key="trip-delete"
-                  onClick={async () => {
-                    await TripService.deleteTrip(
-                      trip.id,
-                      session?.accessToken as string
-                    );
-                    await mutate();
-                  }}
-                >
-                  delete
-                </Button>,
-              ]}
+              actions={
+                dayjs(trip.date) > dayjs()
+                  ? [
+                      <Link key="trip-edit" href={`/tripedit/${trip.id}`}>
+                        edit
+                      </Link>,
+                      <Button
+                        key="trip-delete"
+                        onClick={async () => {
+                          await TripService.deleteTrip(
+                            trip.id,
+                            session?.accessToken as string
+                          );
+                          await mutate();
+                        }}
+                      >
+                        delete
+                      </Button>,
+                    ]
+                  : []
+              }
             >
               <List.Item.Meta
                 title={`${trip.origin.name} - ${trip.dest.name}`}

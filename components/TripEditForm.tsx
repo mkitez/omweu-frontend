@@ -57,6 +57,7 @@ const TripEditForm = ({
       layout="inline"
       requiredMark={false}
       onFinish={handleSubmit}
+      disabled={initialDate && dayjs(initialDate) < dayjs()}
     >
       <PlaceInput label="From" name="from" />
       <PlaceInput label="To" name="to" />
