@@ -22,7 +22,16 @@ const PlaceInput = ({ name, label }: Props) => {
     <Form.Item
       name={name}
       label={label}
-      rules={[{ required: true, message: 'Please select a place' }]}
+      rules={[
+        { required: true, message: 'Please select a place' },
+        ({ getFieldValue }) => ({
+          async validator() {
+            if (getFieldValue('from')?.value === getFieldValue('to')?.value) {
+              throw Error('Please select different places');
+            }
+          },
+        }),
+      ]}
     >
       <Select
         showSearch
