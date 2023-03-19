@@ -17,7 +17,7 @@ const DateTimeInput = ({ name, label, showTime }: Props) => {
       <DatePicker
         allowClear={false}
         format={format}
-        showTime={showTime ? { minuteStep: 15, format: 'HH:mm' } : false}
+        showTime={showTime ? { minuteStep: 30, format: 'HH:mm' } : false}
         showNow={false}
       />
     </Form.Item>
