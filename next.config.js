@@ -6,6 +6,14 @@ const nextConfig = {
   swcMinify: true,
   i18n,
   output: 'standalone',
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.userapi.com',
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;

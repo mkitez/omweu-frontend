@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import Image from 'next/image';
 import useSWR from 'swr';
 import { Session } from 'next-auth';
 import { Form, Input, Button, Row, Col } from 'antd';
@@ -105,6 +106,25 @@ const Profile = ({ session }: { session: Session }) => {
             </Item>
           </Col>
         </Row>
+        {data.photo && (
+          <Row>
+            <Col
+              offset={3}
+              style={{
+                marginBottom: 24,
+                borderRadius: '50%',
+                overflow: 'hidden',
+              }}
+            >
+              <Image
+                src={data.photo}
+                alt="user photo"
+                width={100}
+                height={100}
+              />
+            </Col>
+          </Row>
+        )}
         <Button htmlType="submit" type="primary">
           Save
         </Button>
