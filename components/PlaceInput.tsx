@@ -26,7 +26,12 @@ const PlaceInput = ({ name, label }: Props) => {
         { required: true, message: 'Please select a place' },
         ({ getFieldValue }) => ({
           async validator() {
-            if (getFieldValue('from')?.value === getFieldValue('to')?.value) {
+            const from = getFieldValue('from')?.value;
+            const to = getFieldValue('to')?.value;
+            if (!from || !to) {
+              return;
+            }
+            if (from === to) {
               throw Error('Please select different places');
             }
           },
