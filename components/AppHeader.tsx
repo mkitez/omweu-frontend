@@ -1,63 +1,61 @@
 import Link from 'next/link';
-import { Layout, Menu, Button, theme } from 'antd';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import Image from 'next/image';
+import { useTranslation } from 'next-i18next';
+import { Layout, Button, theme } from 'antd';
+import { PlusCircleOutlined, UserOutlined } from '@ant-design/icons';
+import { signIn, useSession } from 'next-auth/react';
+import styles from '../styles/AppHeader.module.css';
+import logo from '../assets/logo.svg';
 
 const { Header } = Layout;
 
-const getItems = (status: string) => {
-  const defaultItems = [{ key: 'home', label: <Link href="/">Home</Link> }];
-  if (status === 'loading') {
-    return defaultItems;
-  }
-  if (status === 'authenticated') {
-    return [
-      ...defaultItems,
-      {
-        key: 'dashboard',
-        label: <Link href="/dashboard">Dashboard</Link>,
-      },
-      {
-        key: 'signout',
-        label: (
-          <Button onClick={() => signOut({ callbackUrl: '/' })}>
-            Sign out
-          </Button>
-        ),
-      },
-    ];
-  }
-  if (status === 'unauthenticated') {
-    return [
-      ...defaultItems,
-      {
-        key: 'signin',
-        label: (
-          <Button
-            type="primary"
-            onClick={() => signIn(undefined, { callbackUrl: '/dashboard' })}
-          >
-            Sign in
-          </Button>
-        ),
-      },
-      {
-        key: 'signup',
-        label: <Link href="/signup">Sign up</Link>,
-      },
-    ];
-  }
-};
-
 const AppHeader = () => {
   const {
-    token: { colorBgContainer },
+    token: { colorPrimary, colorBgContainer },
   } = theme.useToken();
   const { status } = useSession();
+  const { t } = useTranslation('common');
 
-  const items = getItems(status);
   return (
-    <Header style={{ backgroundColor: colorBgContainer }}>
-      <Menu theme="light" mode="horizontal" items={items} />
+    <Header
+      style={{ backgroundColor: colorBgContainer }}
+      className={styles.container}
+    >
+      <div className={styles.logo}>
+        <Link href="/">
+          <Image src={logo} alt="eubycar.com logo" width={160} />
+        </Link>
+      </div>
+      {(() => {
+        if (status === 'loading') return null;
+        if (status === 'authenticated')
+          return (
+            <div className={styles.navButtons}>
+              <Link href="/newtrip" className={styles.offerTripBtn}>
+                <Button type="text">
+                  <PlusCircleOutlined /> {t('offerTrip')}
+                </Button>
+              </Link>
+              <Link href="/dashboard" className={styles.profileBtn}>
+                <UserOutlined style={{ color: colorPrimary }} />
+              </Link>
+            </div>
+          );
+        if (status === 'unauthenticated')
+          return (
+            <div className={styles.authButtons}>
+              <Button
+                type="primary"
+                onClick={() => signIn(undefined, { callbackUrl: '/dashboard' })}
+              >
+                Sign in
+              </Button>
+              <Link href="/signup">
+                <Button>Sign up</Button>
+              </Link>
+            </div>
+          );
+      })()}
     </Header>
   );
 };

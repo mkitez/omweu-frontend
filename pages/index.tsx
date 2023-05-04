@@ -1,24 +1,21 @@
 import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
 import TripSearch from '../components/TripSearch';
-import styles from '../styles/Home.module.css';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { InferGetServerSidePropsType } from 'next';
-
-interface SSRParams {
-  locale: string;
-}
+import { GetServerSideProps } from 'next';
 
 const Home = (
   _props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
   const { t } = useTranslation('common');
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
-        <title>omw EU</title>
+        <title>EUbyCar.com</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="omw EU" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
       </Head>
       <h1>{t('welcomeMessage')}</h1>
       <TripSearch />
@@ -26,8 +23,10 @@ const Home = (
   );
 };
 
-export const getServerSideProps = async ({ locale }: SSRParams) => {
-  const translations = await serverSideTranslations(locale, ['common']);
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  const translations = await serverSideTranslations(locale as string, [
+    'common',
+  ]);
   return {
     props: {
       ...translations,

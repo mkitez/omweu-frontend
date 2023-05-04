@@ -13,6 +13,7 @@ import 'antd/dist/reset.css';
 import type { Locale } from 'antd/lib/locale';
 import ru from 'antd/locale/ru_RU';
 import 'dayjs/locale/ru';
+import theme from '../theme';
 
 const locales: Record<string, Locale> = {
   ru,
@@ -37,7 +38,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     Component.getLayout ?? ((page) => <AppLayout>{page}</AppLayout>);
   return (
     <SessionProvider session={pageProps.session}>
-      <ConfigProvider locale={locales[locale as string]}>
+      <ConfigProvider locale={locales[locale as string]} theme={theme}>
         {getLayout(<Component {...pageProps} />)}
       </ConfigProvider>
     </SessionProvider>
