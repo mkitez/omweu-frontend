@@ -48,10 +48,10 @@ const AppHeader = () => {
                 type="primary"
                 onClick={() => signIn(undefined, { callbackUrl: '/dashboard' })}
               >
-                Sign in
+                {t('signIn')}
               </Button>
               <Link href="/signup">
-                <Button>Sign up</Button>
+                <Button>{t('signUp')}</Button>
               </Link>
             </div>
           );
