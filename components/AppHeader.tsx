@@ -6,6 +6,7 @@ import { PlusCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { signIn, useSession } from 'next-auth/react';
 import styles from '../styles/AppHeader.module.css';
 import logo from '../assets/logo.svg';
+import logoXs from '../assets/logoXs.svg';
 
 const { Header } = Layout;
 
@@ -21,9 +22,19 @@ const AppHeader = () => {
       style={{ backgroundColor: colorBgContainer }}
       className={styles.container}
     >
-      <div className={styles.logo}>
+      <div className={styles.logoContainer}>
         <Link href="/">
-          <Image src={logo} alt="eubycar.com logo" width={160} />
+          <Image
+            src={logo}
+            alt="eubycar.com logo"
+            width={160}
+            className={styles.logo}
+          />
+          <Image
+            src={logoXs}
+            alt="eubycar.com logo xs"
+            className={styles.logoXs}
+          />
         </Link>
       </div>
       {(() => {
@@ -33,7 +44,8 @@ const AppHeader = () => {
             <div className={styles.navButtons}>
               <Link href="/newtrip" className={styles.offerTripBtn}>
                 <Button type="text">
-                  <PlusCircleOutlined /> {t('offerTrip')}
+                  <PlusCircleOutlined />{' '}
+                  <span className={styles.offerTripText}>{t('offerTrip')}</span>
                 </Button>
               </Link>
               <Link href="/dashboard" className={styles.profileBtn}>

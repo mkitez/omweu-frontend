@@ -8,17 +8,14 @@ const montserrat = Montserrat({
 });
 
 const Banner = () => (
-  <div className={styles.container}>
-    <div className={styles.banner}>
-      <div className={styles.bannerContainer}>
-        <Image src={bannerImg} alt="eubycar.com banner" />
-      </div>
-      <div className={styles.textContainer}>
-        <h1 className={montserrat.className}>
-          <span className={styles.highlight}>Экономьте</span> на поездках в
-          Европу
-        </h1>
-      </div>
+  <div className={styles.banner}>
+    <div className={styles.bannerContainer}>
+      <Image src={bannerImg} alt="eubycar.com banner" />
+    </div>
+    <div className={styles.textContainer}>
+      <h1 className={montserrat.className}>
+        <span className={styles.highlight}>Экономьте</span> на поездках в Европу
+      </h1>
     </div>
   </div>
 );

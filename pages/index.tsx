@@ -1,4 +1,3 @@
-import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
 import Banner from '../components/Banner';
 import TripSearch from '../components/TripSearch';
@@ -9,9 +8,8 @@ import { GetServerSideProps } from 'next';
 const Home = (
   _props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
-  const { t } = useTranslation('common');
   return (
-    <div>
+    <>
       <Head>
         <title>EUbyCar.com</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -20,7 +18,7 @@ const Home = (
       </Head>
       <Banner />
       <TripSearch />
-    </div>
+    </>
   );
 };
 

@@ -5,8 +5,12 @@
   justify-content: space-between;
 }
 
-.logo {
+.logoContainer {
   flex: 1;
+}
+
+.logoXs {
+  display: none;
 }
 
 .authButtons button {
@@ -26,4 +30,25 @@
 .profileBtn {
   margin: 0 5px;
   font-size: 30px;
+}
+
+@media screen and (max-width: 767px) {
+  .offerTripText {
+    display: none !important;
+  }
+
+  .logoXs {
+    display: unset;
+  }
+
+  .logo {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 1439px) {
+  .container {
+    width: 100%;
+    padding-inline: 20px !important;
+  }
 }
