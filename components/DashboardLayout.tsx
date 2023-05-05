@@ -8,7 +8,6 @@ import {
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import AppHeader from './AppHeader';
-import styles from '../styles/Content.module.css';
 import { useRouter } from 'next/router';
 
 const { Content, Footer, Sider } = Layout;
@@ -38,7 +37,7 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
   return (
     <Layout>
       <AppHeader />
-      <Content className={styles.container}>
+      <Content className="content">
         <Layout hasSider>
           <Sider style={{ background: 'none' }}>
             <Menu

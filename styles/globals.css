@@ -16,6 +16,28 @@ a {
   box-sizing: border-box;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-montserrat);
+}
+
+.content {
+  width: 1200px;
+  padding: 1rem 2rem;
+  margin: auto;
+}
+
+@media screen and (max-width: 1440px) {
+  .content {
+    width: 100%;
+    padding: 0 20px;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

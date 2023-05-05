@@ -1,15 +1,20 @@
 import { PropsWithChildren } from 'react';
 import { Layout } from 'antd';
 import AppHeader from './AppHeader';
-import styles from '../styles/Content.module.css';
+import { Montserrat } from 'next/font/google';
+
+const montserrat = Montserrat({
+  subsets: ['latin', 'cyrillic'],
+  variable: '--font-montserrat',
+});
 
 const { Content, Footer } = Layout;
 
 const AppLayout = ({ children }: PropsWithChildren) => {
   return (
-    <Layout>
+    <Layout className={montserrat.variable}>
       <AppHeader />
-      <Content className={styles.container}>{children}</Content>
+      <Content>{children}</Content>
       <Footer>Footer</Footer>
     </Layout>
   );
