@@ -1,11 +1,12 @@
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { Form, Button } from 'antd';
+import { Form, Button, Row, Col } from 'antd';
 import PlaceInput from './PlaceInput';
 import DateTimeInput from './DateTimeInput';
 import type { FormData } from './TripEditForm';
 import SwapButton from './SwapButton';
 import dayjs from 'dayjs';
+import styles from '../styles/TripSearch.module.css';
 
 const TripSearch = () => {
   const router = useRouter();
@@ -37,24 +38,43 @@ const TripSearch = () => {
   };
 
   return (
-    <div style={{ marginBottom: 15 }}>
-      <Form
-        form={form}
-        onFinish={onFinish}
-        layout="inline"
-        requiredMark={false}
-        initialValues={initialValues}
-      >
-        <PlaceInput name="from" label="From" />
-        <SwapButton onClick={swapInput} />
-        <PlaceInput name="to" label="To" />
-        <DateTimeInput name="date" label="Date" />
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            {t('search')}
-          </Button>
-        </Form.Item>
-      </Form>
+    <div className={styles.container}>
+      <div className={styles.formContainer}>
+        <Form
+          form={form}
+          onFinish={onFinish}
+          layout="inline"
+          requiredMark={false}
+          initialValues={initialValues}
+          colon={false}
+        >
+          <Row style={{ width: '100%' }}>
+            <Col xs={21} md={7}>
+              <PlaceInput name="from" label="Откуда" />
+            </Col>
+            <Col xs={3} md={1}>
+              <SwapButton onClick={swapInput} className={styles.swapBtn} />
+            </Col>
+            <Col xs={21} md={7}>
+              <PlaceInput name="to" label="Куда" />
+            </Col>
+            <Col xs={21} md={5}>
+              <DateTimeInput name="date" label="Дата" />
+            </Col>
+            <Col xs={24} md={4}>
+              <Form.Item style={{ margin: 0 }}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className={styles.searchBtn}
+                >
+                  {t('search')}
+                </Button>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </div>
     </div>
   );
 };

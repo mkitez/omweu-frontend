@@ -1,18 +1,24 @@
-import { Select, Form } from 'antd';
+import Image from 'next/image';
+import { Select, Form, Grid } from 'antd';
 import { useTranslation } from 'next-i18next';
 import type { DefaultOptionType } from 'antd/es/select';
 import { useHereAutocomplete } from '../hooks/useHereAutocomplete';
+import location from '../assets/location.svg';
+import styles from '../styles/TripSearch.module.css';
 
 interface Props {
   name: string;
   label?: string;
 }
 
+const { useBreakpoint } = Grid;
+
 const PlaceInput = ({ name, label }: Props) => {
   const { i18n } = useTranslation();
   const { suggestions, getSuggestions } = useHereAutocomplete({
     lang: i18n.language,
   });
+  const { xs } = useBreakpoint();
 
   const handleSearch = async (newValue: string) => {
     getSuggestions(newValue);
@@ -21,7 +27,6 @@ const PlaceInput = ({ name, label }: Props) => {
   return (
     <Form.Item
       name={name}
-      label={label}
       rules={[
         { required: true, message: 'Please select a place' },
         ({ getFieldValue }) => ({
@@ -37,15 +42,24 @@ const PlaceInput = ({ name, label }: Props) => {
           },
         }),
       ]}
+      label={
+        xs ? null : (
+          <Image src={location} alt="" className={styles.inputFieldIcon} />
+        )
+      }
+      labelCol={{ xs: 5, md: 3 }}
+      wrapperCol={{ xs: 18, md: 21 }}
+      style={{ margin: 0 }}
     >
       <Select
+        bordered={false}
         showSearch
         placeholder={label}
         defaultActiveFirstOption
         filterOption={false}
         onSearch={handleSearch}
         showArrow={false}
-        style={{ width: '200px' }}
+        className={styles.input}
         notFoundContent={null}
         labelInValue={true}
         options={suggestions.map(
