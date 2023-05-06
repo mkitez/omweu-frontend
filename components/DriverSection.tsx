@@ -1,10 +1,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Row, Col, Button } from 'antd';
+import { useTranslation } from 'next-i18next';
 import image from '../assets/driverSectionImg.svg';
 import styles from '../styles/DriverSection.module.css';
 
 const DriverSection = () => {
+  const { t } = useTranslation('common');
+
   return (
     <section className={styles.root}>
       <div className="content">
@@ -27,7 +30,7 @@ const DriverSection = () => {
             </div>
             <div className={styles.buttonContainer}>
               <Link href="/newtrip" passHref legacyBehavior>
-                <Button type="primary">Предложить поездку</Button>
+                <Button type="primary">{t('offerTrip')}</Button>
               </Link>
             </div>
           </Col>

@@ -6,6 +6,7 @@ import type { DefaultOptionType } from 'antd/es/select';
 import { Destination } from './Trips';
 import dayjs from 'dayjs';
 import { Rule } from 'antd/es/form';
+import { useTranslation } from 'next-i18next';
 
 export interface FormData {
   from: DefaultOptionType;
@@ -30,6 +31,7 @@ const TripEditForm = ({
   submitValue,
   submit,
 }: any) => {
+  const { t } = useTranslation('common');
   const [error, setError] = useState('');
 
   const initialValues = {
@@ -54,7 +56,7 @@ const TripEditForm = ({
   };
 
   const placeInputRules: Rule[] = [
-    { required: true, message: 'Please select a place' },
+    { required: true, message: t('errors.noPlace') as string },
     ({ getFieldValue }) => ({
       async validator() {
         const from = getFieldValue('from')?.value;
@@ -63,7 +65,7 @@ const TripEditForm = ({
           return;
         }
         if (from === to) {
-          throw Error('Please select different places');
+          throw Error(t('errors.samePlace') as string);
         }
       },
     }),
@@ -79,19 +81,27 @@ const TripEditForm = ({
     >
       <Row gutter={20}>
         <Col xs={24} md={12}>
-          <Form.Item name="from" label="From" rules={placeInputRules}>
-            <PlaceInput placeholder="From" />
+          <Form.Item
+            name="from"
+            label={t('from.label')}
+            rules={placeInputRules}
+          >
+            <PlaceInput placeholder={t('from.placeholder')} />
           </Form.Item>
         </Col>
         <Col xs={24} md={12}>
-          <Form.Item name="to" label="To" rules={placeInputRules}>
-            <PlaceInput placeholder="To" />
+          <Form.Item name="to" label={t('to.label')} rules={placeInputRules}>
+            <PlaceInput placeholder={t('to.placeholder')} />
           </Form.Item>
         </Col>
       </Row>
       <Row>
         <Col xs={24} md={12}>
-          <DateTimeInput name="date" label="Date and time" />
+          <DateTimeInput
+            name="date"
+            label={t('dateTime.label') as string}
+            placeholder={t('dateTime.placeholder') as string}
+          />
         </Col>
       </Row>
       <Form.Item>

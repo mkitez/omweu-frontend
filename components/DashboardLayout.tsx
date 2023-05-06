@@ -10,6 +10,7 @@ import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import AppLayout from './AppLayout';
 import styles from '../styles/DashboardLaout.module.css';
+import { useTranslation } from 'next-i18next';
 
 const { Content, Sider } = Layout;
 
@@ -19,6 +20,7 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
   } = theme.useToken();
   const router = useRouter();
   const [selectedKey, setSelectedKey] = useState<string>();
+  const { t } = useTranslation('dashboard');
   useEffect(() => {
     setSelectedKey(router.pathname.split('/').slice(-1)[0]);
   }, [router.pathname]);
@@ -27,12 +29,12 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
     {
       key: 'trips',
       icon: <CalendarOutlined />,
-      label: <Link href="/dashboard/trips">Trips</Link>,
+      label: <Link href="/dashboard/trips">{t('trips.label')}</Link>,
     },
     {
       key: 'profile',
       icon: <UserOutlined />,
-      label: <Link href="/dashboard/profile">Profile</Link>,
+      label: <Link href="/dashboard/profile">{t('profile.label')}</Link>,
     },
   ];
   return (
@@ -52,7 +54,7 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
                 icon={<LogoutOutlined />}
                 onClick={() => signOut({ callbackUrl: '/' })}
               >
-                <span className={styles.logoutBtnLabel}>Log out</span>
+                <span className={styles.logoutBtnLabel}>{t('logout')}</span>
               </Button>
             </div>
           </Sider>

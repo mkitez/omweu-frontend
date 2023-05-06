@@ -8,6 +8,7 @@ import withAuth from '../../components/withAuthHOC';
 import { API_URL } from '../../utils/constants';
 import api from '../../services/api';
 import DashboardLayout from '../../components/DashboardLayout';
+import { useTranslation } from 'next-i18next';
 
 const { Item } = Form;
 
@@ -28,6 +29,7 @@ const Profile = ({ session }: { session: Session }) => {
       return response.data;
     }
   );
+  const { t } = useTranslation(['dashboard', 'common']);
 
   const handleSubmit = async (formData: FormData) => {
     const url = `${API_URL}/users/${session.user.id}/`;
@@ -37,17 +39,17 @@ const Profile = ({ session }: { session: Session }) => {
     await mutate();
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (error) {
+    return <div>{t('errors.common', { ns: 'common' })}</div>;
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
+  if (isLoading) {
+    return <div>{t('loading', { ns: 'common' })}</div>;
   }
 
   return (
     <>
-      <h2>User Profile</h2>
+      <h2>{t('profile.title')}</h2>
       <Form
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 20 }}
@@ -55,7 +57,7 @@ const Profile = ({ session }: { session: Session }) => {
         initialValues={data}
       >
         <Item
-          label="Email"
+          label={t('profile.email')}
           name="email"
           labelCol={{ span: 3 }}
           wrapperCol={{ span: 9 }}
@@ -67,7 +69,7 @@ const Profile = ({ session }: { session: Session }) => {
             <Item
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 18 }}
-              label="First name"
+              label={t('profile.firstName')}
               name="first_name"
             >
               <Input />
@@ -75,7 +77,7 @@ const Profile = ({ session }: { session: Session }) => {
           </Col>
           <Col span={12}>
             <Item
-              label="Last name"
+              label={t('profile.lastName')}
               name="last_name"
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 18 }}
@@ -89,7 +91,7 @@ const Profile = ({ session }: { session: Session }) => {
             <Item
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 18 }}
-              label="Phone number"
+              label={t('profile.phoneNumber')}
               name="phone_number"
             >
               <Input />
@@ -97,7 +99,7 @@ const Profile = ({ session }: { session: Session }) => {
           </Col>
           <Col span={12}>
             <Item
-              label="Telegram"
+              label={t('profile.telegram')}
               name="telegram_username"
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 18 }}
@@ -126,7 +128,7 @@ const Profile = ({ session }: { session: Session }) => {
           </Row>
         )}
         <Button htmlType="submit" type="primary">
-          Save
+          {t('save', { ns: 'common' })}
         </Button>
       </Form>
     </>

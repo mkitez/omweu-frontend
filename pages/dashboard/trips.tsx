@@ -9,14 +9,18 @@ import Trips from '../../components/Trips';
 import withAuth from '../../components/withAuthHOC';
 import DashboardLayout from '../../components/DashboardLayout';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 
 const TripsPage = () => {
+  const { t } = useTranslation(['dashboard', 'common']);
   return (
     <div>
-      <h2>User Trips</h2>
+      <h2>{t('trips.title')}</h2>
       <Trips />
       <Link href="/newtrip" passHref legacyBehavior>
-        <Button icon={<PlusCircleOutlined />}>Add trip</Button>
+        <Button icon={<PlusCircleOutlined />}>
+          {t('offerTrip', { ns: 'common' })}
+        </Button>
       </Link>
     </div>
   );
@@ -44,6 +48,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   const translations = await serverSideTranslations(locale as string, [
     'common',
+    'dashboard',
   ]);
 
   return {

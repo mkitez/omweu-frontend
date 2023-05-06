@@ -67,7 +67,7 @@ const TripSearch = () => {
             <Col xs={21} md={7}>
               <Form.Item name="from" {...placeInputProps}>
                 <PlaceInput
-                  placeholder="Откуда"
+                  placeholder={t('from.label')}
                   bordered={false}
                   className={styles.input}
                 />
@@ -79,7 +79,7 @@ const TripSearch = () => {
             <Col xs={21} md={7}>
               <Form.Item name="to" {...placeInputProps}>
                 <PlaceInput
-                  placeholder="Куда"
+                  placeholder={t('to.label')}
                   bordered={false}
                   className={styles.input}
                 />
@@ -108,7 +108,7 @@ const TripSearch = () => {
                   disabledDate={(current) =>
                     current && current < dayjs().startOf('day')
                   }
-                  placeholder="Дата"
+                  placeholder={t('date.label') as string}
                   bordered={false}
                   suffixIcon={null}
                   className={styles.input}
