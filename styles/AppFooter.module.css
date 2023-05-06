@@ -1,0 +1,14 @@
+.root {
+  color: #fff !important;
+  background-color: #294a54 !important;
+}
+
+.content {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.copyright {
+  font-size: 0.9rem;
+  font-weight: 300;
+}
