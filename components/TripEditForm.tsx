@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Button, Form } from 'antd';
+import { Button, Form, Row, Col } from 'antd';
 import PlaceInput from './PlaceInput';
 import DateTimeInput from './DateTimeInput';
 import type { DefaultOptionType } from 'antd/es/select';
 import { Destination } from './Trips';
 import dayjs from 'dayjs';
+import { Rule } from 'antd/es/form';
 
 export interface FormData {
   from: DefaultOptionType;
@@ -51,17 +52,48 @@ const TripEditForm = ({
       setError(error.message);
     }
   };
+
+  const placeInputRules: Rule[] = [
+    { required: true, message: 'Please select a place' },
+    ({ getFieldValue }) => ({
+      async validator() {
+        const from = getFieldValue('from')?.value;
+        const to = getFieldValue('to')?.value;
+        if (!from || !to) {
+          return;
+        }
+        if (from === to) {
+          throw Error('Please select different places');
+        }
+      },
+    }),
+  ];
+
   return (
     <Form
       initialValues={initialValues}
-      layout="inline"
+      layout="horizontal"
       requiredMark={false}
       onFinish={handleSubmit}
       disabled={initialDate && dayjs(initialDate) < dayjs()}
     >
-      <PlaceInput label="From" name="from" />
-      <PlaceInput label="To" name="to" />
-      <DateTimeInput name="date" label="Date" showTime />
+      <Row gutter={20}>
+        <Col xs={24} md={12}>
+          <Form.Item name="from" label="From" rules={placeInputRules}>
+            <PlaceInput placeholder="From" />
+          </Form.Item>
+        </Col>
+        <Col xs={24} md={12}>
+          <Form.Item name="to" label="To" rules={placeInputRules}>
+            <PlaceInput placeholder="To" />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={24} md={12}>
+          <DateTimeInput name="date" label="Date and time" />
+        </Col>
+      </Row>
       <Form.Item>
         <Button type="primary" htmlType="submit">
           {submitValue}

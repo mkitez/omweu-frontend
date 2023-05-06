@@ -28,9 +28,11 @@ const Trip = ({ session }: { session: Session }) => {
   }
 
   return (
-    <Descriptions title={`${data.origin.name} - ${data.dest.name}`}>
-      <Descriptions.Item label="Trip date">{data.date}</Descriptions.Item>
-    </Descriptions>
+    <div className="content">
+      <Descriptions title={`${data.origin.name} - ${data.dest.name}`}>
+        <Descriptions.Item label="Trip date">{data.date}</Descriptions.Item>
+      </Descriptions>
+    </div>
   );
 };
 

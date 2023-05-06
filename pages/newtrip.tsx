@@ -13,7 +13,12 @@ const NewTrip = ({ session }: { session: Session }) => {
     router.push('/dashboard');
   };
 
-  return <TripEditForm submitValue="Create" submit={handleSubmit} />;
+  return (
+    <div className="content">
+      <h1>Создать поездку</h1>
+      <TripEditForm submitValue="Create" submit={handleSubmit} />
+    </div>
+  );
 };
 
 export { getServerSideProps };

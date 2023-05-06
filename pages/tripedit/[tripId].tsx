@@ -33,20 +33,23 @@ const TripEdit = ({ session }: { session: Session }) => {
   }
 
   return (
-    <TripEditForm
-      initialOrigin={data.origin}
-      initialDest={data.dest}
-      initialDate={data.date}
-      submitValue="Save"
-      submit={async (data: any) => {
-        await TripService.updateTrip(
-          router.query.tripId,
-          data,
-          session.accessToken as string
-        );
-        router.push('/dashboard');
-      }}
-    />
+    <div className="content">
+      <h2>Редактирование поездки</h2>
+      <TripEditForm
+        initialOrigin={data.origin}
+        initialDest={data.dest}
+        initialDate={data.date}
+        submitValue="Save"
+        submit={async (data: any) => {
+          await TripService.updateTrip(
+            router.query.tripId,
+            data,
+            session.accessToken as string
+          );
+          router.push('/dashboard');
+        }}
+      />
+    </div>
   );
 };
 

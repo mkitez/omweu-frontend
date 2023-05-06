@@ -1,17 +1,20 @@
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { Form, Button, Row, Col } from 'antd';
+import { Form, Button, Row, Col, Grid, DatePicker } from 'antd';
 import PlaceInput from './PlaceInput';
-import DateTimeInput from './DateTimeInput';
 import type { FormData } from './TripEditForm';
 import SwapButton from './SwapButton';
 import dayjs from 'dayjs';
 import styles from '../styles/TripSearch.module.css';
+import location from '../assets/location.svg';
+import calendar from '../assets/calendar.svg';
 
 const TripSearch = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
   const [form] = Form.useForm();
+  const { xs } = Grid.useBreakpoint();
 
   const { from_input, to_input, from, to, date } = router.query;
   const initialValues = {
@@ -22,6 +25,9 @@ const TripSearch = () => {
 
   const onFinish = async (formData: FormData) => {
     const { from, to, date } = formData;
+    if (!from || !to || !date) {
+      return;
+    }
     const formattedDate = date.format('YYYY-MM-DD');
     router.push(
       `/search?from=${from.value}&to=${to.value}&date=${formattedDate}&from_input=${from.label}&to_input=${to.label}`,
@@ -37,6 +43,15 @@ const TripSearch = () => {
     });
   };
 
+  const placeInputProps: React.ComponentProps<typeof Form.Item> = {
+    label: xs ? null : (
+      <Image src={location} alt="" className={styles.inputFieldIcon} />
+    ),
+    labelCol: { xs: 5, md: 3 },
+    wrapperCol: { xs: 18, md: 21 },
+    style: { margin: 0 },
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.formContainer}>
@@ -50,16 +65,55 @@ const TripSearch = () => {
         >
           <Row style={{ width: '100%' }}>
             <Col xs={21} md={7}>
-              <PlaceInput name="from" label="Откуда" />
+              <Form.Item name="from" {...placeInputProps}>
+                <PlaceInput
+                  placeholder="Откуда"
+                  bordered={false}
+                  className={styles.input}
+                />
+              </Form.Item>
             </Col>
             <Col xs={3} md={1}>
               <SwapButton onClick={swapInput} className={styles.swapBtn} />
             </Col>
             <Col xs={21} md={7}>
-              <PlaceInput name="to" label="Куда" />
+              <Form.Item name="to" {...placeInputProps}>
+                <PlaceInput
+                  placeholder="Куда"
+                  bordered={false}
+                  className={styles.input}
+                />
+              </Form.Item>
             </Col>
             <Col xs={21} md={5}>
-              <DateTimeInput name="date" label="Дата" />
+              <Form.Item
+                name="date"
+                label={
+                  xs ? null : (
+                    <Image
+                      src={calendar}
+                      alt=""
+                      className={styles.inputFieldIcon}
+                    />
+                  )
+                }
+                labelCol={{ xs: 5, md: { offset: 1, span: 5 } }}
+                wrapperCol={{ xs: 18, md: 18 }}
+                style={{ width: '100%' }}
+              >
+                <DatePicker
+                  allowClear={false}
+                  format="DD.MM.YYYY"
+                  showNow={false}
+                  disabledDate={(current) =>
+                    current && current < dayjs().startOf('day')
+                  }
+                  placeholder="Дата"
+                  bordered={false}
+                  suffixIcon={null}
+                  className={styles.input}
+                />
+              </Form.Item>
             </Col>
             <Col xs={24} md={4}>
               <Form.Item style={{ margin: 0 }}>
