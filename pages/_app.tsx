@@ -9,6 +9,7 @@ import { appWithTranslation } from 'next-i18next';
 import AppLayout from '../components/AppLayout';
 import '../styles/globals.css';
 import 'antd/dist/reset.css';
+import { StyleProvider } from '@ant-design/cssinjs';
 
 import type { Locale } from 'antd/lib/locale';
 import ru from 'antd/locale/ru_RU';
@@ -39,7 +40,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <SessionProvider session={pageProps.session}>
       <ConfigProvider locale={locales[locale as string]} theme={theme}>
-        {getLayout(<Component {...pageProps} />)}
+        <StyleProvider ssrInline>
+          {getLayout(<Component {...pageProps} />)}
+        </StyleProvider>
       </ConfigProvider>
     </SessionProvider>
   );

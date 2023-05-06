@@ -42,7 +42,12 @@ const AppHeader = () => {
         if (status === 'authenticated')
           return (
             <div className={styles.navButtons}>
-              <Link href="/newtrip" className={styles.offerTripBtn}>
+              <Link
+                href="/newtrip"
+                className={styles.offerTripBtn}
+                passHref
+                legacyBehavior
+              >
                 <Button type="text">
                   <PlusCircleOutlined />{' '}
                   <span className={styles.offerTripText}>{t('offerTrip')}</span>
@@ -62,7 +67,7 @@ const AppHeader = () => {
               >
                 {t('signIn')}
               </Button>
-              <Link href="/signup">
+              <Link href="/signup" passHref legacyBehavior>
                 <Button>{t('signUp')}</Button>
               </Link>
             </div>
