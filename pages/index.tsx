@@ -5,6 +5,8 @@ import PromoSection from '../components/PromoSection';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { InferGetServerSidePropsType } from 'next';
 import { GetServerSideProps } from 'next';
+import { unstable_getServerSession } from 'next-auth';
+import { authOptions } from './api/auth/[...nextauth]';
 
 const Home = (
   _props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -24,13 +26,21 @@ const Home = (
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  locale,
+  req,
+  res,
+}) => {
   const translations = await serverSideTranslations(locale as string, [
     'common',
   ]);
+
+  const session = await unstable_getServerSession(req, res, authOptions);
+
   return {
     props: {
       ...translations,
+      session,
     },
   };
 };

@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import type { GetServerSidePropsContext } from 'next';
+import type { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { Button } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
@@ -8,6 +8,7 @@ import { unstable_getServerSession } from 'next-auth/next';
 import Trips from '../../components/Trips';
 import withAuth from '../../components/withAuthHOC';
 import DashboardLayout from '../../components/DashboardLayout';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const TripsPage = () => {
   return (
@@ -25,12 +26,12 @@ TripsPage.getLayout = function getLayout(page: ReactElement) {
   return <DashboardLayout>{page}</DashboardLayout>;
 };
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  res,
+  locale,
+}) => {
+  const session = await unstable_getServerSession(req, res, authOptions);
 
   if (!session) {
     return {
@@ -41,11 +42,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
+  const translations = await serverSideTranslations(locale as string, [
+    'common',
+  ]);
+
   return {
     props: {
+      ...translations,
       session,
     },
   };
-}
+};
 
 export default withAuth(TripsPage);

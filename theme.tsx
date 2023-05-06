@@ -6,7 +6,6 @@ const theme: ThemeConfig = {
     colorPrimary: '#F65959',
     colorInfo: '#F65959',
     colorBgLayout: '#FFFFFF',
-    colorBgSpotlight: '#294A54',
   },
 };
 
