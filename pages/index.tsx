@@ -3,6 +3,7 @@ import Banner from '../components/Banner';
 import TripSearch from '../components/TripSearch';
 import PromoSection from '../components/PromoSection';
 import ForWhoSection from '../components/ForWhoSection';
+import DriverSection from '../components/DriverSection';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { InferGetServerSidePropsType } from 'next';
 import { GetServerSideProps } from 'next';
@@ -24,6 +25,7 @@ const Home = (
       <TripSearch />
       <PromoSection />
       <ForWhoSection />
+      <DriverSection />
     </>
   );
 };
