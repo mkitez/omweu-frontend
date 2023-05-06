@@ -1,5 +1,5 @@
 import { FC, ReactElement, PropsWithChildren } from 'react';
-import styles from '../styles/PromoBlock.module.css';
+import styles from '../../styles/PromoBlock.module.css';
 
 interface Props extends PropsWithChildren {
   title: string;

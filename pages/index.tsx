@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Banner from '../components/Banner';
 import TripSearch from '../components/TripSearch';
 import PromoSection from '../components/PromoSection';
+import ForWhoSection from '../components/ForWhoSection';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { InferGetServerSidePropsType } from 'next';
 import { GetServerSideProps } from 'next';
@@ -22,6 +23,7 @@ const Home = (
       <Banner />
       <TripSearch />
       <PromoSection />
+      <ForWhoSection />
     </>
   );
 };

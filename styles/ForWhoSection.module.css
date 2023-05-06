@@ -1,26 +1,23 @@
-.container {
-  color: #fff;
-  background-color: #294a54;
+.root {
   min-height: 300px;
   padding: 10px 0;
 }
 
-.container h2 {
-  color: #fff;
+.root h2 {
   font-size: 40px;
   text-align: center;
-  margin: 0 auto 40px;
+  margin: 0 auto;
 }
 
 .highlight {
-  color: #294a54;
+  color: #fff;
   position: relative;
   z-index: 0;
 }
 
 .highlight::before {
   content: '';
-  background-color: #fff;
+  background-color: #294a54;
   width: 106%;
   height: 106%;
   position: absolute;
@@ -32,13 +29,13 @@
 }
 
 @media screen and (max-width: 767px) {
-  .container h2 {
+  .root h2 {
     font-size: 32px;
   }
 }
 
 @media screen and (min-width: 768px) and (max-width: 1199px) {
-  .container h2 {
+  .root h2 {
     font-size: 28px;
   }
 }

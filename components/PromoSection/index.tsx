@@ -1,7 +1,7 @@
 import { Row, Col } from 'antd';
 import PromoBlock from './PromoBlock';
-import cup from '../assets/cup.svg';
-import styles from '../styles/PromoSection.module.css';
+import cup from '../../assets/cup.svg';
+import styles from '../../styles/PromoSection.module.css';
 import Image from 'next/image';
 
 const PromoSection = () => {
