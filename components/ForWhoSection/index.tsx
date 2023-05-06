@@ -7,7 +7,7 @@ const ForWhoSection = () => {
     <section className={styles.root}>
       <div className="content">
         <h2>
-          <span className={styles.highlight}>Для кого</span> этот сервис
+          <span className="highlight">Для кого</span> этот сервис
         </h2>
         <Row gutter={10}>
           {[1, 2, 3, 4].map((index) => (

@@ -9,8 +9,8 @@ const PromoSection = () => {
     <section className={styles.container}>
       <div className="content">
         <h2>
-          <span className={styles.highlight}>Экономьте</span> на поездках в
-          Европу
+          <span className="highlight highlight-contrast">Экономьте</span> на
+          поездках в Европу
         </h2>
         <Row gutter={[40, 40]}>
           <Col md={8}>

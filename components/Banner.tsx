@@ -10,8 +10,7 @@ const Banner = () => (
       </div>
       <div className={styles.textContainer}>
         <h1>
-          <span className={styles.highlight}>Экономьте</span> на поездках в
-          Европу
+          <span className="highlight">Экономьте</span> на поездках в Европу
         </h1>
       </div>
     </div>

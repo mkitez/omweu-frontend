@@ -32,6 +32,33 @@ h6 {
   margin: auto;
 }
 
+.highlight {
+  color: #fff;
+  position: relative;
+  z-index: 0;
+}
+
+.highlight::before {
+  content: '';
+  background-color: #294a54;
+  width: 106%;
+  height: 106%;
+  position: absolute;
+  top: -3%;
+  left: -3%;
+  z-index: -1;
+  border-radius: 0.3em;
+  transform: rotate(-2deg);
+}
+
+.highlight-contrast {
+  color: #294a54;
+}
+
+.highlight-contrast::before {
+  background-color: #fff;
+}
+
 @media screen and (max-width: 1440px) {
   .content {
     width: 100%;
