@@ -7,6 +7,7 @@ import { Destination } from './Trips';
 import dayjs from 'dayjs';
 import { Rule } from 'antd/es/form';
 import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 
 export interface FormData {
   from: DefaultOptionType;
@@ -32,6 +33,7 @@ const TripEditForm = ({
   submit,
 }: any) => {
   const { t } = useTranslation('common');
+  const router = useRouter();
   const [error, setError] = useState('');
 
   const initialValues = {
@@ -104,11 +106,16 @@ const TripEditForm = ({
           />
         </Col>
       </Row>
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          {submitValue}
-        </Button>
-      </Form.Item>
+      <Row gutter={[10, 10]}>
+        <Col>
+          <Button type="primary" htmlType="submit">
+            {submitValue}
+          </Button>
+        </Col>
+        <Col>
+          <Button onClick={() => router.back()}>{t('cancel')}</Button>
+        </Col>
+      </Row>
     </Form>
   );
 };
