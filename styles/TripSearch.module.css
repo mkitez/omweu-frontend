@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.formContainer {
+  width: 800px;
+  height: 46px;
+  padding: 5px;
+  border: 2px solid #294a54;
+  border-radius: 10px;
+}
+
+.searchBtn {
+  font-weight: 500;
+  width: 100%;
+}
+
+.inputFieldIcon {
+  height: 32px;
+}
+
+.input {
+  width: 100%;
+  max-width: 80vw;
+}
+
+@media screen and (max-width: 767px) {
+  .formContainer {
+    border: none;
+    height: auto;
+  }
+
+  .swapBtn {
+    transform: rotate(90deg);
+  }
+
+  .searchBtn {
+    margin-top: 10px;
+  }
+}

@@ -1,0 +1,23 @@
+.content {
+  padding: 20px;
+}
+
+.logoutBtnContainer {
+  padding: 5px 12px;
+}
+
+.logoutBtnContainer button {
+  width: 100%;
+  text-align: left;
+}
+
+@media screen and (max-width: 767px) {
+  .root {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .logoutBtnLabel {
+    display: none !important;
+  }
+}

@@ -9,10 +9,12 @@ import { appWithTranslation } from 'next-i18next';
 import AppLayout from '../components/AppLayout';
 import '../styles/globals.css';
 import 'antd/dist/reset.css';
+import { StyleProvider } from '@ant-design/cssinjs';
 
 import type { Locale } from 'antd/lib/locale';
 import ru from 'antd/locale/ru_RU';
 import 'dayjs/locale/ru';
+import theme from '../theme';
 
 const locales: Record<string, Locale> = {
   ru,
@@ -37,8 +39,10 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     Component.getLayout ?? ((page) => <AppLayout>{page}</AppLayout>);
   return (
     <SessionProvider session={pageProps.session}>
-      <ConfigProvider locale={locales[locale as string]}>
-        {getLayout(<Component {...pageProps} />)}
+      <ConfigProvider locale={locales[locale as string]} theme={theme}>
+        <StyleProvider ssrInline>
+          {getLayout(<Component {...pageProps} />)}
+        </StyleProvider>
       </ConfigProvider>
     </SessionProvider>
   );

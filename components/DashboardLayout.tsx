@@ -7,11 +7,12 @@ import {
 } from '@ant-design/icons';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
-import AppHeader from './AppHeader';
-import styles from '../styles/Content.module.css';
 import { useRouter } from 'next/router';
+import AppLayout from './AppLayout';
+import styles from '../styles/DashboardLayout.module.css';
+import { useTranslation } from 'next-i18next';
 
-const { Content, Footer, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 const DashboardLayout = ({ children }: PropsWithChildren) => {
   const {
@@ -19,6 +20,7 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
   } = theme.useToken();
   const router = useRouter();
   const [selectedKey, setSelectedKey] = useState<string>();
+  const { t } = useTranslation('dashboard');
   useEffect(() => {
     setSelectedKey(router.pathname.split('/').slice(-1)[0]);
   }, [router.pathname]);
@@ -27,42 +29,39 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
     {
       key: 'trips',
       icon: <CalendarOutlined />,
-      label: <Link href="/dashboard/trips">Trips</Link>,
+      label: <Link href="/dashboard/trips">{t('trips.label')}</Link>,
     },
     {
       key: 'profile',
       icon: <UserOutlined />,
-      label: <Link href="/dashboard/profile">Profile</Link>,
+      label: <Link href="/dashboard/profile">{t('profile.label')}</Link>,
     },
   ];
   return (
-    <Layout>
-      <AppHeader />
-      <Content className={styles.container}>
+    <AppLayout>
+      <div className={`content ${styles.root}`}>
         <Layout hasSider>
-          <Sider style={{ background: 'none' }}>
+          <Sider breakpoint="md" collapsedWidth="70" theme="light">
             <Menu
               mode="inline"
               selectedKeys={selectedKey ? [selectedKey] : []}
               items={items}
               style={{ borderRadius }}
             />
-            <div style={{ padding: '5px 12px' }}>
+            <div className={styles.logoutBtnContainer}>
               <Button
                 type="text"
                 icon={<LogoutOutlined />}
-                style={{ width: '100%', textAlign: 'left' }}
                 onClick={() => signOut({ callbackUrl: '/' })}
               >
-                Log out
+                <span className={styles.logoutBtnLabel}>{t('logout')}</span>
               </Button>
             </div>
           </Sider>
-          <Content style={{ padding: '5px 20px' }}>{children}</Content>
+          <Content className={styles.content}>{children}</Content>
         </Layout>
-      </Content>
-      <Footer>Footer</Footer>
-    </Layout>
+      </div>
+    </AppLayout>
   );
 };
 

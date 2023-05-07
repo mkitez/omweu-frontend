@@ -1,10 +1,21 @@
+import React from 'react';
 import { Form, Button } from 'antd';
 import { SwapOutlined } from '@ant-design/icons';
 
-const SwapButton = ({ onClick }: { onClick: () => void }) => {
+interface Props {
+  onClick: () => void;
+  className?: string;
+}
+
+const SwapButton = ({ onClick, className }: Props) => {
   return (
     <Form.Item>
-      <Button onClick={onClick} type="text">
+      <Button
+        onClick={onClick}
+        className={className}
+        type="text"
+        shape="circle"
+      >
         <SwapOutlined />
       </Button>
     </Form.Item>

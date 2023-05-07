@@ -1,0 +1,54 @@
+.container {
+  width: 1440px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.logoContainer {
+  flex: 1;
+}
+
+.logoXs {
+  display: none;
+}
+
+.authButtons button {
+  font-weight: 500;
+  margin: 0 5px;
+}
+
+.navButtons {
+  display: flex;
+  align-items: center;
+}
+
+.offerTripBtn {
+  margin: 0 5px;
+}
+
+.profileBtn {
+  margin: 0 5px;
+  font-size: 30px;
+}
+
+@media screen and (max-width: 767px) {
+  .offerTripText {
+    display: none !important;
+  }
+
+  .logoXs {
+    display: unset;
+  }
+
+  .logo {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 1439px) {
+  .container {
+    width: 100%;
+    padding-inline: 20px !important;
+  }
+}

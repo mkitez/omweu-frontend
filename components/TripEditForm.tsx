@@ -1,10 +1,13 @@
 import { useState } from 'react';
-import { Button, Form } from 'antd';
+import { Button, Form, Row, Col } from 'antd';
 import PlaceInput from './PlaceInput';
 import DateTimeInput from './DateTimeInput';
 import type { DefaultOptionType } from 'antd/es/select';
 import { Destination } from './Trips';
 import dayjs from 'dayjs';
+import { Rule } from 'antd/es/form';
+import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 
 export interface FormData {
   from: DefaultOptionType;
@@ -28,7 +31,10 @@ const TripEditForm = ({
   initialDate,
   submitValue,
   submit,
+  onDelete,
 }: any) => {
+  const { t } = useTranslation('common');
+  const router = useRouter();
   const [error, setError] = useState('');
 
   const initialValues = {
@@ -51,22 +57,75 @@ const TripEditForm = ({
       setError(error.message);
     }
   };
+
+  const placeInputRules: Rule[] = [
+    { required: true, message: t('errors.noPlace') as string },
+    ({ getFieldValue }) => ({
+      async validator() {
+        const from = getFieldValue('from')?.value;
+        const to = getFieldValue('to')?.value;
+        if (!from || !to) {
+          return;
+        }
+        if (from === to) {
+          throw Error(t('errors.samePlace') as string);
+        }
+      },
+    }),
+  ];
+
   return (
     <Form
       initialValues={initialValues}
-      layout="inline"
+      layout="horizontal"
       requiredMark={false}
       onFinish={handleSubmit}
       disabled={initialDate && dayjs(initialDate) < dayjs()}
     >
-      <PlaceInput label="From" name="from" />
-      <PlaceInput label="To" name="to" />
-      <DateTimeInput name="date" label="Date" showTime />
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          {submitValue}
-        </Button>
-      </Form.Item>
+      <Row gutter={20}>
+        <Col xs={24} md={12}>
+          <Form.Item
+            name="from"
+            label={t('from.label')}
+            rules={placeInputRules}
+          >
+            <PlaceInput placeholder={t('from.placeholder')} />
+          </Form.Item>
+        </Col>
+        <Col xs={24} md={12}>
+          <Form.Item name="to" label={t('to.label')} rules={placeInputRules}>
+            <PlaceInput placeholder={t('to.placeholder')} />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={24} md={12}>
+          <DateTimeInput
+            name="date"
+            label={t('dateTime.label') as string}
+            placeholder={t('dateTime.placeholder') as string}
+          />
+        </Col>
+      </Row>
+      <Row gutter={[10, 10]}>
+        <Col>
+          <Button type="primary" htmlType="submit">
+            {submitValue}
+          </Button>
+        </Col>
+        <Col>
+          <Button disabled={false} onClick={() => router.back()}>
+            {t('cancel')}
+          </Button>
+        </Col>
+        {onDelete && (
+          <Col>
+            <Button type="text" danger onClick={() => onDelete()}>
+              {t('delete')}
+            </Button>
+          </Col>
+        )}
+      </Row>
     </Form>
   );
 };

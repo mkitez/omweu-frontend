@@ -1,14 +1,9 @@
-import { Select, Form } from 'antd';
+import { Select, SelectProps } from 'antd';
 import { useTranslation } from 'next-i18next';
 import type { DefaultOptionType } from 'antd/es/select';
 import { useHereAutocomplete } from '../hooks/useHereAutocomplete';
 
-interface Props {
-  name: string;
-  label?: string;
-}
-
-const PlaceInput = ({ name, label }: Props) => {
+const PlaceInput: React.FC<SelectProps> = (props) => {
   const { i18n } = useTranslation();
   const { suggestions, getSuggestions } = useHereAutocomplete({
     lang: i18n.language,
@@ -19,43 +14,22 @@ const PlaceInput = ({ name, label }: Props) => {
   };
 
   return (
-    <Form.Item
-      name={name}
-      label={label}
-      rules={[
-        { required: true, message: 'Please select a place' },
-        ({ getFieldValue }) => ({
-          async validator() {
-            const from = getFieldValue('from')?.value;
-            const to = getFieldValue('to')?.value;
-            if (!from || !to) {
-              return;
-            }
-            if (from === to) {
-              throw Error('Please select different places');
-            }
-          },
-        }),
-      ]}
-    >
-      <Select
-        showSearch
-        placeholder={label}
-        defaultActiveFirstOption
-        filterOption={false}
-        onSearch={handleSearch}
-        showArrow={false}
-        style={{ width: '200px' }}
-        notFoundContent={null}
-        labelInValue={true}
-        options={suggestions.map(
-          (place): DefaultOptionType => ({
-            value: place.id,
-            label: place.address.label,
-          })
-        )}
-      />
-    </Form.Item>
+    <Select
+      showSearch
+      defaultActiveFirstOption
+      filterOption={false}
+      onSearch={handleSearch}
+      showArrow={false}
+      notFoundContent={null}
+      labelInValue={true}
+      options={suggestions.map(
+        (place): DefaultOptionType => ({
+          value: place.id,
+          label: place.address.label,
+        })
+      )}
+      {...props}
+    />
   );
 };
 

@@ -42,7 +42,7 @@ const Search = () => {
   }
 
   return (
-    <div>
+    <div className="content">
       <TripSearch />
       {searchResults}
     </div>

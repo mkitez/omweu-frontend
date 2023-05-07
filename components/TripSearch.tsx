@@ -1,16 +1,20 @@
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { Form, Button } from 'antd';
+import { Form, Button, Row, Col, Grid, DatePicker } from 'antd';
 import PlaceInput from './PlaceInput';
-import DateTimeInput from './DateTimeInput';
 import type { FormData } from './TripEditForm';
 import SwapButton from './SwapButton';
 import dayjs from 'dayjs';
+import styles from '../styles/TripSearch.module.css';
+import location from '../assets/location.svg';
+import calendar from '../assets/calendar.svg';
 
 const TripSearch = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
   const [form] = Form.useForm();
+  const { xs } = Grid.useBreakpoint();
 
   const { from_input, to_input, from, to, date } = router.query;
   const initialValues = {
@@ -21,6 +25,9 @@ const TripSearch = () => {
 
   const onFinish = async (formData: FormData) => {
     const { from, to, date } = formData;
+    if (!from || !to || !date) {
+      return;
+    }
     const formattedDate = date.format('YYYY-MM-DD');
     router.push(
       `/search?from=${from.value}&to=${to.value}&date=${formattedDate}&from_input=${from.label}&to_input=${to.label}`,
@@ -36,25 +43,92 @@ const TripSearch = () => {
     });
   };
 
+  const placeInputProps: React.ComponentProps<typeof Form.Item> = {
+    label: xs ? null : (
+      <Image src={location} alt="" className={styles.inputFieldIcon} />
+    ),
+    labelCol: { xs: 5, md: 3 },
+    wrapperCol: { xs: 18, md: 21 },
+    style: { margin: 0 },
+  };
+
   return (
-    <div style={{ marginBottom: 15 }}>
-      <Form
-        form={form}
-        onFinish={onFinish}
-        layout="inline"
-        requiredMark={false}
-        initialValues={initialValues}
-      >
-        <PlaceInput name="from" label="From" />
-        <SwapButton onClick={swapInput} />
-        <PlaceInput name="to" label="To" />
-        <DateTimeInput name="date" label="Date" />
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            {t('search')}
-          </Button>
-        </Form.Item>
-      </Form>
+    <div className={styles.container}>
+      <div className={styles.formContainer}>
+        <Form
+          form={form}
+          onFinish={onFinish}
+          layout="inline"
+          requiredMark={false}
+          initialValues={initialValues}
+          colon={false}
+        >
+          <Row style={{ width: '100%' }}>
+            <Col xs={21} md={7}>
+              <Form.Item name="from" {...placeInputProps}>
+                <PlaceInput
+                  placeholder={t('from.label')}
+                  bordered={false}
+                  className={styles.input}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={3} md={1}>
+              <SwapButton onClick={swapInput} className={styles.swapBtn} />
+            </Col>
+            <Col xs={21} md={7}>
+              <Form.Item name="to" {...placeInputProps}>
+                <PlaceInput
+                  placeholder={t('to.label')}
+                  bordered={false}
+                  className={styles.input}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={21} md={5}>
+              <Form.Item
+                name="date"
+                label={
+                  xs ? null : (
+                    <Image
+                      src={calendar}
+                      alt=""
+                      className={styles.inputFieldIcon}
+                    />
+                  )
+                }
+                labelCol={{ xs: 5, md: { offset: 1, span: 5 } }}
+                wrapperCol={{ xs: 18, md: 18 }}
+                style={{ width: '100%' }}
+              >
+                <DatePicker
+                  allowClear={false}
+                  format="DD.MM.YYYY"
+                  showNow={false}
+                  disabledDate={(current) =>
+                    current && current < dayjs().startOf('day')
+                  }
+                  placeholder={t('date.label') as string}
+                  bordered={false}
+                  suffixIcon={null}
+                  className={styles.input}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={4}>
+              <Form.Item style={{ margin: 0 }}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className={styles.searchBtn}
+                >
+                  {t('search')}
+                </Button>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </div>
     </div>
   );
 };

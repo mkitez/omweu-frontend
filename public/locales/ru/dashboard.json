@@ -1,0 +1,20 @@
+{
+  "trips": {
+    "label": "Поездки",
+    "title": "Мои поездки",
+    "createTitle": "Создать поездку",
+    "editTitle": "Редактирование поездки",
+    "noTrips": "Пока у вас нет поездок.",
+    "createTrip": "Создать поездку"
+  },
+  "profile": {
+    "label": "Профиль",
+    "title": "Мой профиль",
+    "email": "Email",
+    "firstName": "Имя",
+    "lastName": "Фамилия",
+    "phoneNumber": "Телефон",
+    "telegram": "Telegram"
+  },
+  "logout": "Выйти"
+}
