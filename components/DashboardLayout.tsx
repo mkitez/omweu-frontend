@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import AppLayout from './AppLayout';
-import styles from '../styles/DashboardLaout.module.css';
+import styles from '../styles/DashboardLayout.module.css';
 import { useTranslation } from 'next-i18next';
 
 const { Content, Sider } = Layout;
@@ -58,7 +58,7 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
               </Button>
             </div>
           </Sider>
-          <Content style={{ padding: '5px 20px' }}>{children}</Content>
+          <Content className={styles.content}>{children}</Content>
         </Layout>
       </div>
     </AppLayout>

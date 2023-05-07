@@ -9,6 +9,7 @@ import { API_URL } from '../../utils/constants';
 import api from '../../services/api';
 import DashboardLayout from '../../components/DashboardLayout';
 import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 
 const { Item } = Form;
 
@@ -30,6 +31,7 @@ const Profile = ({ session }: { session: Session }) => {
     }
   );
   const { t } = useTranslation(['dashboard', 'common']);
+  const router = useRouter();
 
   const handleSubmit = async (formData: FormData) => {
     const url = `${API_URL}/users/${session.user.id}/`;
@@ -51,21 +53,25 @@ const Profile = ({ session }: { session: Session }) => {
     <>
       <h2>{t('profile.title')}</h2>
       <Form
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 20 }}
+        labelCol={{ span: 6 }}
+        wrapperCol={{ span: 18 }}
         onFinish={handleSubmit}
         initialValues={data}
       >
-        <Item
-          label={t('profile.email')}
-          name="email"
-          labelCol={{ span: 3 }}
-          wrapperCol={{ span: 9 }}
-        >
-          <Input disabled />
-        </Item>
         <Row>
-          <Col span={12}>
+          <Col xs={24} lg={12}>
+            <Item
+              label={t('profile.email')}
+              name="email"
+              labelCol={{ span: 6 }}
+              wrapperCol={{ span: 18 }}
+            >
+              <Input disabled />
+            </Item>
+          </Col>
+        </Row>
+        <Row gutter={10}>
+          <Col xs={24} lg={12}>
             <Item
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 18 }}
@@ -75,7 +81,7 @@ const Profile = ({ session }: { session: Session }) => {
               <Input />
             </Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} lg={12}>
             <Item
               label={t('profile.lastName')}
               name="last_name"
@@ -86,8 +92,8 @@ const Profile = ({ session }: { session: Session }) => {
             </Item>
           </Col>
         </Row>
-        <Row>
-          <Col span={12}>
+        <Row gutter={10}>
+          <Col xs={24} lg={12}>
             <Item
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 18 }}
@@ -97,7 +103,7 @@ const Profile = ({ session }: { session: Session }) => {
               <Input />
             </Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} lg={12}>
             <Item
               label={t('profile.telegram')}
               name="telegram_username"
@@ -127,9 +133,18 @@ const Profile = ({ session }: { session: Session }) => {
             </Col>
           </Row>
         )}
-        <Button htmlType="submit" type="primary">
-          {t('save', { ns: 'common' })}
-        </Button>
+        <Row gutter={[10, 10]}>
+          <Col>
+            <Button htmlType="submit" type="primary">
+              {t('save', { ns: 'common' })}
+            </Button>
+          </Col>
+          <Col>
+            <Button onClick={() => router.back()}>
+              {t('cancel', { ns: 'common' })}
+            </Button>
+          </Col>
+        </Row>
       </Form>
     </>
   );
