@@ -31,6 +31,7 @@ const TripEditForm = ({
   initialDate,
   submitValue,
   submit,
+  onDelete,
 }: any) => {
   const { t } = useTranslation('common');
   const router = useRouter();
@@ -113,8 +114,17 @@ const TripEditForm = ({
           </Button>
         </Col>
         <Col>
-          <Button onClick={() => router.back()}>{t('cancel')}</Button>
+          <Button disabled={false} onClick={() => router.back()}>
+            {t('cancel')}
+          </Button>
         </Col>
+        {onDelete && (
+          <Col>
+            <Button type="text" danger onClick={() => onDelete()}>
+              {t('delete')}
+            </Button>
+          </Col>
+        )}
       </Row>
     </Form>
   );

@@ -1,0 +1,6 @@
+@media screen and (max-width: 767px) {
+  .row {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}

@@ -12,15 +12,13 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
 
 const TripsPage = () => {
-  const { t } = useTranslation(['dashboard', 'common']);
+  const { t } = useTranslation('dashboard');
   return (
     <div>
       <h2>{t('trips.title')}</h2>
       <Trips />
       <Link href="/newtrip" passHref legacyBehavior>
-        <Button icon={<PlusCircleOutlined />}>
-          {t('offerTrip', { ns: 'common' })}
-        </Button>
+        <Button icon={<PlusCircleOutlined />}>{t('trips.createTrip')}</Button>
       </Link>
     </div>
   );

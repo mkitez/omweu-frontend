@@ -1,12 +1,12 @@
 import useSWR from 'swr';
 import { useSession } from 'next-auth/react';
-import { Button, List } from 'antd';
+import { List } from 'antd';
 import Link from 'next/link';
 import dayjs from 'dayjs';
-import TripService from '../services/trip.service';
 import { API_URL } from '../utils/constants';
 import api from '../services/api';
 import { useTranslation } from 'next-i18next';
+import styles from '../styles/Trips.module.css';
 
 export interface User {
   id: number;
@@ -37,7 +37,6 @@ const Trips = () => {
     data: trips,
     error,
     isLoading,
-    mutate,
   } = useSWR<Trip[]>(`${API_URL}/trips/`, async (url) => {
     const response = await api.get(url, {
       headers: {
@@ -61,36 +60,19 @@ const Trips = () => {
       {trips && trips.length > 0 ? (
         <List
           itemLayout="horizontal"
+          size="small"
           dataSource={trips
             .slice()
             .sort((tripA, tripB) => dayjs(tripB.date).diff(dayjs(tripA.date)))}
           renderItem={(trip) => (
-            <List.Item
-              actions={
-                dayjs(trip.date) > dayjs()
-                  ? [
-                      <Link key="trip-edit" href={`/tripedit/${trip.id}`}>
-                        edit
-                      </Link>,
-                      <Button
-                        key="trip-delete"
-                        onClick={async () => {
-                          await TripService.deleteTrip(
-                            trip.id,
-                            session?.accessToken as string
-                          );
-                          await mutate();
-                        }}
-                      >
-                        delete
-                      </Button>,
-                    ]
-                  : []
-              }
-            >
+            <List.Item className={styles.row}>
               <List.Item.Meta
-                title={`${trip.origin.name} - ${trip.dest.name}`}
-                description={trip.date}
+                title={
+                  <Link key="trip-edit" href={`/tripedit/${trip.id}`}>
+                    {trip.origin.name} - {trip.dest.name}
+                  </Link>
+                }
+                description={new Date(trip.date).toLocaleString(i18n.language)}
               />
             </List.Item>
           )}

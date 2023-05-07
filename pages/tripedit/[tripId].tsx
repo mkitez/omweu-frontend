@@ -53,6 +53,13 @@ const TripEdit = ({ session }: { session: Session }) => {
           );
           router.push('/dashboard');
         }}
+        onDelete={async () => {
+          await TripService.deleteTrip(
+            router.query.tripId,
+            session.accessToken as string
+          );
+          router.push('/dashboard');
+        }}
       />
     </div>
   );
