@@ -15,7 +15,7 @@ const NewTrip = ({ session }: { session: Session }) => {
   };
 
   return (
-    <div className="content">
+    <div className="content" style={{ marginBottom: 30 }}>
       <h1>{t('trips.createTitle')}</h1>
       <TripEditForm
         submitValue={t('create', { ns: 'common' })}

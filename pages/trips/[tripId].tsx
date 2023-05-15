@@ -77,6 +77,9 @@ const Trip = ({ session }: { session: Session }) => {
             )}
           </div>
         </Descriptions.Item>
+        <Descriptions.Item label={t('price')}>
+          &euro;{data.price}
+        </Descriptions.Item>
       </Descriptions>
     </div>
   );
