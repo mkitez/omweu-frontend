@@ -4,12 +4,12 @@ import useSWR from 'swr';
 import { Session } from 'next-auth';
 import { Form, Input, Button, Row, Col } from 'antd';
 import { getServerSideProps } from './trips';
-import withAuth from '../../components/withAuthHOC';
 import { API_URL } from '../../utils/constants';
 import api from '../../services/api';
 import DashboardLayout from '../../components/DashboardLayout';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 const { Item } = Form;
 
@@ -150,10 +150,12 @@ const Profile = ({ session }: { session: Session }) => {
   );
 };
 
+Profile.auth = true;
+
 Profile.getLayout = function getLayout(page: ReactElement) {
   return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export { getServerSideProps };
 
-export default withAuth(Profile);
+export default Profile;

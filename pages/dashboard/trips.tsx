@@ -6,7 +6,6 @@ import { PlusCircleOutlined } from '@ant-design/icons';
 import { authOptions } from '../api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth/next';
 import Trips from '../../components/Trips';
-import withAuth from '../../components/withAuthHOC';
 import DashboardLayout from '../../components/DashboardLayout';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
@@ -23,6 +22,8 @@ const TripsPage = () => {
     </div>
   );
 };
+
+TripsPage.auth = true;
 
 TripsPage.getLayout = function getLayout(page: ReactElement) {
   return <DashboardLayout>{page}</DashboardLayout>;
@@ -57,4 +58,4 @@ export const getServerSideProps: GetServerSideProps = async ({
   };
 };
 
-export default withAuth(TripsPage);
+export default TripsPage;

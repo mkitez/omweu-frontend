@@ -2,7 +2,6 @@ import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { Descriptions } from 'antd';
 import { Session } from 'next-auth';
-import withAuth from '../../components/withAuthHOC';
 import api from '../../services/api';
 import AuthService from '../../services/auth.service';
 import { getServerSideProps } from '../dashboard/trips';
@@ -38,4 +37,4 @@ const Trip = ({ session }: { session: Session }) => {
 
 export { getServerSideProps };
 
-export default withAuth(Trip);
+export default Trip;
