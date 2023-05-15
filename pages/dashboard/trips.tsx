@@ -48,6 +48,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   const translations = await serverSideTranslations(locale as string, [
     'common',
     'dashboard',
+    'trip',
   ]);
 
   return {
