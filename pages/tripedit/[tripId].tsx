@@ -4,7 +4,6 @@ import TripEditForm from '../../components/TripEditForm';
 import TripService from '../../services/trip.service';
 import { getServerSideProps } from '../dashboard/trips';
 import { Session } from 'next-auth';
-import withAuth from '../../components/withAuthHOC';
 import api from '../../services/api';
 import AuthService from '../../services/auth.service';
 import { useTranslation } from 'next-i18next';
@@ -65,6 +64,8 @@ const TripEdit = ({ session }: { session: Session }) => {
   );
 };
 
-export default withAuth(TripEdit);
+TripEdit.auth = true;
+
+export default TripEdit;
 
 export { getServerSideProps };

@@ -1,4 +1,4 @@
-import type { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
@@ -7,6 +7,7 @@ import { Session } from 'next-auth';
 import { ConfigProvider } from 'antd';
 import { appWithTranslation } from 'next-i18next';
 import AppLayout from '../components/AppLayout';
+import AuthWrapper from '../components/AuthWrapper';
 import '../styles/globals.css';
 import 'antd/dist/reset.css';
 import { StyleProvider } from '@ant-design/cssinjs';
@@ -22,6 +23,7 @@ const locales: Record<string, Locale> = {
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
+  auth?: boolean;
 };
 
 interface MyAppProps {
@@ -41,7 +43,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     <SessionProvider session={pageProps.session}>
       <ConfigProvider locale={locales[locale as string]} theme={theme}>
         <StyleProvider ssrInline>
-          {getLayout(<Component {...pageProps} />)}
+          {Component.auth ? (
+            <AuthWrapper>{getLayout(<Component {...pageProps} />)}</AuthWrapper>
+          ) : (
+            getLayout(<Component {...pageProps} />)
+          )}
         </StyleProvider>
       </ConfigProvider>
     </SessionProvider>
