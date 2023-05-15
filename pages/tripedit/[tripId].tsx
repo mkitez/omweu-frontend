@@ -37,12 +37,13 @@ const TripEdit = ({ session }: { session: Session }) => {
   }
 
   return (
-    <div className="content">
+    <div className="content" style={{ marginBottom: 30 }}>
       <h2>{t('trips.editTitle')}</h2>
       <TripEditForm
         initialOrigin={data.origin}
         initialDest={data.dest}
         initialDate={data.date}
+        initialPrice={data.price}
         submitValue={t('save', { ns: 'common' })}
         submit={async (data: any) => {
           await TripService.updateTrip(

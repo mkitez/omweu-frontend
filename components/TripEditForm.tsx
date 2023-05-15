@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Button, Form, Row, Col } from 'antd';
+import { useEffect, useState, useMemo } from 'react';
+import { Button, Form, Row, Col, InputNumber } from 'antd';
 import PlaceInput from './PlaceInput';
 import DateTimeInput from './DateTimeInput';
 import type { DefaultOptionType } from 'antd/es/select';
@@ -13,6 +13,7 @@ export interface FormData {
   from: DefaultOptionType;
   to: DefaultOptionType;
   date: dayjs.Dayjs;
+  price: string;
 }
 
 const getInitialPlaceValue = (place: Destination): DefaultOptionType | null => {
@@ -29,6 +30,7 @@ const TripEditForm = ({
   initialOrigin,
   initialDest,
   initialDate,
+  initialPrice,
   submitValue,
   submit,
   onDelete,
@@ -36,12 +38,20 @@ const TripEditForm = ({
   const { t } = useTranslation('common');
   const router = useRouter();
   const [error, setError] = useState('');
+  const [form] = Form.useForm();
 
-  const initialValues = {
-    from: getInitialPlaceValue(initialOrigin),
-    to: getInitialPlaceValue(initialDest),
-    date: initialDate ? dayjs(initialDate, 'YYYY-MM-DD HH:mm') : null,
-  };
+  const initialValues = useMemo(
+    () => ({
+      from: getInitialPlaceValue(initialOrigin),
+      to: getInitialPlaceValue(initialDest),
+      date: initialDate ? dayjs(initialDate, 'YYYY-MM-DD HH:mm') : null,
+      price: initialPrice ?? 0,
+    }),
+    [initialDate, initialDest, initialOrigin, initialPrice]
+  );
+  useEffect(() => {
+    form.setFieldsValue(initialValues);
+  }, [form, initialValues]);
 
   const handleSubmit = async (formData: FormData) => {
     const date = formData.date.format('YYYY-MM-DDTHH:mm:00');
@@ -50,6 +60,7 @@ const TripEditForm = ({
       origin_id: formData.from.value,
       dest_id: formData.to.value,
       date,
+      price: formData.price,
     };
     try {
       await submit(data);
@@ -76,6 +87,7 @@ const TripEditForm = ({
 
   return (
     <Form
+      form={form}
       initialValues={initialValues}
       layout="horizontal"
       requiredMark={false}
@@ -105,6 +117,19 @@ const TripEditForm = ({
             label={t('dateTime.label') as string}
             placeholder={t('dateTime.placeholder') as string}
           />
+        </Col>
+        <Col xs={24} md={12}>
+          <Form.Item
+            name="price"
+            label={t('price.label')}
+            rules={[{ required: true, message: t('errors.noPrice') as string }]}
+          >
+            <InputNumber
+              placeholder={t('price.placeholder') as string}
+              maxLength={5}
+              step={1}
+            />
+          </Form.Item>
         </Col>
       </Row>
       <Row gutter={[10, 10]}>
