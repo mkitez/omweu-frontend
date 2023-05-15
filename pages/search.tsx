@@ -10,7 +10,7 @@ import TripSearch from '../components/TripSearch';
 
 const Search = () => {
   const router = useRouter();
-  const { i18n } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const { data, error, isLoading } = useSWR(
     `${API_URL}/trips/search/?origin_id=${router.query.from}&dest_id=${router.query.to}&date=${router.query.date}`,
     async (url) => {
@@ -23,18 +23,18 @@ const Search = () => {
 
   let searchResults;
   if (isLoading) {
-    searchResults = <div>Searching...</div>;
+    searchResults = <div>{t('searching')}</div>;
   } else if (error) {
-    searchResults = <div>Error: {error}</div>;
+    searchResults = <div>{t('errors.common')}</div>;
   } else if (data.results.length === 0) {
-    searchResults = <div>No results</div>;
+    searchResults = <div>{t('tripsNotFound')}</div>;
   } else {
     searchResults = data.results.map((trip: Trip) => (
       <Link href={`/trips/${trip.id}`} key={trip.id}>
         <Card hoverable style={{ marginBottom: 10 }}>
           <Card.Meta
             title={`${trip.origin.name} - ${trip.dest.name}`}
-            description={trip.date}
+            description={new Date(trip.date).toLocaleString(i18n.language)}
           />
         </Card>
       </Link>
