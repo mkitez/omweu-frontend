@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { Form, Button, Row, Col, Grid, DatePicker } from 'antd';
@@ -7,8 +6,8 @@ import type { FormData } from './TripEditForm';
 import SwapButton from './SwapButton';
 import dayjs from 'dayjs';
 import styles from '../styles/TripSearch.module.css';
-import location from '../assets/location.svg';
-import calendar from '../assets/calendar.svg';
+import Location from '../assets/location.svg';
+import Calendar from '../assets/calendar.svg';
 
 const TripSearch = () => {
   const router = useRouter();
@@ -44,9 +43,7 @@ const TripSearch = () => {
   };
 
   const placeInputProps: React.ComponentProps<typeof Form.Item> = {
-    label: xs ? null : (
-      <Image src={location} alt="" className={styles.inputFieldIcon} />
-    ),
+    label: xs ? null : <Location width="100%" />,
     labelCol: { xs: 5, md: 3 },
     wrapperCol: { xs: 18, md: 21 },
     style: { margin: 0 },
@@ -88,15 +85,7 @@ const TripSearch = () => {
             <Col xs={21} md={5}>
               <Form.Item
                 name="date"
-                label={
-                  xs ? null : (
-                    <Image
-                      src={calendar}
-                      alt=""
-                      className={styles.inputFieldIcon}
-                    />
-                  )
-                }
+                label={xs ? null : <Calendar width="100%" />}
                 labelCol={{ xs: 5, md: { offset: 1, span: 5 } }}
                 wrapperCol={{ xs: 18, md: 18 }}
                 style={{ width: '100%' }}

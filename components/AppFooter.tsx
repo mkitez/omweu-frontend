@@ -1,6 +1,5 @@
-import Image from 'next/image';
 import { Layout, Row, Col } from 'antd';
-import logo from '../assets/logoWhite.svg';
+import Logo from '../assets/logoWhite.svg';
 import styles from '../styles/AppFooter.module.css';
 
 const { Footer } = Layout;
@@ -12,7 +11,7 @@ const AppFooter = () => {
         <Row>
           <Col>
             <div className={styles.logoContainer}>
-              <Image src={logo} alt="" width={120} />
+              <Logo />
             </div>
           </Col>
         </Row>

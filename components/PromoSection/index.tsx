@@ -1,8 +1,7 @@
 import { Row, Col } from 'antd';
 import PromoBlock from './PromoBlock';
-import cup from '../../assets/cup.svg';
+import Cup from '../../assets/cup.svg';
 import styles from '../../styles/PromoSection.module.css';
-import Image from 'next/image';
 
 const PromoSection = () => {
   return (
@@ -16,7 +15,7 @@ const PromoSection = () => {
           <Col md={8}>
             <PromoBlock
               title="Lorem ipsum dolor sit"
-              icon={<Image src={cup} alt="" />}
+              icon={<Cup width={48} height="100%" />}
             >
               Lorem ipsum dolor sit amet consectetur. Neque quam pellentesque
               malesuada elit nunc mattis. In quis ipsum purus risus in lobortis
@@ -28,7 +27,7 @@ const PromoSection = () => {
           <Col md={8}>
             <PromoBlock
               title="Lorem ipsum dolor sit"
-              icon={<Image src={cup} alt="" />}
+              icon={<Cup width={48} height="100%" />}
             >
               Lorem ipsum dolor sit amet consectetur. Neque quam pellentesque
               malesuada elit nunc mattis. In quis ipsum purus risus in lobortis
@@ -40,7 +39,7 @@ const PromoSection = () => {
           <Col md={8}>
             <PromoBlock
               title="Lorem ipsum dolor sit"
-              icon={<Image src={cup} alt="" />}
+              icon={<Cup width={48} height="100%" />}
             >
               Lorem ipsum dolor sit amet consectetur. Neque quam pellentesque
               malesuada elit nunc mattis. In quis ipsum purus risus in lobortis

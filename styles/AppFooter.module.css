@@ -12,3 +12,7 @@
   font-size: 0.9rem;
   font-weight: 300;
 }
+
+.logoContainer svg {
+  width: 120px;
+}

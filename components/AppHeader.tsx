@@ -1,12 +1,11 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import { Layout, Button, theme } from 'antd';
 import { PlusCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { signIn, useSession } from 'next-auth/react';
 import styles from '../styles/AppHeader.module.css';
-import logo from '../assets/logo.svg';
-import logoXs from '../assets/logoXs.svg';
+import Logo from '../assets/logo.svg';
+import LogoXs from '../assets/logoXs.svg';
 
 const { Header } = Layout;
 
@@ -22,19 +21,14 @@ const AppHeader = () => {
       style={{ backgroundColor: colorBgContainer }}
       className={styles.container}
     >
-      <div className={styles.logoContainer}>
+      <div className={styles.logo}>
         <Link href="/">
-          <Image
-            src={logo}
-            alt="eubycar.com logo"
-            width={160}
-            className={styles.logo}
-          />
-          <Image
-            src={logoXs}
-            alt="eubycar.com logo xs"
-            className={styles.logoXs}
-          />
+          <Logo />
+        </Link>
+      </div>
+      <div className={styles.logoXs}>
+        <Link href="/">
+          <LogoXs />
         </Link>
       </div>
       {(() => {

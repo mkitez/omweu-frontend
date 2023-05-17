@@ -1,8 +1,7 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { Row, Col, Button } from 'antd';
 import { useTranslation } from 'next-i18next';
-import image from '../assets/driverSectionImg.svg';
+import DriverSectionImage from '../assets/driverSectionImg.svg';
 import styles from '../styles/DriverSection.module.css';
 
 const DriverSection = () => {
@@ -14,7 +13,7 @@ const DriverSection = () => {
         <Row gutter={[20, 10]}>
           <Col md={12}>
             <div className={styles.imgContainer}>
-              <Image src={image} alt="" />
+              <DriverSectionImage />
             </div>
           </Col>
           <Col md={12}>

@@ -9,7 +9,7 @@
   flex: 1;
 }
 
-.bannerContainer img {
+.bannerContainer svg {
   width: 100%;
   height: 100%;
 }
