@@ -85,6 +85,8 @@ const Trip = ({ session }: { session: Session }) => {
   );
 };
 
+Trip.auth = true;
+
 export { getServerSideProps };
 
 export default Trip;

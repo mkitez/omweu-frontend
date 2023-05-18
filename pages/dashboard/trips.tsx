@@ -36,15 +36,6 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
   const session = await unstable_getServerSession(req, res, authOptions);
 
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/api/auth/signin',
-        permanent: false,
-      },
-    };
-  }
-
   const translations = await serverSideTranslations(locale as string, [
     'common',
     'dashboard',

@@ -139,7 +139,10 @@ const TripEditForm = ({
           </Button>
         </Col>
         <Col>
-          <Button disabled={false} onClick={() => router.back()}>
+          <Button
+            disabled={false}
+            onClick={() => router.push('/dashboard/trips')}
+          >
             {t('cancel')}
           </Button>
         </Col>
