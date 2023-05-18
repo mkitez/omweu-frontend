@@ -10,7 +10,7 @@ const DriverSection = () => {
   return (
     <section className={styles.root}>
       <div className="content">
-        <Row gutter={[20, 10]}>
+        <Row gutter={[20, 30]}>
           <Col md={12}>
             <div className={styles.imgContainer}>
               <DriverSectionImage />

@@ -15,7 +15,7 @@ const PromoSection = () => {
           <Col md={8}>
             <PromoBlock
               title="Lorem ipsum dolor sit"
-              icon={<Cup width={48} height="100%" />}
+              icon={<Cup width={40} height="100%" />}
             >
               Lorem ipsum dolor sit amet consectetur. Neque quam pellentesque
               malesuada elit nunc mattis. In quis ipsum purus risus in lobortis
@@ -27,7 +27,7 @@ const PromoSection = () => {
           <Col md={8}>
             <PromoBlock
               title="Lorem ipsum dolor sit"
-              icon={<Cup width={48} height="100%" />}
+              icon={<Cup width={40} height="100%" />}
             >
               Lorem ipsum dolor sit amet consectetur. Neque quam pellentesque
               malesuada elit nunc mattis. In quis ipsum purus risus in lobortis
@@ -39,7 +39,7 @@ const PromoSection = () => {
           <Col md={8}>
             <PromoBlock
               title="Lorem ipsum dolor sit"
-              icon={<Cup width={48} height="100%" />}
+              icon={<Cup width={40} height="100%" />}
             >
               Lorem ipsum dolor sit amet consectetur. Neque quam pellentesque
               malesuada elit nunc mattis. In quis ipsum purus risus in lobortis

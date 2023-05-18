@@ -9,7 +9,7 @@ const ForWhoSection = () => {
         <h2>
           <span className="highlight">Для кого</span> этот сервис
         </h2>
-        <Row gutter={10}>
+        <Row>
           {[1, 2, 3, 4].map((index) => (
             <Col md={6} key={index}>
               <ForWhoBlock title={`0${index}`}>

@@ -1,3 +1,7 @@
+.root {
+  padding: 2rem 0;
+}
+
 .imgContainer svg {
   width: 100%;
 }
