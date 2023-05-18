@@ -37,6 +37,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
   const translations = await serverSideTranslations(locale as string, [
     'common',
+    'home',
   ]);
 
   const session = await unstable_getServerSession(req, res, authOptions);
