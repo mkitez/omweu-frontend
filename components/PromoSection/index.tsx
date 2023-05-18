@@ -1,7 +1,9 @@
 import { useTranslation, Trans } from 'next-i18next';
 import { Row, Col } from 'antd';
 import PromoBlock from './PromoBlock';
+import Money from '../../assets/money.svg';
 import Cup from '../../assets/cup.svg';
+import ThumbUp from '../../assets/thumbUp.svg';
 import styles from '../../styles/PromoSection.module.css';
 
 const PromoSection = () => {
@@ -22,7 +24,7 @@ const PromoSection = () => {
           <Col md={8}>
             <PromoBlock
               title={t('sectionOne.blocks.0.title')}
-              icon={<Cup width={40} height="100%" />}
+              icon={<Money width={40} height="100%" />}
             >
               {t('sectionOne.blocks.0.text')}
             </PromoBlock>
@@ -38,7 +40,7 @@ const PromoSection = () => {
           <Col md={8}>
             <PromoBlock
               title={t('sectionOne.blocks.2.title')}
-              icon={<Cup width={40} height="100%" />}
+              icon={<ThumbUp width={40} height="100%" />}
             >
               {t('sectionOne.blocks.2.text')}
             </PromoBlock>
