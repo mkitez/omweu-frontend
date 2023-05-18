@@ -1,24 +1,43 @@
+import { useTranslation, Trans } from 'next-i18next';
 import { Row, Col } from 'antd';
 import ForWhoBlock from './ForWhoBlock';
 import styles from '../../styles/ForWhoSection.module.css';
 
 const ForWhoSection = () => {
+  const { t } = useTranslation('home');
   return (
     <section className={styles.root}>
       <div className="content">
         <h2>
-          <span className="highlight">Для кого</span> этот сервис
+          <Trans
+            components={{
+              mark: <span className="highlight" />,
+            }}
+          >
+            {t('sectionTwo.title')}
+          </Trans>
         </h2>
-        <Row gutter={10}>
-          {[1, 2, 3, 4].map((index) => (
-            <Col md={6} key={index}>
-              <ForWhoBlock title={`0${index}`}>
-                Lorem ipsum dolor sit amet consectetur. Neque quam pellentesque
-                malesuada elit nunc mattis. In quis ipsum purus risus in
-                lobortis neque bibendum. Eget quis a a non mauris mollis.
-              </ForWhoBlock>
-            </Col>
-          ))}
+        <Row>
+          <Col md={12} lg={6}>
+            <ForWhoBlock title="01">
+              {t('sectionTwo.blocks.stepOne')}
+            </ForWhoBlock>
+          </Col>
+          <Col md={12} lg={6}>
+            <ForWhoBlock title="02">
+              {t('sectionTwo.blocks.stepTwo')}
+            </ForWhoBlock>
+          </Col>
+          <Col md={12} lg={6}>
+            <ForWhoBlock title="03">
+              {t('sectionTwo.blocks.stepThree')}
+            </ForWhoBlock>
+          </Col>
+          <Col md={12} lg={6}>
+            <ForWhoBlock title="04">
+              {t('sectionTwo.blocks.stepFour')}
+            </ForWhoBlock>
+          </Col>
         </Row>
       </div>
     </section>

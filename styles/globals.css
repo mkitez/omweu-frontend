@@ -38,7 +38,7 @@ h6 {
   z-index: 0;
 }
 
-.highlight::before {
+.highlight::after {
   content: '';
   background-color: #294a54;
   width: 106%;
@@ -55,7 +55,7 @@ h6 {
   color: #294a54;
 }
 
-.highlight-contrast::before {
+.highlight-contrast::after {
   background-color: #fff;
 }
 

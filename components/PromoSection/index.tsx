@@ -1,51 +1,48 @@
+import { useTranslation, Trans } from 'next-i18next';
 import { Row, Col } from 'antd';
 import PromoBlock from './PromoBlock';
+import Money from '../../assets/money.svg';
 import Cup from '../../assets/cup.svg';
+import ThumbUp from '../../assets/thumbUp.svg';
 import styles from '../../styles/PromoSection.module.css';
 
 const PromoSection = () => {
+  const { t } = useTranslation('home');
   return (
     <section className={styles.container}>
       <div className="content">
         <h2>
-          <span className="highlight highlight-contrast">Экономьте</span> на
-          поездках в Европу
+          <Trans
+            components={{
+              mark: <span className="highlight highlight-contrast" />,
+            }}
+          >
+            {t('sectionOne.title')}
+          </Trans>
         </h2>
         <Row gutter={[40, 40]}>
           <Col md={8}>
             <PromoBlock
-              title="Lorem ipsum dolor sit"
-              icon={<Cup width={48} height="100%" />}
+              title={t('sectionOne.blocks.0.title')}
+              icon={<Money width={40} height="100%" />}
             >
-              Lorem ipsum dolor sit amet consectetur. Neque quam pellentesque
-              malesuada elit nunc mattis. In quis ipsum purus risus in lobortis
-              neque bibendum. Eget quis a a non mauris mollis. Mauris fringilla
-              odio luctus maecenas lacus pulvinar. Luctus fringilla diam mi enim
-              at lacinia quisque.
+              {t('sectionOne.blocks.0.text')}
             </PromoBlock>
           </Col>
           <Col md={8}>
             <PromoBlock
-              title="Lorem ipsum dolor sit"
-              icon={<Cup width={48} height="100%" />}
+              title={t('sectionOne.blocks.1.title')}
+              icon={<Cup width={40} height="100%" />}
             >
-              Lorem ipsum dolor sit amet consectetur. Neque quam pellentesque
-              malesuada elit nunc mattis. In quis ipsum purus risus in lobortis
-              neque bibendum. Eget quis a a non mauris mollis. Mauris fringilla
-              odio luctus maecenas lacus pulvinar. Luctus fringilla diam mi enim
-              at lacinia quisque.
+              {t('sectionOne.blocks.1.text')}
             </PromoBlock>
           </Col>
           <Col md={8}>
             <PromoBlock
-              title="Lorem ipsum dolor sit"
-              icon={<Cup width={48} height="100%" />}
+              title={t('sectionOne.blocks.2.title')}
+              icon={<ThumbUp width={40} height="100%" />}
             >
-              Lorem ipsum dolor sit amet consectetur. Neque quam pellentesque
-              malesuada elit nunc mattis. In quis ipsum purus risus in lobortis
-              neque bibendum. Eget quis a a non mauris mollis. Mauris fringilla
-              odio luctus maecenas lacus pulvinar. Luctus fringilla diam mi enim
-              at lacinia quisque.
+              {t('sectionOne.blocks.2.text')}
             </PromoBlock>
           </Col>
         </Row>
