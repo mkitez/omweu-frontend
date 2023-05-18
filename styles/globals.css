@@ -16,16 +16,6 @@ a {
   box-sizing: border-box;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-montserrat);
-  color: #454545;
-}
-
 .content {
   width: 1200px;
   padding: 0 2rem;

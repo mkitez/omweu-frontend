@@ -1,0 +1,7 @@
+.root h1,
+.root h2,
+.root h3,
+.root h4 {
+  font-family: var(--font-montserrat);
+  color: #454545;
+}

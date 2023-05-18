@@ -16,6 +16,7 @@ import type { Locale } from 'antd/lib/locale';
 import ru from 'antd/locale/ru_RU';
 import 'dayjs/locale/ru';
 import theme from '../theme';
+import Head from 'next/head';
 
 const locales: Record<string, Locale> = {
   ru,
@@ -43,6 +44,10 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     <SessionProvider session={pageProps.session}>
       <ConfigProvider locale={locales[locale as string]} theme={theme}>
         <StyleProvider ssrInline>
+          <Head>
+            <title>EUbyCar.com</title>
+            <link rel="icon" href="/favicon.png" />
+          </Head>
           {Component.auth ? (
             <AuthWrapper>{getLayout(<Component {...pageProps} />)}</AuthWrapper>
           ) : (
