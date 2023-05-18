@@ -18,22 +18,22 @@ const ForWhoSection = () => {
           </Trans>
         </h2>
         <Row>
-          <Col md={6}>
+          <Col md={12} lg={6}>
             <ForWhoBlock title="01">
               {t('sectionTwo.blocks.stepOne')}
             </ForWhoBlock>
           </Col>
-          <Col md={6}>
+          <Col md={12} lg={6}>
             <ForWhoBlock title="02">
               {t('sectionTwo.blocks.stepTwo')}
             </ForWhoBlock>
           </Col>
-          <Col md={6}>
+          <Col md={12} lg={6}>
             <ForWhoBlock title="03">
               {t('sectionTwo.blocks.stepThree')}
             </ForWhoBlock>
           </Col>
-          <Col md={6}>
+          <Col md={12} lg={6}>
             <ForWhoBlock title="04">
               {t('sectionTwo.blocks.stepFour')}
             </ForWhoBlock>
