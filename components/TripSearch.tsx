@@ -43,7 +43,7 @@ const TripSearch = () => {
   };
 
   const placeInputProps: React.ComponentProps<typeof Form.Item> = {
-    label: xs ? null : <Location width="100%" />,
+    label: xs ? null : <Location width="100%" height="100%" />,
     labelCol: { xs: 5, md: 3 },
     wrapperCol: { xs: 18, md: 21 },
     style: { margin: 0 },
@@ -85,7 +85,7 @@ const TripSearch = () => {
             <Col xs={21} md={5}>
               <Form.Item
                 name="date"
-                label={xs ? null : <Calendar width="100%" />}
+                label={xs ? null : <Calendar width="100%" height="100%" />}
                 labelCol={{ xs: 5, md: { offset: 1, span: 5 } }}
                 wrapperCol={{ xs: 18, md: 18 }}
                 style={{ width: '100%' }}
