@@ -24,7 +24,8 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.VK_CLIENT_SECRET as string,
     }),
     CredentialsProvider({
-      name: 'credentials',
+      id: 'email-password',
+      name: 'Email and Password',
       credentials: {
         email: { label: 'Email', type: 'text' },
         password: { label: 'Password', type: 'password' },
@@ -35,7 +36,8 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     CredentialsProvider({
-      name: 'accountActivation',
+      id: 'account-activation',
+      name: 'Account Activation',
       credentials: {
         uidb64: { type: 'text' },
         token: { type: 'text' },
@@ -57,7 +59,7 @@ export const authOptions: NextAuthOptions = {
           token.refreshToken = refresh;
           token.id = response.data.user.id;
         }
-        if (account.provider === 'credentials') {
+        if (account.type === 'credentials') {
           const { access, refresh } = user?.tokens;
           token.accessToken = access;
           token.refreshToken = refresh;
