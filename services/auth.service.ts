@@ -6,12 +6,15 @@ const getAuthHeaders = (accessToken: string) => {
   };
 };
 
-const signUp = async (username: string, password: string) => {
-  const response = await api.post('/users/', {
-    username,
-    password,
-  });
-  return response.data;
+const signUp = (email: string, password: string, lang?: string) => {
+  return api.post(
+    '/users/',
+    {
+      email,
+      password,
+    },
+    { headers: { 'Accept-Language': lang } }
+  );
 };
 
 const AuthService = {

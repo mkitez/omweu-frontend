@@ -1,0 +1,13 @@
+.form {
+  margin: auto;
+  max-width: 600px;
+}
+
+.submitButtonContainer {
+  text-align: center;
+}
+
+.alert {
+  margin: auto;
+  max-width: 600px;
+}
