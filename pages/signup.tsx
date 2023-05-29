@@ -51,11 +51,9 @@ const Register = () => {
     try {
       await AuthService.signUp({ email, password, captcha }, i18n.language);
       setSuccess(true);
-      setLoading(false);
       form.resetFields();
     } catch (e) {
       setSuccess(false);
-      setLoading(false);
       if (axios.isAxiosError(e)) {
         if (e.response?.status === 400) {
           setError(
@@ -68,6 +66,7 @@ const Register = () => {
       } else {
         setError(t('errors.common', { ns: 'common' }) as string);
       }
+      setLoading(false);
     }
   };
 
@@ -130,7 +129,7 @@ const Register = () => {
           rules={[
             { required: true, message: t('errors.solveCaptcha') as string },
           ]}
-          wrapperCol={{ offset: 8, span: 16 }}
+          wrapperCol={{ xs: 24, sm: { offset: 8, span: 16 } }}
         >
           <ReCAPTCHA
             sitekey={RECAPTCHA_SITE_KEY as string}
