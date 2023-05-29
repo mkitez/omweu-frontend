@@ -6,15 +6,14 @@ const getAuthHeaders = (accessToken: string) => {
   };
 };
 
-const signUp = (email: string, password: string, lang?: string) => {
-  return api.post(
-    '/users/',
-    {
-      email,
-      password,
-    },
-    { headers: { 'Accept-Language': lang } }
-  );
+interface SignupData {
+  email: string;
+  password: string;
+  captcha: string;
+}
+
+const signUp = (data: SignupData, lang?: string) => {
+  return api.post('/users/', data, { headers: { 'Accept-Language': lang } });
 };
 
 const AuthService = {

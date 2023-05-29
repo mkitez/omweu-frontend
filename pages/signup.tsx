@@ -1,4 +1,5 @@
 import axios from 'axios';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { ReactNode, useState } from 'react';
 import { Button, Form, Input, Alert } from 'antd';
 import AuthService from '../services/auth.service';
@@ -6,6 +7,7 @@ import styles from '../styles/Register.module.css';
 import { GetServerSideProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
+import { RECAPTCHA_SITE_KEY } from '../utils/constants';
 
 const ErrorBox = ({
   text,
@@ -30,6 +32,7 @@ interface FormData {
   email: string;
   password: string;
   passwordConfirmation: string;
+  captcha: string;
 }
 
 const Register = () => {
@@ -44,9 +47,9 @@ const Register = () => {
   const onFinish = async (formData: FormData) => {
     setError(null);
     setLoading(true);
-    const { email, password } = formData;
+    const { email, password, captcha } = formData;
     try {
-      await AuthService.signUp(email, password, i18n.language);
+      await AuthService.signUp({ email, password, captcha }, i18n.language);
       setSuccess(true);
       setLoading(false);
       form.resetFields();
@@ -120,6 +123,21 @@ const Register = () => {
           dependencies={['password']}
         >
           <Input.Password />
+        </Form.Item>
+        <Form.Item
+          name="captcha"
+          initialValue={null}
+          rules={[
+            { required: true, message: t('errors.solveCaptcha') as string },
+          ]}
+          wrapperCol={{ offset: 8, span: 16 }}
+        >
+          <ReCAPTCHA
+            sitekey={RECAPTCHA_SITE_KEY as string}
+            onChange={(value) => form.setFieldValue('captcha', value)}
+            className={styles.captchaContainer}
+            hl={i18n.language}
+          />
         </Form.Item>
         <Form.Item
           className={styles.submitButtonContainer}
