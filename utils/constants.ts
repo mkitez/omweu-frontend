@@ -5,3 +5,4 @@ const BASE_URL =
 
 export const API_URL = `${BASE_URL}/api/v1`;
 export const HERE_API_KEY = process.env.NEXT_PUBLIC_HERE_API_KEY;
+export const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
