@@ -1,8 +1,7 @@
+import Head from 'next/head';
 import useSWR from 'swr';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { Descriptions } from 'antd';
 import api from '../../services/api';
 import AuthService from '../../services/auth.service';
 import { getServerSideProps } from '../dashboard/trips';
@@ -38,26 +37,45 @@ const Trip = () => {
     }
   );
 
+  let content;
   if (isLoading) {
-    return <div className="content">{t('loading', { ns: 'common' })}</div>;
-  }
-
-  if (error) {
-    return (
-      <div className="content">{t('errors.common', { ns: 'common' })}</div>
-    );
-  }
-
-  const date = new Date(data.date);
-  return (
-    <div className="container">
-      <div className={styles.root}>
-        <h1>
-          {t('tripDetails')} {formatDate(date, i18n.language)}
-        </h1>
-        <TripDetails trip={data} />
+    content = (
+      <div className={styles.loadingErrorContainer}>
+        {t('loading', { ns: 'common' })}
       </div>
-    </div>
+    );
+  } else if (error) {
+    content = (
+      <div className={styles.loadingErrorContainer}>
+        {t('errors.common', { ns: 'common' })}
+      </div>
+    );
+  } else {
+    content = <TripDetails trip={data} />;
+  }
+
+  return (
+    <>
+      <Head>
+        <title>{`${t('title')} ${
+          data
+            ? `${data.origin.name} – ${data.dest.name} ${formatDate(
+                new Date(data.date),
+                i18n.language
+              )}`
+            : ''
+        } | EUbyCar.com`}</title>
+      </Head>
+      <div className="container">
+        <div className={styles.root}>
+          <h1>
+            {t('title')}{' '}
+            {data?.date ? formatDate(new Date(data.date), i18n.language) : ''}
+          </h1>
+          {content}
+        </div>
+      </div>
+    </>
   );
 };
 

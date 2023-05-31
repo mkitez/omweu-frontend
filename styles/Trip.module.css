@@ -1,3 +1,8 @@
 .root h1 {
   text-align: center;
 }
+
+.loadingErrorContainer {
+  padding: 2rem;
+  text-align: center;
+}
