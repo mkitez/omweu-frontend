@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import Image from 'next/image';
 import type { Trip } from '../components/Trips';
-import styles from '../styles/InlineTrip.module.css';
+import styles from '../styles/TripDetails.module.css';
 import { useTranslation } from 'next-i18next';
 import { TripLine } from './TripLine';
 
@@ -9,11 +9,12 @@ interface Props {
   trip: Trip;
 }
 
-const InlineTrip: FC<Props> = ({ trip }) => {
-  const { i18n } = useTranslation('common');
+const TripDetails: FC<Props> = ({ trip }) => {
+  const { t, i18n } = useTranslation('trip');
   const tripTime = new Date(trip.date).toLocaleTimeString(i18n.language, {
     timeStyle: 'short',
   });
+  const { phone_number, telegram_username } = trip.driver;
   return (
     <div className={styles.root}>
       <div className={styles.tripDetails}>
@@ -36,8 +37,30 @@ const InlineTrip: FC<Props> = ({ trip }) => {
         </div>
         <div className={styles.driverName}>{trip.driver.first_name}</div>
       </div>
+      <div className={styles.contacts}>
+        <ul>
+          {phone_number && (
+            <li>
+              {t('phone')}: <a href={`tel:${phone_number}`}>{phone_number}</a>
+            </li>
+          )}
+          {telegram_username && (
+            <li>
+              Telegram:{' '}
+              <a
+                href={`https://web.telegram.org/k/#${telegram_username}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {telegram_username}
+              </a>
+            </li>
+          )}
+        </ul>
+      </div>
+      <div className={styles.reach}>{t('reachDriver')}</div>
     </div>
   );
 };
 
-export default InlineTrip;
+export default TripDetails;

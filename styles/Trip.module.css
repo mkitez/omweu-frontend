@@ -1,20 +1,3 @@
-.root {
-  margin-top: 30px;
-}
-
-.driver {
-  display: flex;
-  gap: 10px;
-}
-
-.imgContainer {
-  width: 30px;
-  height: 30px;
-  overflow: hidden;
-  border-radius: 50%;
-}
-
-.imgContainer img {
-  width: 100%;
-  height: 100%;
+.root h1 {
+  text-align: center;
 }

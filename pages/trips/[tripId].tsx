@@ -3,13 +3,26 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { Descriptions } from 'antd';
-import { Session } from 'next-auth';
 import api from '../../services/api';
 import AuthService from '../../services/auth.service';
 import { getServerSideProps } from '../dashboard/trips';
 import styles from '../../styles/Trip.module.css';
+import { useSession } from 'next-auth/react';
+import TripDetails from '../../components/TripDetails';
 
-const Trip = ({ session }: { session: Session }) => {
+const formatDate = (date: Date, lang: string) => {
+  const [weekday, comma, ...rest] = new Intl.DateTimeFormat(lang, {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'long',
+  }).formatToParts(date);
+  return [rest.map((v) => v.value).join(''), comma.value, weekday.value].join(
+    ''
+  );
+};
+
+const Trip = () => {
+  const { data: session } = useSession({ required: true });
   const router = useRouter();
   const { t, i18n } = useTranslation(['trip', 'common']);
   const { data, error, isLoading } = useSWR(
@@ -17,7 +30,7 @@ const Trip = ({ session }: { session: Session }) => {
     async (url) => {
       const response = await api.get(url, {
         headers: {
-          ...AuthService.getAuthHeaders(session.accessToken as string),
+          ...AuthService.getAuthHeaders(session?.accessToken as string),
           'Accept-Language': i18n.language,
         },
       });
@@ -35,52 +48,15 @@ const Trip = ({ session }: { session: Session }) => {
     );
   }
 
+  const date = new Date(data.date);
   return (
-    <div className={`content ${styles.root}`}>
-      <h1>{t('tripDetails')}</h1>
-      <Descriptions
-        title={
-          <>
-            {data.origin.name} &mdash; {data.dest.name}
-          </>
-        }
-        layout="vertical"
-      >
-        <Descriptions.Item label={t('tripDate')}>
-          {new Date(data.date).toLocaleString(i18n.language)}
-        </Descriptions.Item>
-        <Descriptions.Item label={t('driver')}>
-          <div className={styles.driver}>
-            <div className={styles.imgContainer}>
-              <Image
-                src={data.driver.photo}
-                width={100}
-                height={100}
-                alt="driver photo"
-              />
-            </div>
-            <div>{data.driver.first_name}</div>
-          </div>
-        </Descriptions.Item>
-        <Descriptions.Item label={t('contacts')}>
-          <div>
-            {data.driver.phone_number && (
-              <>
-                <span>
-                  {t('phone')}: {data.driver.phone_number}
-                </span>
-                <br />
-              </>
-            )}
-            {data.driver.telegram_username && (
-              <span>Telegram: {data.driver.telegram_username}</span>
-            )}
-          </div>
-        </Descriptions.Item>
-        <Descriptions.Item label={t('price')}>
-          &euro;{data.price}
-        </Descriptions.Item>
-      </Descriptions>
+    <div className="container">
+      <div className={styles.root}>
+        <h1>
+          {t('tripDetails')} {formatDate(date, i18n.language)}
+        </h1>
+        <TripDetails trip={data} />
+      </div>
     </div>
   );
 };
