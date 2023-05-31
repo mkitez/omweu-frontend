@@ -32,7 +32,12 @@ const InlineTrip: FC<Props> = ({ trip }) => {
           <div className={styles.origin}>{trip.origin.name}</div>
           <div className={styles.dest}>{trip.dest.name}</div>
         </div>
-        <div className={styles.price}>&euro;{trip.price}</div>
+        <div className={styles.price}>
+          &euro;
+          {Number(trip.price).toLocaleString(i18n.language, {
+            minimumFractionDigits: 2,
+          })}
+        </div>
       </div>
       <div className={styles.driver}>
         <div className={styles.imgContainer}>
