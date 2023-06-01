@@ -22,6 +22,12 @@ a {
   margin: auto;
 }
 
+.container {
+  max-width: 800px;
+  padding: 1rem;
+  margin: auto;
+}
+
 .highlight {
   color: #fff;
   position: relative;

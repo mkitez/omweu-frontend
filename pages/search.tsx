@@ -1,14 +1,14 @@
+import { GetServerSideProps } from 'next';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { Card } from 'antd';
 import { API_URL } from '../utils/constants';
 import type { Trip } from '../components/Trips';
 import TripSearch from '../components/TripSearch';
 import styles from '../styles/Search.module.css';
+import InlineTrip from '../components/InlineTrip';
 
 const Search = () => {
   const router = useRouter();
@@ -33,47 +33,23 @@ const Search = () => {
   } else {
     searchResults = data.results.map((trip: Trip) => (
       <Link href={`/trips/${trip.id}`} key={trip.id}>
-        <Card hoverable style={{ marginBottom: 10 }}>
-          <Card.Meta
-            title={new Date(trip.date).toLocaleTimeString(i18n.language, {
-              timeStyle: 'short',
-            })}
-            description={
-              <div>
-                <div>
-                  {trip.origin.name} &mdash; {trip.dest.name}
-                </div>
-                <div className={styles.driver}>
-                  <div className={styles.imgContainer}>
-                    <Image
-                      src={trip.driver.photo}
-                      width={100}
-                      height={100}
-                      alt=""
-                    />
-                  </div>
-                  <div className={styles.driverName}>
-                    {trip.driver.first_name}
-                  </div>
-                </div>
-              </div>
-            }
-          />
-        </Card>
+        <InlineTrip trip={trip} />
       </Link>
     ));
   }
 
   return (
-    <div className="content">
+    <div className={styles.root}>
       <TripSearch />
       {searchResults}
     </div>
   );
 };
 
-export const getServerSideProps = async ({ locale }: any) => {
-  const translations = await serverSideTranslations(locale, ['common']);
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  const translations = await serverSideTranslations(locale as string, [
+    'common',
+  ]);
   return {
     props: {
       ...translations,

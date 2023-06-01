@@ -10,10 +10,12 @@ import styles from '../styles/Trips.module.css';
 
 export interface User {
   id: number;
-  username: string;
+  email: string;
   first_name: string;
   last_name: string;
   photo: string;
+  phone_number: string;
+  telegram_username: string;
 }
 
 export interface Destination {
@@ -29,7 +31,7 @@ export interface Trip {
   date: string;
   date_created: string;
   driver: User;
-  price: number;
+  price: string;
 }
 
 const Trips = () => {
