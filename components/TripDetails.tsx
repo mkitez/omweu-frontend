@@ -41,7 +41,10 @@ const TripDetails: FC<Props> = ({ trip }) => {
         <ul>
           {phone_number && (
             <li>
-              {t('phone')}: <a href={`tel:${phone_number}`}>{phone_number}</a>
+              {t('phone')}:{' '}
+              <a className={styles.contactValue} href={`tel:${phone_number}`}>
+                {phone_number}
+              </a>
             </li>
           )}
           {telegram_username && (
@@ -51,6 +54,7 @@ const TripDetails: FC<Props> = ({ trip }) => {
                 href={`https://web.telegram.org/k/#${telegram_username}`}
                 target="_blank"
                 rel="noreferrer"
+                className={styles.contactValue}
               >
                 {telegram_username}
               </a>

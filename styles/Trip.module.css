@@ -2,6 +2,13 @@
   text-align: center;
 }
 
+.back button {
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.45);
+  padding: 0.3rem 0;
+  text-decoration: underline;
+}
+
 .loadingErrorContainer {
   padding: 2rem;
   text-align: center;

@@ -8,6 +8,7 @@ import { getServerSideProps } from '../dashboard/trips';
 import styles from '../../styles/Trip.module.css';
 import { useSession } from 'next-auth/react';
 import TripDetails from '../../components/TripDetails';
+import { Button } from 'antd';
 
 const formatDate = (date: Date, lang: string) => {
   const [weekday, comma, ...rest] = new Intl.DateTimeFormat(lang, {
@@ -68,6 +69,11 @@ const Trip = () => {
       </Head>
       <div className="container">
         <div className={styles.root}>
+          <div className={styles.back}>
+            <Button type="link" onClick={() => router.back()}>
+              &lt; {t('back')}
+            </Button>
+          </div>
           <h1>
             {t('title')}{' '}
             {data?.date ? formatDate(new Date(data.date), i18n.language) : ''}
