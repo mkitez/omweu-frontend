@@ -7,6 +7,8 @@ import styles from '../../styles/SignIn.module.css';
 import { useRouter } from 'next/router';
 import { Alert, Col, Row, Divider } from 'antd';
 import VkButton from '../../components/VkButton';
+import { authOptions } from '../api/auth/[...nextauth]';
+import { unstable_getServerSession } from 'next-auth';
 
 const SignIn = () => {
   const { t } = useTranslation('auth');
@@ -43,7 +45,16 @@ const SignIn = () => {
 
 export default SignIn;
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  res,
+  locale,
+}) => {
+  const session = await unstable_getServerSession(req, res, authOptions);
+  if (session) {
+    return { redirect: { destination: '/dashboard' }, props: [] };
+  }
+
   const translations = await serverSideTranslations(locale as string, [
     'auth',
     'common',
