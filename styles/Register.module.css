@@ -1,5 +1,9 @@
+.root h1 {
+  text-align: center;
+}
+
 .form {
-  margin: auto;
+  margin: 2rem auto;
   max-width: 600px;
 }
 

@@ -72,89 +72,93 @@ const Register = () => {
 
   return (
     <div className="container">
-      <h1>{t('registration.title')}</h1>
-      <Form
-        form={form}
-        onFinish={onFinish}
-        className={styles.form}
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-      >
-        <Form.Item
-          name="email"
-          label={t('registration.email')}
-          rules={[
-            { required: true, message: t('errors.enterEmail') as string },
-            { type: 'email' },
-          ]}
+      <div className={styles.root}>
+        <h1>{t('registration.title')}</h1>
+        <Form
+          form={form}
+          onFinish={onFinish}
+          className={styles.form}
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
         >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          label={t('registration.password')}
-          rules={[
-            { required: true, message: t('errors.enterPassword') as string },
-            {
-              min: 8,
-              message: t('errors.shortPassword', { len: 8 }) as string,
-            },
-          ]}
-        >
-          <Input.Password type="password" />
-        </Form.Item>
-        <Form.Item
-          name="passwordConfirmation"
-          label={t('registration.confirmPassword')}
-          rules={[
-            { required: true, message: t('errors.enterPassword') as string },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue('password') === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(
-                  new Error(t('errors.passwordsDoNotMatch') as string)
-                );
+          <Form.Item
+            name="email"
+            label={t('registration.email')}
+            rules={[
+              { required: true, message: t('errors.enterEmail') as string },
+              { type: 'email' },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            label={t('registration.password')}
+            rules={[
+              { required: true, message: t('errors.enterPassword') as string },
+              {
+                min: 8,
+                message: t('errors.shortPassword', { len: 8 }) as string,
               },
-            }),
-          ]}
-          dependencies={['password']}
-        >
-          <Input.Password />
-        </Form.Item>
-        <Form.Item
-          name="captcha"
-          initialValue={null}
-          rules={[
-            { required: true, message: t('errors.solveCaptcha') as string },
-          ]}
-          wrapperCol={{ xs: 24, sm: { offset: 8, span: 16 } }}
-        >
-          <ReCAPTCHA
-            sitekey={RECAPTCHA_SITE_KEY as string}
-            onChange={(value) => form.setFieldValue('captcha', value)}
-            className={styles.captchaContainer}
-            hl={i18n.language}
+            ]}
+          >
+            <Input.Password type="password" />
+          </Form.Item>
+          <Form.Item
+            name="passwordConfirmation"
+            label={t('registration.confirmPassword')}
+            rules={[
+              { required: true, message: t('errors.enterPassword') as string },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error(t('errors.passwordsDoNotMatch') as string)
+                  );
+                },
+              }),
+            ]}
+            dependencies={['password']}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            name="captcha"
+            initialValue={null}
+            rules={[
+              { required: true, message: t('errors.solveCaptcha') as string },
+            ]}
+            wrapperCol={{ xs: 24, sm: { offset: 8, span: 16 } }}
+          >
+            <ReCAPTCHA
+              sitekey={RECAPTCHA_SITE_KEY as string}
+              onChange={(value) => form.setFieldValue('captcha', value)}
+              className={styles.captchaContainer}
+              hl={i18n.language}
+            />
+          </Form.Item>
+          <Form.Item
+            className={styles.submitButtonContainer}
+            wrapperCol={{ span: 24 }}
+          >
+            <Button type="primary" htmlType="submit" loading={loading}>
+              {t('registration.formButtonLabel')}
+            </Button>
+          </Form.Item>
+        </Form>
+        {success && (
+          <Alert
+            className={styles.alert}
+            type="success"
+            message={t('registration.success')}
           />
-        </Form.Item>
-        <Form.Item
-          className={styles.submitButtonContainer}
-          wrapperCol={{ span: 24 }}
-        >
-          <Button type="primary" htmlType="submit" loading={loading}>
-            {t('registration.formButtonLabel')}
-          </Button>
-        </Form.Item>
-      </Form>
-      {success && (
-        <Alert
-          className={styles.alert}
-          type="success"
-          message={t('registration.success')}
-        />
-      )}
-      {error && <Alert className={styles.alert} type="error" message={error} />}
+        )}
+        {error && (
+          <Alert className={styles.alert} type="error" message={error} />
+        )}
+      </div>
     </div>
   );
 };
