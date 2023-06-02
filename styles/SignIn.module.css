@@ -5,3 +5,8 @@
 .info {
   text-align: center;
 }
+
+.divider span {
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 0.9rem;
+}

@@ -5,7 +5,8 @@ import LoginForm from '../../components/LoginForm';
 import { useTranslation } from 'next-i18next';
 import styles from '../../styles/SignIn.module.css';
 import { useRouter } from 'next/router';
-import { Alert, Col, Row } from 'antd';
+import { Alert, Col, Row, Divider } from 'antd';
+import VkButton from '../../components/VkButton';
 
 const SignIn = () => {
   const { t } = useTranslation('auth');
@@ -30,6 +31,10 @@ const SignIn = () => {
             </Row>
           )}
           <LoginForm />
+          <Divider plain className={styles.divider}>
+            {t('login.dividerText')}
+          </Divider>
+          <VkButton />
         </div>
       </div>
     </>
