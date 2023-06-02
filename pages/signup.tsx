@@ -1,13 +1,16 @@
 import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { ReactNode, useState } from 'react';
-import { Button, Form, Input, Alert } from 'antd';
+import { Button, Form, Input, Alert, Divider } from 'antd';
 import AuthService from '../services/auth.service';
 import styles from '../styles/Register.module.css';
 import { GetServerSideProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
 import { RECAPTCHA_SITE_KEY } from '../utils/constants';
+import VkButton from '../components/VkButton';
+import { unstable_getServerSession } from 'next-auth';
+import { authOptions } from './api/auth/[...nextauth]';
 
 const ErrorBox = ({
   text,
@@ -158,12 +161,25 @@ const Register = () => {
         {error && (
           <Alert className={styles.alert} type="error" message={error} />
         )}
+        <Divider plain className={styles.divider}>
+          {t('login.dividerText')}
+        </Divider>
+        <VkButton />
       </div>
     </div>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  res,
+  locale,
+}) => {
+  const session = await unstable_getServerSession(req, res, authOptions);
+  if (session) {
+    return { redirect: { destination: '/dashboard' }, props: [] };
+  }
+
   const translations = await serverSideTranslations(locale as string, [
     'auth',
     'common',
