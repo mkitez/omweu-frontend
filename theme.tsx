@@ -7,7 +7,6 @@ const theme: ThemeConfig = {
     fontSize: 16,
     colorText: '#151515',
     colorPrimary: '#F65959',
-    colorInfo: '#F65959',
     colorBgLayout: '#FFFFFF',
   },
 };
