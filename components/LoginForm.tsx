@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Alert, Button, Col, Form, Input, Row } from 'antd';
-import { useTranslation } from 'next-i18next';
+import { useTranslation, Trans } from 'next-i18next';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import styles from '../styles/LoginForm.module.css';
+import Link from 'next/link';
 
 interface FormData {
   email: string;
@@ -57,7 +58,7 @@ const LoginForm = () => {
             { type: 'email' },
           ]}
         >
-          <Input />
+          <Input placeholder={t('login.email') || ''} />
         </Form.Item>
         <Form.Item
           name="password"
@@ -66,12 +67,26 @@ const LoginForm = () => {
             { required: true, message: t('errors.enterPassword') as string },
           ]}
         >
-          <Input.Password type="password" />
+          <Input.Password
+            type="password"
+            placeholder={t('login.password') || ''}
+          />
         </Form.Item>
         <Form.Item wrapperCol={{ span: 24 }} className={styles.btnContainer}>
           <Button type="primary" htmlType="submit" loading={loading}>
             {t('login.formButtonLabel')}
           </Button>
+          <div className={styles.signup}>
+            <Trans
+              components={[
+                <Link key={0} href="/signup">
+                  x
+                </Link>,
+              ]}
+            >
+              {t('login.noAccount')}
+            </Trans>
+          </div>
         </Form.Item>
       </Form>
       {error && (
