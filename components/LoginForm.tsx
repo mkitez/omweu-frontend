@@ -79,7 +79,7 @@ const LoginForm = () => {
           <div className={styles.signup}>
             <Trans
               components={[
-                <Link key={0} href="/signup">
+                <Link key={0} href="/auth/signup">
                   x
                 </Link>,
               ]}

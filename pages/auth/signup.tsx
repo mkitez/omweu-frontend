@@ -2,15 +2,15 @@ import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { ReactNode, useState } from 'react';
 import { Button, Form, Input, Alert, Divider } from 'antd';
-import AuthService from '../services/auth.service';
-import styles from '../styles/Register.module.css';
+import AuthService from '../../services/auth.service';
+import styles from '../../styles/Register.module.css';
 import { GetServerSideProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
-import { RECAPTCHA_SITE_KEY } from '../utils/constants';
-import VkButton from '../components/VkButton';
+import { RECAPTCHA_SITE_KEY } from '../../utils/constants';
+import VkButton from '../../components/VkButton';
 import { unstable_getServerSession } from 'next-auth';
-import { authOptions } from './api/auth/[...nextauth]';
+import { authOptions } from '../api/auth/[...nextauth]';
 
 const ErrorBox = ({
   text,
@@ -92,7 +92,7 @@ const Register = () => {
               { type: 'email' },
             ]}
           >
-            <Input />
+            <Input placeholder={t('registration.email') || ''} />
           </Form.Item>
           <Form.Item
             name="password"
@@ -105,7 +105,7 @@ const Register = () => {
               },
             ]}
           >
-            <Input.Password type="password" />
+            <Input.Password placeholder={t('registration.password') || ''} />
           </Form.Item>
           <Form.Item
             name="passwordConfirmation"
@@ -125,7 +125,7 @@ const Register = () => {
             ]}
             dependencies={['password']}
           >
-            <Input.Password />
+            <Input.Password placeholder={t('registration.password') || ''} />
           </Form.Item>
           <Form.Item
             name="captcha"
