@@ -71,7 +71,7 @@ const Register = () => {
   };
 
   return (
-    <div className="content">
+    <div className="container">
       <h1>{t('registration.title')}</h1>
       <Form
         form={form}

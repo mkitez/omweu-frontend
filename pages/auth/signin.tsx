@@ -1,8 +1,9 @@
+import Head from 'next/head';
 import { GetServerSideProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import LoginForm from '../../components/LoginForm';
 import { useTranslation } from 'next-i18next';
-import Head from 'next/head';
+import styles from '../../styles/SignIn.module.css';
 
 const SignIn = () => {
   const { t } = useTranslation('auth');
@@ -12,8 +13,10 @@ const SignIn = () => {
         <title>{`${t('login.title')} | EUbyCar.com`}</title>
       </Head>
       <div className="container">
-        <h1>{t('login.title')}</h1>
-        <LoginForm />
+        <div className={styles.root}>
+          <h1>{t('login.title')}</h1>
+          <LoginForm />
+        </div>
       </div>
     </>
   );
