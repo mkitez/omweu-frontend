@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+.btnContainer {
+  margin-bottom: 1rem;
+}
+
 .btn {
   height: 3rem;
 }

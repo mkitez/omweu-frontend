@@ -11,7 +11,7 @@ import { authOptions } from '../api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth';
 
 const SignIn = () => {
-  const { t } = useTranslation('auth');
+  const { t } = useTranslation(['auth', 'common']);
   const router = useRouter();
   return (
     <>
@@ -37,6 +37,17 @@ const SignIn = () => {
             {t('login.dividerText')}
           </Divider>
           <VkButton />
+          {router.query.error === 'Default' && (
+            <Row>
+              <Col md={{ span: 16, offset: 4 }}>
+                <Alert
+                  type="error"
+                  message={t('errors.common', { ns: 'common' })}
+                  className={styles.error}
+                />
+              </Col>
+            </Row>
+          )}
         </div>
       </div>
     </>

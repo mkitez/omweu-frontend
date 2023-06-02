@@ -77,7 +77,7 @@ const LoginForm = () => {
       {error && (
         <Row>
           <Col md={{ span: 16, offset: 4 }}>
-            <Alert type="error" message={error} />
+            <Alert type="error" message={error} className={styles.error} />
           </Col>
         </Row>
       )}

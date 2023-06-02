@@ -2,7 +2,8 @@
   text-align: center;
 }
 
-.info {
+.info,
+.error {
   text-align: center;
 }
 
