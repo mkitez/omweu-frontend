@@ -30,7 +30,7 @@ const VkButton = () => {
           {t('login.vkAuth')}
         </Button>
       </div>
-      {['OAuthSignin', 'OAuthCallback'].includes(
+      {['OAuthSignin', 'OAuthCallback', 'Callback'].includes(
         router.query.error as string
       ) && (
         <Row>
