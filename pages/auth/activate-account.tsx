@@ -92,10 +92,16 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
   res,
   locale,
+  query,
 }) => {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (session) {
     return { redirect: { destination: '/dashboard' }, props: [] };
+  }
+
+  const { uid, token } = query;
+  if (!uid || !token) {
+    return { redirect: { destination: '/' }, props: [] };
   }
 
   const translations = await serverSideTranslations(locale as string, [
