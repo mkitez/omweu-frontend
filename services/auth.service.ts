@@ -9,6 +9,8 @@ const getAuthHeaders = (accessToken: string) => {
 interface SignupData {
   email: string;
   password: string;
+  first_name: string;
+  phone_number: string;
   captcha: string;
 }
 

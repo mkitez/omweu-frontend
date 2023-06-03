@@ -1,0 +1,17 @@
+.root h1 {
+  text-align: center;
+}
+
+.content {
+  margin-top: 2rem;
+}
+
+.success,
+.info,
+.error {
+  text-align: center;
+}
+
+.success a {
+  text-decoration: underline;
+}
