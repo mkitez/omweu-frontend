@@ -69,8 +69,8 @@ const Register = () => {
       } else {
         setError(t('errors.common', { ns: 'common' }) as string);
       }
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   return (

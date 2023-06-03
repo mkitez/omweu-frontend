@@ -7,6 +7,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Alert } from 'antd';
 import styles from '../../styles/ActivateAccount.module.css';
 import Link from 'next/link';
+import ResendLinkButton from '../../components/ResendLinkButton';
 
 type Status = 'loading' | 'success' | 'activationError' | 'error';
 
@@ -57,12 +58,15 @@ const ActivateAccount = () => {
             />
           )}
           {status === 'activationError' && (
-            <Alert
-              type="error"
-              showIcon
-              className={styles.error}
-              message={t('errors.activationTokenInvalid')}
-            />
+            <>
+              <Alert
+                type="error"
+                showIcon
+                className={styles.error}
+                message={t('errors.activationTokenInvalid')}
+              />
+              <ResendLinkButton />
+            </>
           )}
           {status === 'error' && (
             <Alert
