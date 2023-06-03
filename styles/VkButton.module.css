@@ -1,0 +1,17 @@
+.root {
+  text-align: center;
+}
+
+.btnContainer {
+  margin-bottom: 1rem;
+}
+
+.btn {
+  height: 3rem;
+}
+
+.btn span {
+  vertical-align: middle;
+  padding-inline-start: 0.5rem;
+  font-weight: 500;
+}

@@ -61,7 +61,7 @@ const AppHeader = () => {
               >
                 {t('signIn')}
               </Button>
-              <Link href="/signup" passHref legacyBehavior>
+              <Link href="/auth/signup" passHref legacyBehavior>
                 <Button>{t('signUp')}</Button>
               </Link>
             </div>
