@@ -11,6 +11,7 @@ import { RECAPTCHA_SITE_KEY } from '../../utils/constants';
 import VkButton from '../../components/VkButton';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]';
+import Head from 'next/head';
 
 const ErrorBox = ({
   text,
@@ -75,6 +76,9 @@ const Register = () => {
 
   return (
     <div className="container">
+      <Head>
+        <title>{`${t('registration.title')} | EUbyCar.com`}</title>
+      </Head>
       <div className={styles.root}>
         <h1>{t('registration.title')}</h1>
         <Form

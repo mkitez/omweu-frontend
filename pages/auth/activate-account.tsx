@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
@@ -8,6 +9,8 @@ import { Alert } from 'antd';
 import styles from '../../styles/ActivateAccount.module.css';
 import Link from 'next/link';
 import ResendLinkButton from '../../components/ResendLinkButton';
+import { unstable_getServerSession } from 'next-auth';
+import { authOptions } from '../api/auth/[...nextauth]';
 
 type Status = 'loading' | 'success' | 'activationError' | 'error';
 
@@ -36,6 +39,9 @@ const ActivateAccount = () => {
 
   return (
     <div className="container">
+      <Head>
+        <title>{`${t('activation.title')} | EUbyCar.com`}</title>
+      </Head>
       <div className={styles.root}>
         <h1>{t('activation.title')}</h1>
         <div className={styles.content}>
@@ -82,7 +88,16 @@ const ActivateAccount = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  res,
+  locale,
+}) => {
+  const session = await unstable_getServerSession(req, res, authOptions);
+  if (session) {
+    return { redirect: { destination: '/dashboard' }, props: [] };
+  }
+
   const translations = await serverSideTranslations(locale as string, [
     'common',
     'auth',
