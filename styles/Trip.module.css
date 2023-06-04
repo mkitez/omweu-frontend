@@ -14,8 +14,3 @@
 .back a:not(:hover) {
   color: rgba(0, 0, 0, 0.45);
 }
-
-.loadingErrorContainer {
-  padding: 2rem;
-  text-align: center;
-}
