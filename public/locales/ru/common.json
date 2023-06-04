@@ -9,6 +9,7 @@
   "cancel": "Отмена",
   "loading": "Загрузка...",
   "searching": "Поиск...",
+  "searchTitle": "Поиск поездок",
   "tripsNotFound": "Поездок на заданную дату не найдено.",
   "from": {
     "label": "Откуда",
