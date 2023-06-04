@@ -2,11 +2,13 @@
   text-align: center;
 }
 
-.back button {
+.back a {
   font-size: 0.8rem;
-  color: rgba(0, 0, 0, 0.45);
   padding: 0.3rem 0;
-  text-decoration: underline;
+}
+
+.back a:not(:hover) {
+  color: rgba(0, 0, 0, 0.45);
 }
 
 .loadingErrorContainer {

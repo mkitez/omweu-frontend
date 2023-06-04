@@ -1,18 +1,36 @@
 import { InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import api from '../../services/api';
 import styles from '../../styles/Trip.module.css';
 import TripDetails from '../../components/TripDetails';
-import { Button } from 'antd';
 import { GetServerSideProps } from 'next';
 import { Session, unstable_getServerSession } from 'next-auth';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { authOptions } from '../api/auth/[...nextauth]';
 import axios from 'axios';
-import type { Trip as TripType } from '../../components/Trips';
+import type { Trip } from '../../components/Trips';
 import Error from 'next/error';
+import Link from 'next/link';
+import dayjs from 'dayjs';
+
+const BackButton = ({ trip }: { trip: Trip }) => {
+  const { t } = useTranslation('trip');
+  const { origin, dest } = trip;
+  const fromInput = `${origin.name}, ${origin.country_name}`;
+  const toInput = `${dest.name}, ${dest.country_name}`;
+  const formattedDate = dayjs(trip.date).format('YYYY-MM-DD');
+
+  return (
+    <div className={styles.back}>
+      <Link
+        href={`/search?from=${origin.place_id}&to=${dest.place_id}&date=${formattedDate}&from_input=${fromInput}&to_input=${toInput}`}
+      >
+        &lt; {t('back')}
+      </Link>
+    </div>
+  );
+};
 
 const formatDate = (date: Date, lang: string) => {
   const [weekday, comma, ...rest] = new Intl.DateTimeFormat(lang, {
@@ -25,10 +43,9 @@ const formatDate = (date: Date, lang: string) => {
   );
 };
 
-const Trip = ({
+const TripDetailsPage = ({
   trip: data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const router = useRouter();
   const { t, i18n } = useTranslation(['trip', 'common']);
 
   if (data === null) {
@@ -45,11 +62,7 @@ const Trip = ({
       </Head>
       <div className="container">
         <div className={styles.root}>
-          <div className={styles.back}>
-            <Button type="link" onClick={() => router.back()}>
-              &lt; {t('back')}
-            </Button>
-          </div>
+          <BackButton trip={data} />
           <h1>
             {t('title')} {formattedDate}
           </h1>
@@ -60,10 +73,10 @@ const Trip = ({
   );
 };
 
-Trip.auth = true;
+TripDetailsPage.auth = true;
 
 type Props = {
-  trip: TripType | null;
+  trip: Trip | null;
   session: Session | null;
 } & SSRConfig;
 
@@ -81,7 +94,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 
   const session = await unstable_getServerSession(req, res, authOptions);
 
-  let trip: TripType | null = null;
+  let notFound = false;
+  let trip: Trip | null = null;
   if (session) {
     try {
       const tripResponse = await api.get(`/trips/${params?.tripId}/`, {
@@ -93,18 +107,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
       trip = tripResponse.data;
     } catch (e) {
       if (axios.isAxiosError(e) && e.response?.status === 404) {
-        return {
-          notFound: true,
-          props: {
-            ...translations,
-            session,
-          },
-        };
+        notFound = true;
       }
     }
   }
 
   return {
+    notFound,
     props: {
       ...translations,
       session,
@@ -113,4 +122,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   };
 };
 
-export default Trip;
+export default TripDetailsPage;
