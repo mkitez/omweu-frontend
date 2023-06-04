@@ -24,7 +24,8 @@ instance.interceptors.response.use(
       if (
         error.response?.status === 403 &&
         error.response?.data.code === 'token_not_valid' &&
-        !originalConfig._retry
+        !originalConfig._retry &&
+        typeof window !== 'undefined'
       ) {
         originalConfig._retry = true;
         let session;

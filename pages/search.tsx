@@ -9,6 +9,7 @@ import type { Trip } from '../components/Trips';
 import TripSearch from '../components/TripSearch';
 import styles from '../styles/Search.module.css';
 import InlineTrip from '../components/InlineTrip';
+import Head from 'next/head';
 
 const Search = () => {
   const router = useRouter();
@@ -22,6 +23,12 @@ const Search = () => {
       return await response.json();
     }
   );
+
+  const title = `${t('searchTitle')}${
+    router.query.from_input && router.query.to_input
+      ? ` ${router.query.from_input} – ${router.query.to_input}`
+      : ''
+  } | EUbyCar.com`;
 
   let searchResults;
   if (isLoading) {
@@ -39,10 +46,15 @@ const Search = () => {
   }
 
   return (
-    <div className={styles.root}>
-      <TripSearch />
-      {searchResults}
-    </div>
+    <>
+      <Head>
+        <title>{title}</title>
+      </Head>
+      <div className={styles.root}>
+        <TripSearch />
+        {searchResults}
+      </div>
+    </>
   );
 };
 
