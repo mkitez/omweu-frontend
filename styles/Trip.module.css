@@ -4,13 +4,6 @@
 
 .back {
   margin-bottom: 0.5rem;
-}
-
-.back a {
   font-size: 0.8rem;
-  padding: 0.3rem 0;
-}
-
-.back a:not(:hover) {
   color: rgba(0, 0, 0, 0.45);
 }
