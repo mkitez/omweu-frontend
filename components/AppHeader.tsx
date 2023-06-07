@@ -2,10 +2,11 @@ import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import { Layout, Button, theme } from 'antd';
 import { PlusCircleOutlined, UserOutlined } from '@ant-design/icons';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import styles from '../styles/AppHeader.module.css';
 import Logo from '../assets/logo.svg';
 import LogoXs from '../assets/logoXs.svg';
+import { useEffect } from 'react';
 
 const { Header } = Layout;
 
@@ -13,8 +14,14 @@ const AppHeader = () => {
   const {
     token: { colorPrimary, colorBgContainer },
   } = theme.useToken();
-  const { status } = useSession();
+  const { status, data: session } = useSession();
   const { t } = useTranslation('common');
+
+  useEffect(() => {
+    if (session?.error) {
+      signOut({ callbackUrl: '/' });
+    }
+  }, [session]);
 
   return (
     <Header
@@ -33,6 +40,20 @@ const AppHeader = () => {
       </div>
       {(() => {
         if (status === 'loading') return null;
+        if (status === 'unauthenticated' || session?.error)
+          return (
+            <div className={styles.authButtons}>
+              <Button
+                type="primary"
+                onClick={() => signIn(undefined, { callbackUrl: '/dashboard' })}
+              >
+                {t('signIn')}
+              </Button>
+              <Link href="/auth/signup" passHref legacyBehavior>
+                <Button>{t('signUp')}</Button>
+              </Link>
+            </div>
+          );
         if (status === 'authenticated')
           return (
             <div className={styles.navButtons}>
@@ -49,20 +70,6 @@ const AppHeader = () => {
               </Link>
               <Link href="/dashboard" className={styles.profileBtn}>
                 <UserOutlined style={{ color: colorPrimary }} />
-              </Link>
-            </div>
-          );
-        if (status === 'unauthenticated')
-          return (
-            <div className={styles.authButtons}>
-              <Button
-                type="primary"
-                onClick={() => signIn(undefined, { callbackUrl: '/dashboard' })}
-              >
-                {t('signIn')}
-              </Button>
-              <Link href="/auth/signup" passHref legacyBehavior>
-                <Button>{t('signUp')}</Button>
               </Link>
             </div>
           );

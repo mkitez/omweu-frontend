@@ -1,0 +1,32 @@
+.destContainer {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+  font-weight: 500;
+}
+
+.location {
+  height: 2rem;
+  width: 2rem;
+}
+
+.arrow {
+  height: 2rem;
+  width: 2rem;
+  line-height: 2rem;
+  text-align: center;
+  border-radius: 50%;
+  background-color: #efe3e3;
+}
+
+.btnContainer {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.btnContainer a {
+  font-weight: 500;
+  min-width: 10rem;
+}
