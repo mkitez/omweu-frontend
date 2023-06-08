@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Button, Form, InputNumber } from 'antd';
+import { Alert, Button, Form, InputNumber } from 'antd';
 import PlaceInput from './PlaceInput';
 import DateTimeInput from './DateTimeInput';
 import type { DefaultOptionType } from 'antd/es/select';
@@ -9,6 +9,7 @@ import { Rule } from 'antd/es/form';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import styles from '../styles/TripEditForm.module.css';
+import axios from 'axios';
 
 export interface FormData {
   from: DefaultOptionType;
@@ -38,7 +39,10 @@ const TripEditForm = ({
 }: any) => {
   const { t } = useTranslation('common');
   const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
   const [form] = Form.useForm();
 
   const initialValues = useMemo(
@@ -63,10 +67,14 @@ const TripEditForm = ({
       date,
       price: formData.price,
     };
+    setLoading(true);
     try {
       await submit(data);
-    } catch (error: any) {
-      setError(error.message);
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        setError(t('errors.common') as string);
+      }
+      setLoading(false);
     }
   };
 
@@ -96,55 +104,58 @@ const TripEditForm = ({
   ];
 
   return (
-    <Form
-      form={form}
-      initialValues={initialValues}
-      requiredMark={false}
-      onFinish={handleSubmit}
-      disabled={initialDate && dayjs(initialDate) < dayjs()}
-      labelCol={{ span: 5 }}
-      wrapperCol={{ span: 14 }}
-      className={styles.root}
-    >
-      <Form.Item name="from" label={t('from.label')} rules={placeInputRules}>
-        <PlaceInput placeholder={t('from.placeholder')} />
-      </Form.Item>
-      <Form.Item name="to" label={t('to.label')} rules={placeInputRules}>
-        <PlaceInput placeholder={t('to.placeholder')} />
-      </Form.Item>
-      <DateTimeInput
-        name="date"
-        label={t('dateTime.label') as string}
-        placeholder={t('dateTime.placeholder') as string}
-      />
-      <Form.Item name="price" label={t('price.label')} rules={priceRules}>
-        <InputNumber
-          placeholder={t('price.placeholder') as string}
-          maxLength={5}
-          step={1}
-          addonAfter="€"
-        />
-      </Form.Item>
-      <Form.Item
-        className={styles.btnContainer}
-        wrapperCol={{ sm: { offset: 5 } }}
+    <>
+      <Form
+        form={form}
+        initialValues={initialValues}
+        requiredMark={false}
+        onFinish={handleSubmit}
+        disabled={(initialDate && dayjs(initialDate) < dayjs()) || loading}
+        labelCol={{ span: 5 }}
+        wrapperCol={{ span: 14 }}
+        className={styles.root}
       >
-        <Button type="primary" htmlType="submit">
-          {submitValue}
-        </Button>
-        <Button
-          disabled={false}
-          onClick={() => router.push('/dashboard/trips')}
+        <Form.Item name="from" label={t('from.label')} rules={placeInputRules}>
+          <PlaceInput placeholder={t('from.placeholder')} />
+        </Form.Item>
+        <Form.Item name="to" label={t('to.label')} rules={placeInputRules}>
+          <PlaceInput placeholder={t('to.placeholder')} />
+        </Form.Item>
+        <DateTimeInput
+          name="date"
+          label={t('dateTime.label') as string}
+          placeholder={t('dateTime.placeholder') as string}
+        />
+        <Form.Item name="price" label={t('price.label')} rules={priceRules}>
+          <InputNumber
+            placeholder={t('price.placeholder') as string}
+            maxLength={5}
+            step={1}
+            addonAfter="€"
+          />
+        </Form.Item>
+        <Form.Item
+          className={styles.btnContainer}
+          wrapperCol={{ sm: { offset: 5 } }}
         >
-          {t('cancel')}
-        </Button>
-        {onDelete && (
-          <Button type="text" danger onClick={() => onDelete()}>
-            {t('delete')}
+          <Button type="primary" htmlType="submit" loading={loading}>
+            {submitValue}
           </Button>
-        )}
-      </Form.Item>
-    </Form>
+          <Button
+            disabled={false}
+            onClick={() => router.push('/dashboard/trips')}
+          >
+            {t('cancel')}
+          </Button>
+          {onDelete && (
+            <Button type="text" danger onClick={() => onDelete()}>
+              {t('delete')}
+            </Button>
+          )}
+        </Form.Item>
+      </Form>
+      {error && <Alert type="error" message={error} />}
+    </>
   );
 };
 
