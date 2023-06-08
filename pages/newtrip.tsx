@@ -1,16 +1,22 @@
 import { useRouter } from 'next/router';
 import TripService from '../services/trip.service';
 import TripEditForm from '../components/TripEditForm';
-import { Session } from 'next-auth';
-import { getServerSideProps } from './dashboard/trips';
+import { unstable_getServerSession } from 'next-auth';
 import { useTranslation } from 'next-i18next';
+import { GetServerSideProps } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { authOptions } from './api/auth/[...nextauth]';
+import { useSession } from 'next-auth/react';
+import api from '../services/api';
+import { User } from '../components/Trips';
 
-const NewTrip = ({ session }: { session: Session }) => {
+const NewTrip = () => {
   const router = useRouter();
+  const { data: session } = useSession();
   const { t } = useTranslation(['dashboard', 'common']);
 
   const handleSubmit = async (data: any) => {
-    await TripService.createTrip(data, session.accessToken as string);
+    await TripService.createTrip(data, session?.accessToken as string);
     router.push('/dashboard');
   };
 
@@ -27,6 +33,39 @@ const NewTrip = ({ session }: { session: Session }) => {
 
 NewTrip.auth = true;
 
-export { getServerSideProps };
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  res,
+  locale,
+}) => {
+  const session = await unstable_getServerSession(req, res, authOptions);
+  if (session) {
+    const userResponse = await api.get(`/users/${session.user.id}/`, {
+      headers: {
+        Authorization: `Bearer ${session.accessToken}`,
+        'Accept-Language': locale,
+      },
+    });
+    const userData = userResponse.data as User;
+    if (!userData.phone_number && !userData.telegram_username) {
+      return {
+        redirect: { destination: '/add-contacts' },
+        props: {},
+      };
+    }
+  }
+
+  const translations = await serverSideTranslations(locale as string, [
+    'common',
+    'dashboard',
+  ]);
+
+  return {
+    props: {
+      ...translations,
+      session,
+    },
+  };
+};
 
 export default NewTrip;
