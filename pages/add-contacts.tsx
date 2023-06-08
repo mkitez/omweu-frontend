@@ -8,6 +8,7 @@ import { SSRConfig, useTranslation } from 'next-i18next';
 import styles from '../styles/AddContacts.module.css';
 import api from '../services/api';
 import { User } from '../components/Trips';
+import ContactDetailsForm from '../components/ContactDetailsForm';
 
 const AddContacts = ({
   user,
@@ -20,6 +21,7 @@ const AddContacts = ({
       </Head>
       <div className={styles.root}>
         <h1>{t('addContacts.title')}</h1>
+        <ContactDetailsForm />
       </div>
     </div>
   );
@@ -48,7 +50,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     },
   });
   const userData = userResponse.data as User;
-  if (userData.phone_number && userData.telegram_username) {
+  if (userData.phone_number || userData.telegram_username) {
     return {
       redirect: { destination: '/newtrip' },
       props: {},
