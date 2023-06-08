@@ -1,0 +1,11 @@
+.root {
+  margin-bottom: 1rem;
+}
+
+.btnContainer {
+  padding: 0.5rem 0;
+}
+
+.btnContainer button {
+  margin-right: 0.5rem;
+}

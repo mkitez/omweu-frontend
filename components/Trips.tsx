@@ -3,9 +3,9 @@ import { useSession } from 'next-auth/react';
 import { List } from 'antd';
 import Link from 'next/link';
 import dayjs from 'dayjs';
-import { API_URL } from '../utils/constants';
 import api from '../services/api';
 import { useTranslation } from 'next-i18next';
+import { LoadingOutlined } from '@ant-design/icons';
 import styles from '../styles/Trips.module.css';
 
 export interface User {
@@ -35,13 +35,13 @@ export interface Trip {
 }
 
 const Trips = () => {
-  const { data: session } = useSession({ required: true });
+  const { data: session } = useSession();
   const { t, i18n } = useTranslation(['dashboard', 'common']);
   const {
     data: trips,
     error,
     isLoading,
-  } = useSWR<Trip[]>(`${API_URL}/trips/`, async (url) => {
+  } = useSWR<Trip[]>('/trips/', async (url) => {
     const response = await api.get(url, {
       headers: {
         Authorization: `Bearer ${session?.accessToken}`,
@@ -51,39 +51,52 @@ const Trips = () => {
     return response.data;
   });
 
-  if (error) {
-    return <div>{t('errors.common', { ns: 'common' })}</div>;
-  }
-
-  if (isLoading) {
-    return <div>{t('loading', { ns: 'common' })}</div>;
-  }
-
   return (
-    <div style={{ marginBottom: 10 }}>
-      {trips && trips.length > 0 ? (
-        <List
-          itemLayout="horizontal"
-          size="small"
-          dataSource={trips
-            .slice()
-            .sort((tripA, tripB) => dayjs(tripB.date).diff(dayjs(tripA.date)))}
-          renderItem={(trip) => (
-            <List.Item className={styles.row}>
-              <List.Item.Meta
-                title={
-                  <Link key="trip-edit" href={`/tripedit/${trip.id}`}>
-                    {trip.origin.name} - {trip.dest.name}
-                  </Link>
-                }
-                description={new Date(trip.date).toLocaleString(i18n.language)}
-              />
-            </List.Item>
-          )}
-        />
-      ) : (
-        <div>{t('trips.noTrips')}</div>
-      )}
+    <div className={styles.root}>
+      {(() => {
+        if (error) {
+          return (
+            <div className={styles.errorLoadingContainer}>
+              {t('errors.common', { ns: 'common' })}
+            </div>
+          );
+        }
+        if (isLoading) {
+          return (
+            <div className={styles.errorLoadingContainer}>
+              <LoadingOutlined style={{ fontSize: '2rem' }} />
+            </div>
+          );
+        }
+        if (trips?.length === 0) {
+          return <div>{t('trips.noTrips')}</div>;
+        }
+        return (
+          <List
+            itemLayout="horizontal"
+            size="small"
+            dataSource={trips
+              ?.slice()
+              .sort((tripA, tripB) =>
+                dayjs(tripB.date).diff(dayjs(tripA.date))
+              )}
+            renderItem={(trip) => (
+              <List.Item className={styles.row}>
+                <List.Item.Meta
+                  title={
+                    <Link key="trip-edit" href={`/tripedit/${trip.id}`}>
+                      {trip.origin.name} – {trip.dest.name}
+                    </Link>
+                  }
+                  description={new Date(trip.date).toLocaleString(
+                    i18n.language
+                  )}
+                />
+              </List.Item>
+            )}
+          />
+        );
+      })()}
     </div>
   );
 };

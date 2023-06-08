@@ -2,7 +2,6 @@ import Head from 'next/head';
 import type { ReactElement } from 'react';
 import useSWR from 'swr';
 import { getServerSideProps } from './trips';
-import { API_URL } from '../../utils/constants';
 import api from '../../services/api';
 import DashboardLayout from '../../components/DashboardLayout';
 import { useTranslation } from 'next-i18next';
@@ -15,7 +14,7 @@ import styles from '../../styles/Profile.module.css';
 const Profile = () => {
   const { data: session } = useSession();
   const { data, error, isLoading, mutate } = useSWR<User>(
-    `${API_URL}/users/${session?.user.id}/`,
+    `/users/${session?.user.id}/`,
     async (url) => {
       const response = await api.get(url, {
         headers: { Authorization: `Bearer ${session?.accessToken}` },

@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Button, Form, Row, Col, InputNumber } from 'antd';
+import { Alert, Button, Form, InputNumber } from 'antd';
 import PlaceInput from './PlaceInput';
 import DateTimeInput from './DateTimeInput';
 import type { DefaultOptionType } from 'antd/es/select';
@@ -8,6 +8,8 @@ import dayjs from 'dayjs';
 import { Rule } from 'antd/es/form';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
+import styles from '../styles/TripEditForm.module.css';
+import axios from 'axios';
 
 export interface FormData {
   from: DefaultOptionType;
@@ -37,7 +39,10 @@ const TripEditForm = ({
 }: any) => {
   const { t } = useTranslation('common');
   const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
   const [form] = Form.useForm();
 
   const initialValues = useMemo(
@@ -45,7 +50,7 @@ const TripEditForm = ({
       from: getInitialPlaceValue(initialOrigin),
       to: getInitialPlaceValue(initialDest),
       date: initialDate ? dayjs(initialDate, 'YYYY-MM-DD HH:mm') : null,
-      price: initialPrice ?? 0,
+      price: initialPrice ?? null,
     }),
     [initialDate, initialDest, initialOrigin, initialPrice]
   );
@@ -62,10 +67,14 @@ const TripEditForm = ({
       date,
       price: formData.price,
     };
+    setLoading(true);
     try {
       await submit(data);
-    } catch (error: any) {
-      setError(error.message);
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        setError(t('errors.common') as string);
+      }
+      setLoading(false);
     }
   };
 
@@ -85,76 +94,68 @@ const TripEditForm = ({
     }),
   ];
 
+  const priceRules: Rule[] = [
+    () => ({
+      validator: (_, value) =>
+        Number(value) > 0
+          ? Promise.resolve()
+          : Promise.reject(t('errors.noPrice')),
+    }),
+  ];
+
   return (
-    <Form
-      form={form}
-      initialValues={initialValues}
-      layout="horizontal"
-      requiredMark={false}
-      onFinish={handleSubmit}
-      disabled={initialDate && dayjs(initialDate) < dayjs()}
-    >
-      <Row gutter={20}>
-        <Col xs={24} md={12}>
-          <Form.Item
-            name="from"
-            label={t('from.label')}
-            rules={placeInputRules}
-          >
-            <PlaceInput placeholder={t('from.placeholder')} />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={12}>
-          <Form.Item name="to" label={t('to.label')} rules={placeInputRules}>
-            <PlaceInput placeholder={t('to.placeholder')} />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={24} md={12}>
-          <DateTimeInput
-            name="date"
-            label={t('dateTime.label') as string}
-            placeholder={t('dateTime.placeholder') as string}
+    <>
+      <Form
+        form={form}
+        initialValues={initialValues}
+        requiredMark={false}
+        onFinish={handleSubmit}
+        disabled={(initialDate && dayjs(initialDate) < dayjs()) || loading}
+        labelCol={{ span: 5 }}
+        wrapperCol={{ span: 14 }}
+        className={styles.root}
+      >
+        <Form.Item name="from" label={t('from.label')} rules={placeInputRules}>
+          <PlaceInput placeholder={t('from.placeholder')} />
+        </Form.Item>
+        <Form.Item name="to" label={t('to.label')} rules={placeInputRules}>
+          <PlaceInput placeholder={t('to.placeholder')} />
+        </Form.Item>
+        <DateTimeInput
+          name="date"
+          label={t('dateTime.label') as string}
+          placeholder={t('dateTime.placeholder') as string}
+        />
+        <Form.Item name="price" label={t('price.label')} rules={priceRules}>
+          <InputNumber
+            placeholder={t('price.placeholder') as string}
+            maxLength={5}
+            step={1}
+            addonAfter="€"
           />
-        </Col>
-        <Col xs={24} md={12}>
-          <Form.Item
-            name="price"
-            label={t('price.label')}
-            rules={[{ required: true, message: t('errors.noPrice') as string }]}
-          >
-            <InputNumber
-              placeholder={t('price.placeholder') as string}
-              maxLength={5}
-              step={1}
-            />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row gutter={[10, 10]}>
-        <Col>
-          <Button type="primary" htmlType="submit">
+        </Form.Item>
+        <Form.Item
+          className={styles.btnContainer}
+          wrapperCol={{ sm: { offset: 5 } }}
+        >
+          <Button type="primary" htmlType="submit" loading={loading}>
             {submitValue}
           </Button>
-        </Col>
-        <Col>
           <Button
             disabled={false}
             onClick={() => router.push('/dashboard/trips')}
           >
             {t('cancel')}
           </Button>
-        </Col>
-        {onDelete && (
-          <Col>
+          {onDelete && (
             <Button type="text" danger onClick={() => onDelete()}>
               {t('delete')}
             </Button>
-          </Col>
-        )}
-      </Row>
-    </Form>
+          )}
+        </Form.Item>
+      </Form>
+      {error && <Alert type="error" message={error} />}
+    </>
   );
 };
 
