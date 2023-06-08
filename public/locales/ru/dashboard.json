@@ -16,5 +16,8 @@
     "phoneNumber": "Телефон",
     "telegram": "Telegram"
   },
+  "addContacts": {
+    "title": "Ваши контактные данные"
+  },
   "logout": "Выйти"
 }
