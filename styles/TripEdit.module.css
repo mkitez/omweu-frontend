@@ -1,0 +1,12 @@
+.root {
+  margin-bottom: 2rem;
+}
+
+.root h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.errorLoadingContainer {
+  text-align: center;
+}
