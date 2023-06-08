@@ -4,11 +4,12 @@ import type { InferGetServerSidePropsType } from 'next';
 import { unstable_getServerSession } from 'next-auth';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { authOptions } from './api/auth/[...nextauth]';
-import { SSRConfig, useTranslation } from 'next-i18next';
+import { SSRConfig, Trans, useTranslation } from 'next-i18next';
 import styles from '../styles/AddContacts.module.css';
 import api from '../services/api';
 import { User } from '../components/Trips';
 import ContactDetailsForm from '../components/ContactDetailsForm';
+import Link from 'next/link';
 
 const AddContacts = ({
   user,
@@ -21,6 +22,20 @@ const AddContacts = ({
       </Head>
       <div className={styles.root}>
         <h1>{t('addContacts.title')}</h1>
+        <div className={styles.info}>
+          <p>
+            <Trans
+              components={[
+                <Link key={0} href="/dashboard/profile">
+                  x
+                </Link>,
+              ]}
+            >
+              {t('addContacts.infoTextOne')}
+            </Trans>
+          </p>
+          <p>{t('addContacts.infoTextTwo')}</p>
+        </div>
         <ContactDetailsForm />
       </div>
     </div>
