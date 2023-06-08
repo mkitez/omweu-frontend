@@ -29,7 +29,7 @@ const UserProfileForm: FC<Props> = ({ data, onSubmit }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const { t } = useTranslation(['dashboard', 'common']);
+  const { t, i18n } = useTranslation(['dashboard', 'common']);
   const router = useRouter();
 
   const handleSubmit = async (formData: FormData) => {
@@ -38,7 +38,10 @@ const UserProfileForm: FC<Props> = ({ data, onSubmit }) => {
     const url = `${API_URL}/users/${session?.user.id}/`;
     try {
       await api.put(url, formData, {
-        headers: { Authorization: `Bearer ${session?.accessToken}` },
+        headers: {
+          Authorization: `Bearer ${session?.accessToken}`,
+          'Accept-Language': i18n.language,
+        },
       });
     } catch (e) {
       setError(t('errors.common', { ns: 'common' }) as string);
@@ -78,6 +81,7 @@ const UserProfileForm: FC<Props> = ({ data, onSubmit }) => {
               wrapperCol={{ span: 18 }}
               label={t('profile.firstName')}
               name="first_name"
+              rules={[{ required: true }]}
             >
               <Input />
             </Item>
