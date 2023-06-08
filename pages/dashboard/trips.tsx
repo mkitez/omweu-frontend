@@ -9,11 +9,15 @@ import Trips from '../../components/Trips';
 import DashboardLayout from '../../components/DashboardLayout';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
+import Head from 'next/head';
 
 const TripsPage = () => {
   const { t } = useTranslation('dashboard');
   return (
     <div>
+      <Head>
+        <title>{`${t('trips.title')} | EUbyCar.com`}</title>
+      </Head>
       <h2>{t('trips.title')}</h2>
       <Trips />
       <Link href="/newtrip" passHref legacyBehavior>
