@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Button, Form, Row, Col, InputNumber } from 'antd';
+import { Button, Form, InputNumber } from 'antd';
 import PlaceInput from './PlaceInput';
 import DateTimeInput from './DateTimeInput';
 import type { DefaultOptionType } from 'antd/es/select';
@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import { Rule } from 'antd/es/form';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
+import styles from '../styles/TripEditForm.module.css';
 
 export interface FormData {
   from: DefaultOptionType;
@@ -45,7 +46,7 @@ const TripEditForm = ({
       from: getInitialPlaceValue(initialOrigin),
       to: getInitialPlaceValue(initialDest),
       date: initialDate ? dayjs(initialDate, 'YYYY-MM-DD HH:mm') : null,
-      price: initialPrice ?? 0,
+      price: initialPrice ?? null,
     }),
     [initialDate, initialDest, initialOrigin, initialPrice]
   );
@@ -85,75 +86,64 @@ const TripEditForm = ({
     }),
   ];
 
+  const priceRules: Rule[] = [
+    () => ({
+      validator: (_, value) =>
+        Number(value) > 0
+          ? Promise.resolve()
+          : Promise.reject(t('errors.noPrice')),
+    }),
+  ];
+
   return (
     <Form
       form={form}
       initialValues={initialValues}
-      layout="horizontal"
       requiredMark={false}
       onFinish={handleSubmit}
       disabled={initialDate && dayjs(initialDate) < dayjs()}
+      labelCol={{ span: 5 }}
+      wrapperCol={{ span: 14 }}
+      className={styles.root}
     >
-      <Row gutter={20}>
-        <Col xs={24} md={12}>
-          <Form.Item
-            name="from"
-            label={t('from.label')}
-            rules={placeInputRules}
-          >
-            <PlaceInput placeholder={t('from.placeholder')} />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={12}>
-          <Form.Item name="to" label={t('to.label')} rules={placeInputRules}>
-            <PlaceInput placeholder={t('to.placeholder')} />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={24} md={12}>
-          <DateTimeInput
-            name="date"
-            label={t('dateTime.label') as string}
-            placeholder={t('dateTime.placeholder') as string}
-          />
-        </Col>
-        <Col xs={24} md={12}>
-          <Form.Item
-            name="price"
-            label={t('price.label')}
-            rules={[{ required: true, message: t('errors.noPrice') as string }]}
-          >
-            <InputNumber
-              placeholder={t('price.placeholder') as string}
-              maxLength={5}
-              step={1}
-            />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row gutter={[10, 10]}>
-        <Col>
-          <Button type="primary" htmlType="submit">
-            {submitValue}
-          </Button>
-        </Col>
-        <Col>
-          <Button
-            disabled={false}
-            onClick={() => router.push('/dashboard/trips')}
-          >
-            {t('cancel')}
-          </Button>
-        </Col>
+      <Form.Item name="from" label={t('from.label')} rules={placeInputRules}>
+        <PlaceInput placeholder={t('from.placeholder')} />
+      </Form.Item>
+      <Form.Item name="to" label={t('to.label')} rules={placeInputRules}>
+        <PlaceInput placeholder={t('to.placeholder')} />
+      </Form.Item>
+      <DateTimeInput
+        name="date"
+        label={t('dateTime.label') as string}
+        placeholder={t('dateTime.placeholder') as string}
+      />
+      <Form.Item name="price" label={t('price.label')} rules={priceRules}>
+        <InputNumber
+          placeholder={t('price.placeholder') as string}
+          maxLength={5}
+          step={1}
+          addonAfter="€"
+        />
+      </Form.Item>
+      <Form.Item
+        className={styles.btnContainer}
+        wrapperCol={{ sm: { offset: 5 } }}
+      >
+        <Button type="primary" htmlType="submit">
+          {submitValue}
+        </Button>
+        <Button
+          disabled={false}
+          onClick={() => router.push('/dashboard/trips')}
+        >
+          {t('cancel')}
+        </Button>
         {onDelete && (
-          <Col>
-            <Button type="text" danger onClick={() => onDelete()}>
-              {t('delete')}
-            </Button>
-          </Col>
+          <Button type="text" danger onClick={() => onDelete()}>
+            {t('delete')}
+          </Button>
         )}
-      </Row>
+      </Form.Item>
     </Form>
   );
 };

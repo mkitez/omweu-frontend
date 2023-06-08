@@ -9,6 +9,8 @@ import { authOptions } from './api/auth/[...nextauth]';
 import { useSession } from 'next-auth/react';
 import api from '../services/api';
 import { User } from '../components/Trips';
+import styles from '../styles/NewTrip.module.css';
+import Head from 'next/head';
 
 const NewTrip = () => {
   const router = useRouter();
@@ -21,12 +23,17 @@ const NewTrip = () => {
   };
 
   return (
-    <div className="content" style={{ marginBottom: 30 }}>
-      <h1>{t('trips.createTitle')}</h1>
-      <TripEditForm
-        submitValue={t('create', { ns: 'common' })}
-        submit={handleSubmit}
-      />
+    <div className="container">
+      <Head>
+        <title>{`${t('trips.createTitle')} | EUbyCar.com`}</title>
+      </Head>
+      <div className={styles.root}>
+        <h1>{t('trips.createTitle')}</h1>
+        <TripEditForm
+          submitValue={t('create', { ns: 'common' })}
+          submit={handleSubmit}
+        />
+      </div>
     </div>
   );
 };
