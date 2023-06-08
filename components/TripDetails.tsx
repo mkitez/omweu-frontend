@@ -33,7 +33,11 @@ const TripDetails: FC<Props> = ({ trip }) => {
       </div>
       <div className={styles.driver}>
         <div className={styles.imgContainer}>
-          <Image src={trip.driver.photo} width={100} height={100} alt="" />
+          {trip.driver.photo ? (
+            <Image src={trip.driver.photo} width={100} height={100} alt="" />
+          ) : (
+            trip.driver.first_name.charAt(0)
+          )}
         </div>
         <div className={styles.driverName}>{trip.driver.first_name}</div>
       </div>

@@ -30,21 +30,6 @@ const Search = () => {
       : ''
   } | EUbyCar.com`;
 
-  let searchResults;
-  if (isLoading) {
-    searchResults = <div>{t('searching')}</div>;
-  } else if (error) {
-    searchResults = <div>{t('errors.common')}</div>;
-  } else if (data.results.length === 0) {
-    searchResults = <div>{t('tripsNotFound')}</div>;
-  } else {
-    searchResults = data.results.map((trip: Trip) => (
-      <Link href={`/trips/${trip.id}`} key={trip.id}>
-        <InlineTrip trip={trip} />
-      </Link>
-    ));
-  }
-
   return (
     <>
       <Head>
@@ -52,7 +37,21 @@ const Search = () => {
       </Head>
       <div className={styles.root}>
         <TripSearch />
-        {searchResults}
+        {(() => {
+          if (isLoading) {
+            return <div>{t('searching')}</div>;
+          } else if (error) {
+            return <div>{t('errors.common')}</div>;
+          } else if (data.results.length === 0) {
+            return <div>{t('tripsNotFound')}</div>;
+          } else {
+            return data.results.map((trip: Trip) => (
+              <Link href={`/trips/${trip.id}`} key={trip.id}>
+                <InlineTrip trip={trip} />
+              </Link>
+            ));
+          }
+        })()}
       </div>
     </>
   );
