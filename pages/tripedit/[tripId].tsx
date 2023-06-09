@@ -60,6 +60,7 @@ const TripEdit = () => {
               initialDest={data.dest}
               initialDate={data.date}
               initialPrice={data.price}
+              initialDescription={data.description}
               submitValue={t('save', { ns: 'common' })}
               submit={async (data: any) => {
                 await TripService.updateTrip(

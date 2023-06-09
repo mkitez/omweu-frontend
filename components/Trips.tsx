@@ -32,6 +32,7 @@ export interface Trip {
   date_created: string;
   driver: User;
   price: string;
+  description: string;
 }
 
 const Trips = () => {
