@@ -41,6 +41,9 @@ const TripDetails: FC<Props> = ({ trip }) => {
         </div>
         <div className={styles.driverName}>{trip.driver.first_name}</div>
       </div>
+      {trip.description && (
+        <div className={styles.description}>{trip.description}</div>
+      )}
       <div className={styles.contacts}>
         <ul>
           {phone_number && (

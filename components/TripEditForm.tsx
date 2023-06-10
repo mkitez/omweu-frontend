@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Alert, Button, Form, InputNumber } from 'antd';
+import { Alert, Button, Form, Input, InputNumber } from 'antd';
 import PlaceInput from './PlaceInput';
 import DateTimeInput from './DateTimeInput';
 import type { DefaultOptionType } from 'antd/es/select';
@@ -16,6 +16,7 @@ export interface FormData {
   to: DefaultOptionType;
   date: dayjs.Dayjs;
   price: string;
+  description: string;
 }
 
 const getInitialPlaceValue = (place: Destination): DefaultOptionType | null => {
@@ -33,6 +34,7 @@ const TripEditForm = ({
   initialDest,
   initialDate,
   initialPrice,
+  initialDescription,
   submitValue,
   submit,
   onDelete,
@@ -51,8 +53,9 @@ const TripEditForm = ({
       to: getInitialPlaceValue(initialDest),
       date: initialDate ? dayjs(initialDate, 'YYYY-MM-DD HH:mm') : null,
       price: initialPrice ?? null,
+      description: initialDescription || '',
     }),
-    [initialDate, initialDest, initialOrigin, initialPrice]
+    [initialDate, initialDest, initialOrigin, initialPrice, initialDescription]
   );
   useEffect(() => {
     form.setFieldsValue(initialValues);
@@ -66,6 +69,7 @@ const TripEditForm = ({
       dest_id: formData.to.value,
       date,
       price: formData.price,
+      description: formData.description,
     };
     setLoading(true);
     try {
@@ -132,6 +136,14 @@ const TripEditForm = ({
             maxLength={5}
             step={1}
             addonAfter="€"
+          />
+        </Form.Item>
+        <Form.Item name="description" label={t('description.label')}>
+          <Input.TextArea
+            placeholder={t('description.placeholder') as string}
+            maxLength={300}
+            rows={3}
+            className={styles.desc}
           />
         </Form.Item>
         <Form.Item
