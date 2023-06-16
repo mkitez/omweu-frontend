@@ -6,7 +6,7 @@ import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
 import { Document } from '@contentful/rich-text-types';
 import { SSRConfig } from 'next-i18next';
 
-const Impressum = ({
+const PrivacyPolicy = ({
   title,
   body,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -35,7 +35,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => {
     accessToken: process.env.CONTENTFUL_ACCESS_TOKEN as string,
   });
 
-  const entry = await client.getEntry('4JIOTNUyKpQrzxTL66DnR', { locale });
+  const entry = await client.getEntry('1tPukCMhfcUZ46UsUSurhz', { locale });
   return {
     revalidate: 60,
     props: {
@@ -46,4 +46,4 @@ export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => {
   };
 };
 
-export default Impressum;
+export default PrivacyPolicy;
