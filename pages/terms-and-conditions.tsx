@@ -14,6 +14,7 @@ const TermsAndConditions = ({
     <div className="container">
       <Head>
         <title>{`${title} | EUbyCar.com`}</title>
+        <meta name="robots" content="noindex" />
       </Head>
       <div dangerouslySetInnerHTML={{ __html: body }} />
     </div>
