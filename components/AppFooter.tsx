@@ -1,6 +1,7 @@
 import { Layout, Row, Col } from 'antd';
 import Logo from '../assets/logoWhite.svg';
 import styles from '../styles/AppFooter.module.css';
+import Link from 'next/link';
 
 const { Footer } = Layout;
 
@@ -15,11 +16,18 @@ const AppFooter = () => {
             </div>
           </Col>
         </Row>
-        <Row>
-          <Col>
-            <div className={styles.copyright}>
-              &copy; EUbyCar.com, {new Date().getFullYear()}
-            </div>
+        <Row className={styles.links} gutter={[10, 16]}>
+          <Col xs={24} lg={8}>
+            &copy; EUbyCar.com, {new Date().getFullYear()}
+          </Col>
+          <Col xs={24} lg={4}>
+            <Link href="/impressum">Impressum</Link>
+          </Col>
+          <Col xs={24} lg={6}>
+            <Link href="/privacy-policy">Политика конфиденциальности</Link>
+          </Col>
+          <Col xs={24} lg={6}>
+            <Link href="/terms-and-conditions">Условия использования</Link>
           </Col>
         </Row>
       </div>
