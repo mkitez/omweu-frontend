@@ -7,6 +7,7 @@ import styles from '../../styles/SignIn.module.css';
 import { useRouter } from 'next/router';
 import { Alert, Col, Row, Divider } from 'antd';
 import VkButton from '../../components/VkButton';
+import AgreeToTermsAndPolicy from '../../components/AgreeToTermsAndPolicy';
 import { authOptions } from '../api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth';
 
@@ -37,6 +38,7 @@ const SignIn = () => {
             {t('login.dividerText')}
           </Divider>
           <VkButton />
+          <AgreeToTermsAndPolicy />
           {router.query.error === 'Default' && (
             <Row>
               <Col md={{ span: 16, offset: 4 }}>

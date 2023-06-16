@@ -7,6 +7,7 @@ import { useTranslation } from 'next-i18next';
 import { authOptions } from '../api/auth/[...nextauth]';
 import SignupForm from '../../components/SignupForm';
 import VkButton from '../../components/VkButton';
+import AgreeToTermsAndPolicy from '../../components/AgreeToTermsAndPolicy';
 import styles from '../../styles/Register.module.css';
 
 const Register = () => {
@@ -24,6 +25,7 @@ const Register = () => {
           {t('login.dividerText')}
         </Divider>
         <VkButton />
+        <AgreeToTermsAndPolicy />
       </div>
     </div>
   );

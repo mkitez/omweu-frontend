@@ -1,0 +1,11 @@
+.root {
+  margin: 0 auto 2rem;
+  max-width: 600px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.root a {
+  text-decoration: underline;
+}

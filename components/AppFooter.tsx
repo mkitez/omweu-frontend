@@ -16,7 +16,7 @@ const AppFooter = () => {
             </div>
           </Col>
         </Row>
-        <Row className={styles.links} gutter={[10, 10]}>
+        <Row className={styles.links} gutter={[10, 16]}>
           <Col xs={24} lg={8}>
             &copy; EUbyCar.com, {new Date().getFullYear()}
           </Col>
