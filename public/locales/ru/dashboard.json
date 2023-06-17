@@ -14,7 +14,8 @@
     "firstName": "Имя",
     "lastName": "Фамилия",
     "phoneNumber": "Телефон",
-    "telegram": "Telegram"
+    "telegram": "Telegram",
+    "telegramPlaceholder": "Имя пользователя без @"
   },
   "addContacts": {
     "title": "Ваши контактные данные",

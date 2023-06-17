@@ -58,12 +58,12 @@ const TripDetails: FC<Props> = ({ trip }) => {
             <li>
               Telegram:{' '}
               <a
-                href={`https://web.telegram.org/k/#${telegram_username}`}
+                href={`https://t.me/${telegram_username}`}
                 target="_blank"
                 rel="noreferrer"
                 className={styles.contactValue}
               >
-                {telegram_username}
+                @{telegram_username}
               </a>
             </li>
           )}

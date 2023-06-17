@@ -74,7 +74,7 @@ const ContactDetailsForm = () => {
           <Input placeholder={t('profile.phoneNumber') as string} />
         </Item>
         <Item label={t('profile.telegram')} name="telegram_username">
-          <Input placeholder="@username" />
+          <Input placeholder={t('profile.telegramPlaceholder') as string} />
         </Item>
         <Item wrapperCol={{ span: 24 }} className={styles.btnContainer}>
           <Button htmlType="submit" type="primary" loading={loading}>
