@@ -7,15 +7,10 @@ import ForWhoSection from '../components/ForWhoSection';
 import DriverSection from '../components/DriverSection';
 import PopularTripsSection from '../components/PopularTripsSection';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import type { InferGetServerSidePropsType } from 'next';
-import { GetServerSideProps } from 'next';
-import { unstable_getServerSession } from 'next-auth';
-import { authOptions } from './api/auth/[...nextauth]';
+import { GetStaticProps } from 'next';
 import styles from '../styles/Home.module.css';
 
-const Home = (
-  _props: InferGetServerSidePropsType<typeof getServerSideProps>
-) => {
+const Home = () => {
   const { t } = useTranslation('home');
   return (
     <div className={styles.root}>
@@ -34,22 +29,15 @@ const Home = (
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({
-  locale,
-  req,
-  res,
-}) => {
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(locale as string, [
     'common',
     'home',
   ]);
 
-  const session = await unstable_getServerSession(req, res, authOptions);
-
   return {
     props: {
       ...translations,
-      session,
     },
   };
 };
