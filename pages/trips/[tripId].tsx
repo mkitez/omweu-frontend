@@ -26,7 +26,7 @@ const BackButton = ({ trip }: { trip: Trip }) => {
       <Link
         href={`/search?from=${origin.place_id}&to=${dest.place_id}&date=${formattedDate}&from_input=${fromInput}&to_input=${toInput}`}
       >
-        &lt; {t('back')}
+        {t('back')}
       </Link>
     </div>
   );
