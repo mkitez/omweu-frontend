@@ -33,6 +33,7 @@ export interface Trip {
   driver: User;
   price: string;
   description: string;
+  route_stops: Destination[];
 }
 
 const Trips = () => {

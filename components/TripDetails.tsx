@@ -3,7 +3,7 @@ import Image from 'next/image';
 import type { Trip } from '../components/Trips';
 import styles from '../styles/TripDetails.module.css';
 import { useTranslation } from 'next-i18next';
-import { TripLine } from './TripLine';
+import TripOutline from './TripOutline';
 
 interface Props {
   trip: Trip;
@@ -19,11 +19,11 @@ const TripDetails: FC<Props> = ({ trip }) => {
     <div className={styles.root}>
       <div className={styles.tripDetails}>
         <div className={styles.time}>{tripTime}</div>
-        <TripLine />
-        <div className={styles.destContainer}>
-          <div className={styles.origin}>{trip.origin.name}</div>
-          <div className={styles.dest}>{trip.dest.name}</div>
-        </div>
+        <TripOutline
+          origin={trip.origin.name}
+          dest={trip.dest.name}
+          routeStops={trip.route_stops.map((stop) => stop.name)}
+        />
         <div className={styles.price}>
           &euro;
           {Number(trip.price).toLocaleString(i18n.language, {

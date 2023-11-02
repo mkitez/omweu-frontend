@@ -31,8 +31,20 @@
   color: rgba(0, 0, 0, 0.65);
 }
 
+.destContainer .origin {
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
 .destContainer .dest {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+.destContainer .routeStops {
+  height: 1rem;
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.55);
 }
 
 .driver {

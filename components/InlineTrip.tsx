@@ -21,6 +21,9 @@ const InlineTrip: FC<Props> = ({ trip }) => {
         <TripLine />
         <div className={styles.destContainer}>
           <div className={styles.origin}>{trip.origin.name}</div>
+          <div className={styles.routeStops}>
+            {trip.route_stops.map((stop) => stop.name).join(' — ')}
+          </div>
           <div className={styles.dest}>{trip.dest.name}</div>
         </div>
         <div className={styles.price}>
