@@ -18,7 +18,7 @@ const TripOutline: FC<Props> = ({ origin, dest, routeStops }) => {
         <div className={styles.originName}>{origin}</div>
       </div>
       {routeStops.map((stop, i) => (
-        <div key={i} className={styles.origin}>
+        <div key={i} className={styles.stop}>
           <div className={styles.routeStopLine}>
             <div className={styles.circleSm}></div>
             <div className={styles.routeStopBox}></div>
@@ -26,7 +26,7 @@ const TripOutline: FC<Props> = ({ origin, dest, routeStops }) => {
           <div className={styles.routeStopName}>{stop}</div>
         </div>
       ))}
-      <div className={styles.origin}>
+      <div className={styles.dest}>
         <div className={styles.destLine}>
           <div className={styles.circle}></div>
         </div>

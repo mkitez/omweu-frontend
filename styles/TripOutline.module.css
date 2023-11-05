@@ -6,6 +6,15 @@
 
 .origin {
   display: flex;
+  flex-grow: 1;
+}
+
+.stop {
+  display: flex;
+}
+
+.dest {
+  display: flex;
 }
 
 .originLine {
@@ -46,15 +55,17 @@
   background-color: #fff;
 }
 
-.routeStopBox {
-  height: 2rem;
+.box {
+  height: 100%;
+  min-height: 3rem;
   width: 3px;
   background-color: #294a54;
   margin: -1px auto -0.5rem;
 }
 
-.box {
-  height: 3rem;
+.routeStopBox {
+  height: 100%;
+  min-height: 2rem;
   width: 3px;
   background-color: #294a54;
   margin: -1px auto -0.5rem;
