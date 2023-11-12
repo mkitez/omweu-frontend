@@ -22,6 +22,7 @@ const InlineTrip: FC<Props> = ({ trip }) => {
           origin={trip.origin.name}
           dest={trip.dest.name}
           routeStops={[trip.route_stops.map((stop) => stop.name).join(' — ')]}
+          inline={true}
         />
         <div className={styles.price}>
           &euro;

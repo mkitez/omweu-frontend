@@ -20,6 +20,7 @@
 
 .tripDetails {
   display: flex;
+  height: 5rem;
 }
 
 .time {

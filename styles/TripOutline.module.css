@@ -70,3 +70,12 @@
   background-color: #294a54;
   margin: -1px auto -0.5rem;
 }
+
+.inlineOriginStop {
+  flex-grow: 1;
+}
+
+.inlineOriginStop .box,
+.inlineOriginStop .routeStopBox {
+  min-height: unset;
+}
