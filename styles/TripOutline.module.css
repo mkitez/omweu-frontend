@@ -4,15 +4,8 @@
   flex-grow: 1;
 }
 
-.origin {
-  display: flex;
-  flex-grow: 1;
-}
-
-.stop {
-  display: flex;
-}
-
+.origin,
+.stop,
 .dest {
   display: flex;
 }
@@ -71,11 +64,15 @@
   margin: -1px auto -0.5rem;
 }
 
-.inlineOriginStop {
+.inlineOrigin {
+  flex-grow: 1.5;
+}
+
+.inlineStop {
   flex-grow: 1;
 }
 
-.inlineOriginStop .box,
-.inlineOriginStop .routeStopBox {
+.inlineOrigin .box,
+.inlineStop .routeStopBox {
   min-height: unset;
 }

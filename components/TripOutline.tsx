@@ -11,7 +11,7 @@ type Props = {
 const TripOutline: FC<Props> = ({ origin, dest, routeStops, inline }) => {
   return (
     <div className={styles.root}>
-      <div className={`${styles.origin} ${inline && styles.inlineOriginStop}`}>
+      <div className={`${styles.origin} ${inline && styles.inlineOrigin}`}>
         <div className={styles.originLine}>
           <div className={styles.circle}></div>
           <div className={styles.box}></div>
@@ -21,7 +21,7 @@ const TripOutline: FC<Props> = ({ origin, dest, routeStops, inline }) => {
       {routeStops.map((stop, i) => (
         <div
           key={i}
-          className={`${styles.stop} ${inline && styles.inlineOriginStop}`}
+          className={`${styles.stop} ${inline && styles.inlineStop}`}
         >
           <div className={styles.routeStopLine}>
             <div className={styles.circleSm}></div>
