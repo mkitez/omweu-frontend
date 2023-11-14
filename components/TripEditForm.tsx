@@ -34,6 +34,7 @@ const getInitialPlaceValue = (place: Destination): DefaultOptionType | null => {
 const TripEditForm = ({
   initialOrigin,
   initialDest,
+  initialRouteStops,
   initialDate,
   initialPrice,
   initialDescription,
@@ -53,12 +54,21 @@ const TripEditForm = ({
     () => ({
       from: getInitialPlaceValue(initialOrigin),
       to: getInitialPlaceValue(initialDest),
+      routeStops: (initialRouteStops || [])
+        .map((stop: any) => getInitialPlaceValue(stop))
+        .filter((stop: any) => !!stop),
       date: initialDate ? dayjs(initialDate, 'YYYY-MM-DD HH:mm') : null,
       price: initialPrice ?? null,
       description: initialDescription || '',
-      routeStops: [],
     }),
-    [initialDate, initialDest, initialOrigin, initialPrice, initialDescription]
+    [
+      initialDate,
+      initialDest,
+      initialRouteStops,
+      initialOrigin,
+      initialPrice,
+      initialDescription,
+    ]
   );
   useEffect(() => {
     form.setFieldsValue(initialValues);
