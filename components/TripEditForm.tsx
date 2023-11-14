@@ -129,7 +129,10 @@ const TripEditForm = ({
     ({ getFieldValue }) => ({
       async validator() {
         const stops = getFieldValue('routeStops') as DefaultOptionType[];
-        const stopValues = stops.map((stop) => stop.value);
+        const stopValues = stops.map((stop) => stop?.value);
+        if (stopValues.includes(undefined)) {
+          return;
+        }
         const stopValuesSet = new Set(stopValues);
         if (stopValues.length !== stopValuesSet.size) {
           throw Error(t('errors.sameStop') as string);
@@ -176,7 +179,12 @@ const TripEditForm = ({
                   labelCol={{ span: 5 }}
                   wrapperCol={{ span: 14 }}
                 >
-                  <Form.Item noStyle {...field} rules={routeStopRules}>
+                  <Form.Item
+                    noStyle
+                    {...field}
+                    rules={routeStopRules}
+                    // validateTrigger={['onChange', 'onBlur']}
+                  >
                     <PlaceInput placeholder={t('stop.placeholder')} />
                   </Form.Item>
                   <MinusCircleOutlined
