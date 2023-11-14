@@ -179,12 +179,7 @@ const TripEditForm = ({
                   labelCol={{ span: 5 }}
                   wrapperCol={{ span: 14 }}
                 >
-                  <Form.Item
-                    noStyle
-                    {...field}
-                    rules={routeStopRules}
-                    // validateTrigger={['onChange', 'onBlur']}
-                  >
+                  <Form.Item noStyle {...field} rules={routeStopRules}>
                     <PlaceInput placeholder={t('stop.placeholder')} />
                   </Form.Item>
                   <MinusCircleOutlined
