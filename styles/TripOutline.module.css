@@ -1,0 +1,78 @@
+.root {
+  display: flex;
+  flex-flow: column;
+  flex-grow: 1;
+}
+
+.origin,
+.stop,
+.dest {
+  display: flex;
+}
+
+.originLine {
+  width: 2rem;
+  padding-top: 0.3rem;
+}
+
+.routeStopLine {
+  width: 2rem;
+  padding-top: 0.2rem;
+}
+
+.destLine {
+  width: 2rem;
+  padding-top: 0.3rem;
+}
+
+.routeStopName {
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.circle {
+  margin: auto;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 3px solid #294a54;
+  background-color: #fff;
+}
+
+.circleSm {
+  margin: auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 3px solid #294a54;
+  background-color: #fff;
+}
+
+.box {
+  height: 100%;
+  min-height: 3rem;
+  width: 3px;
+  background-color: #294a54;
+  margin: -1px auto -0.5rem;
+}
+
+.routeStopBox {
+  height: 100%;
+  min-height: 2rem;
+  width: 3px;
+  background-color: #294a54;
+  margin: -1px auto -0.5rem;
+}
+
+.inlineOrigin {
+  flex-grow: 1.5;
+}
+
+.inlineStop {
+  flex-grow: 1;
+}
+
+.inlineOrigin .box,
+.inlineStop .routeStopBox {
+  min-height: unset;
+}

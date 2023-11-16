@@ -1,8 +1,9 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Alert, Button, Form, Input, InputNumber } from 'antd';
+import { Alert, Button, Col, Form, Input, InputNumber, Row } from 'antd';
 import PlaceInput from './PlaceInput';
 import DateTimeInput from './DateTimeInput';
 import type { DefaultOptionType } from 'antd/es/select';
+import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { Destination } from './Trips';
 import dayjs from 'dayjs';
 import { Rule } from 'antd/es/form';
@@ -14,6 +15,7 @@ import axios from 'axios';
 export interface FormData {
   from: DefaultOptionType;
   to: DefaultOptionType;
+  routeStops: DefaultOptionType[];
   date: dayjs.Dayjs;
   price: string;
   description: string;
@@ -32,6 +34,7 @@ const getInitialPlaceValue = (place: Destination): DefaultOptionType | null => {
 const TripEditForm = ({
   initialOrigin,
   initialDest,
+  initialRouteStops,
   initialDate,
   initialPrice,
   initialDescription,
@@ -51,11 +54,21 @@ const TripEditForm = ({
     () => ({
       from: getInitialPlaceValue(initialOrigin),
       to: getInitialPlaceValue(initialDest),
+      routeStops: (initialRouteStops || [])
+        .map((stop: any) => getInitialPlaceValue(stop))
+        .filter((stop: any) => !!stop),
       date: initialDate ? dayjs(initialDate, 'YYYY-MM-DD HH:mm') : null,
       price: initialPrice ?? null,
       description: initialDescription || '',
     }),
-    [initialDate, initialDest, initialOrigin, initialPrice, initialDescription]
+    [
+      initialDate,
+      initialDest,
+      initialRouteStops,
+      initialOrigin,
+      initialPrice,
+      initialDescription,
+    ]
   );
   useEffect(() => {
     form.setFieldsValue(initialValues);
@@ -69,7 +82,8 @@ const TripEditForm = ({
       dest_id: formData.to.value,
       date,
       price: formData.price,
-      description: formData.description,
+      description: formData.description || '',
+      route_stop_ids: formData.routeStops.map((stop) => stop.value),
     };
     setLoading(true);
     try {
@@ -93,6 +107,35 @@ const TripEditForm = ({
         }
         if (from === to) {
           throw Error(t('errors.samePlace') as string);
+        }
+      },
+    }),
+  ];
+
+  const routeStopRules: Rule[] = [
+    { required: true, message: t('errors.noStop') as string },
+    ({ getFieldValue }) => ({
+      async validator(_, value) {
+        if (!value) {
+          return;
+        }
+        const from = getFieldValue('from')?.value;
+        const to = getFieldValue('to')?.value;
+        if (value.value === from || value.value === to) {
+          throw Error(t('errors.sameStopAsOriginDest') as string);
+        }
+      },
+    }),
+    ({ getFieldValue }) => ({
+      async validator() {
+        const stops = getFieldValue('routeStops') as DefaultOptionType[];
+        const stopValues = stops.map((stop) => stop?.value);
+        if (stopValues.includes(undefined)) {
+          return;
+        }
+        const stopValuesSet = new Set(stopValues);
+        if (stopValues.length !== stopValuesSet.size) {
+          throw Error(t('errors.sameStop') as string);
         }
       },
     }),
@@ -125,6 +168,41 @@ const TripEditForm = ({
         <Form.Item name="to" label={t('to.label')} rules={placeInputRules}>
           <PlaceInput placeholder={t('to.placeholder')} />
         </Form.Item>
+        <Form.List name="routeStops">
+          {(fields, { add, remove }, { errors }) => (
+            <>
+              {fields.map((field, index) => (
+                <Form.Item
+                  key={field.key}
+                  label={`${t('stop.label')} ${index + 1}`}
+                  required={false}
+                  labelCol={{ span: 5 }}
+                  wrapperCol={{ span: 14 }}
+                >
+                  <Form.Item noStyle {...field} rules={routeStopRules}>
+                    <PlaceInput placeholder={t('stop.placeholder')} />
+                  </Form.Item>
+                  <MinusCircleOutlined
+                    className={styles.removeStopBtn}
+                    onClick={() => remove(field.name)}
+                  />
+                </Form.Item>
+              ))}
+              {fields.length < 3 && (
+                <Form.Item wrapperCol={{ sm: { offset: 5 } }}>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    icon={<PlusOutlined />}
+                  >
+                    {t('addStop')}
+                  </Button>
+                  <Form.ErrorList errors={errors} />
+                </Form.Item>
+              )}
+            </>
+          )}
+        </Form.List>
         <DateTimeInput
           name="date"
           label={t('dateTime.label') as string}

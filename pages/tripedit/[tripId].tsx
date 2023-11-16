@@ -58,6 +58,7 @@ const TripEdit = () => {
             <TripEditForm
               initialOrigin={data.origin}
               initialDest={data.dest}
+              initialRouteStops={data.route_stops}
               initialDate={data.date}
               initialPrice={data.price}
               initialDescription={data.description}
