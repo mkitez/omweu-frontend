@@ -1,6 +1,6 @@
 import { useTranslation, Trans } from 'next-i18next';
-import BannerImg from '../assets/bannerImg.svg';
-import styles from '../styles/Banner.module.css';
+import BannerImg from '../../assets/bannerImg.svg';
+import styles from '../../styles/Banner.module.css';
 
 const Banner = () => {
   const { t } = useTranslation('home');

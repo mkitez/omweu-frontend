@@ -13,6 +13,7 @@ import type { Trip } from '../../components/Trips';
 import Error from 'next/error';
 import Link from 'next/link';
 import dayjs from 'dayjs';
+import { formatDate } from '../../utils/formatDate';
 
 const BackButton = ({ trip }: { trip: Trip }) => {
   const { t } = useTranslation('trip');
@@ -29,17 +30,6 @@ const BackButton = ({ trip }: { trip: Trip }) => {
         {t('back')}
       </Link>
     </div>
-  );
-};
-
-const formatDate = (date: Date, lang: string) => {
-  const [weekday, comma, ...rest] = new Intl.DateTimeFormat(lang, {
-    weekday: 'short',
-    day: 'numeric',
-    month: 'long',
-  }).formatToParts(date);
-  return [rest.map((v) => v.value).join(''), comma.value, weekday.value].join(
-    ''
   );
 };
 

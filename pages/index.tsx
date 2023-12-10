@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import { useTranslation } from 'next-i18next';
-import Banner from '../components/Banner';
-import TripSearch from '../components/TripSearch';
+import BannerSection from '../components/BannerSection';
 import PromoSection from '../components/PromoSection';
 import ForWhoSection from '../components/ForWhoSection';
 import DriverSection from '../components/DriverSection';
@@ -19,8 +18,7 @@ const Home = () => {
         <meta name="description" content={t('description') as string} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <Banner />
-      <TripSearch />
+      <BannerSection />
       <PromoSection />
       <ForWhoSection />
       <DriverSection />

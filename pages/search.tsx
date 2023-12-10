@@ -10,6 +10,7 @@ import TripSearch from '../components/TripSearch';
 import styles from '../styles/Search.module.css';
 import InlineTrip from '../components/InlineTrip';
 import Head from 'next/head';
+import { formatDate } from '../utils/formatDate';
 
 const Search = () => {
   const router = useRouter();
@@ -30,6 +31,11 @@ const Search = () => {
       : ''
   } | EUbyCar.com`;
 
+  const formattedDate = formatDate(
+    new Date(router.query.date as string),
+    i18n.language
+  );
+
   return (
     <>
       <Head>
@@ -37,21 +43,30 @@ const Search = () => {
       </Head>
       <div className={styles.root}>
         <TripSearch />
-        {(() => {
-          if (isLoading) {
-            return <div>{t('searching')}</div>;
-          } else if (error) {
-            return <div>{t('errors.common')}</div>;
-          } else if (data.results.length === 0) {
-            return <div>{t('tripsNotFound')}</div>;
-          } else {
-            return data.results.map((trip: Trip) => (
-              <Link href={`/trips/${trip.id}`} key={trip.id}>
-                <InlineTrip trip={trip} />
-              </Link>
-            ));
-          }
-        })()}
+        <div className={styles.result}>
+          {(() => {
+            if (isLoading) {
+              return t('searching');
+            } else if (error) {
+              return t('errors.common');
+            } else if (data.results.length === 0) {
+              return t('tripsNotFound');
+            } else {
+              return (
+                <>
+                  <h2>
+                    {t('tripsFound')} {formattedDate}
+                  </h2>
+                  {data.results.map((trip: Trip) => (
+                    <Link href={`/trips/${trip.id}`} key={trip.id}>
+                      <InlineTrip trip={trip} />
+                    </Link>
+                  ))}
+                </>
+              );
+            }
+          })()}
+        </div>
       </div>
     </>
   );
