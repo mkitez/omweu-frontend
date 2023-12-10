@@ -150,6 +150,8 @@ const TripEditForm = ({
     }),
   ];
 
+  const tripIsInPast = initialDate && dayjs(initialDate) < dayjs();
+
   return (
     <>
       <Form
@@ -157,7 +159,7 @@ const TripEditForm = ({
         initialValues={initialValues}
         requiredMark={false}
         onFinish={handleSubmit}
-        disabled={(initialDate && dayjs(initialDate) < dayjs()) || loading}
+        disabled={tripIsInPast || loading}
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 14 }}
         className={styles.root}
@@ -184,7 +186,9 @@ const TripEditForm = ({
                   </Form.Item>
                   <MinusCircleOutlined
                     className={styles.removeStopBtn}
-                    onClick={() => remove(field.name)}
+                    onClick={
+                      tripIsInPast ? undefined : () => remove(field.name)
+                    }
                   />
                 </Form.Item>
               ))}
