@@ -14,6 +14,9 @@ const InlineTrip: FC<Props> = ({ trip }) => {
   const tripTime = new Date(trip.date).toLocaleTimeString(i18n.language, {
     timeStyle: 'short',
   });
+  const routeStops = trip.route_stops.length
+    ? [trip.route_stops.map((stop) => stop.name).join(' — ')]
+    : [];
   return (
     <div className={styles.root}>
       <div className={styles.tripDetails}>
@@ -21,7 +24,7 @@ const InlineTrip: FC<Props> = ({ trip }) => {
         <TripOutline
           origin={trip.origin.name}
           dest={trip.dest.name}
-          routeStops={[trip.route_stops.map((stop) => stop.name).join(' — ')]}
+          routeStops={routeStops}
           inline={true}
         />
         <div className={styles.price}>
