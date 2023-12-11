@@ -1,11 +1,11 @@
 import useSWR from 'swr';
 import { useSession } from 'next-auth/react';
-import { List } from 'antd';
+import { List, Tooltip } from 'antd';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import api from '../services/api';
 import { useTranslation } from 'next-i18next';
-import { LoadingOutlined } from '@ant-design/icons';
+import { LoadingOutlined, CopyOutlined } from '@ant-design/icons';
 import styles from '../styles/Trips.module.css';
 
 export interface User {
@@ -83,7 +83,21 @@ const Trips = () => {
                 dayjs(tripB.date).diff(dayjs(tripA.date))
               )}
             renderItem={(trip) => (
-              <List.Item className={styles.row}>
+              <List.Item
+                className={styles.row}
+                actions={[
+                  <Tooltip key={trip.id} title={t('trips.copyTrip')}>
+                    <Link
+                      href={{
+                        pathname: '/tripcopy',
+                        query: { tripId: trip.id },
+                      }}
+                    >
+                      <CopyOutlined />
+                    </Link>
+                  </Tooltip>,
+                ]}
+              >
                 <List.Item.Meta
                   title={
                     <Link key="trip-edit" href={`/tripedit/${trip.id}`}>

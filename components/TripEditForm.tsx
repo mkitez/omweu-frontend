@@ -150,6 +150,8 @@ const TripEditForm = ({
     }),
   ];
 
+  const tripIsInPast = initialDate && dayjs(initialDate) < dayjs();
+
   return (
     <>
       <Form
@@ -157,7 +159,7 @@ const TripEditForm = ({
         initialValues={initialValues}
         requiredMark={false}
         onFinish={handleSubmit}
-        disabled={(initialDate && dayjs(initialDate) < dayjs()) || loading}
+        disabled={tripIsInPast || loading}
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 14 }}
         className={styles.root}
@@ -171,6 +173,13 @@ const TripEditForm = ({
         <Form.List name="routeStops">
           {(fields, { add, remove }, { errors }) => (
             <>
+              {fields.length === 0 && !tripIsInPast && (
+                <Row>
+                  <Col sm={{ offset: 5 }} className={styles.stopsTooltip}>
+                    {t('addStopTooltip')}
+                  </Col>
+                </Row>
+              )}
               {fields.map((field, index) => (
                 <Form.Item
                   key={field.key}
@@ -184,7 +193,9 @@ const TripEditForm = ({
                   </Form.Item>
                   <MinusCircleOutlined
                     className={styles.removeStopBtn}
-                    onClick={() => remove(field.name)}
+                    onClick={
+                      tripIsInPast ? undefined : () => remove(field.name)
+                    }
                   />
                 </Form.Item>
               ))}
