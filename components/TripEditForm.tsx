@@ -173,6 +173,13 @@ const TripEditForm = ({
         <Form.List name="routeStops">
           {(fields, { add, remove }, { errors }) => (
             <>
+              {fields.length === 0 && (
+                <Row>
+                  <Col sm={{ offset: 5 }} className={styles.stopsTooltip}>
+                    {t('addStopTooltip')}
+                  </Col>
+                </Row>
+              )}
               {fields.map((field, index) => (
                 <Form.Item
                   key={field.key}
