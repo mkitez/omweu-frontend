@@ -10,19 +10,20 @@
   display: flex;
 }
 
-.originLine {
-  width: 2rem;
+.originLine,
+.destLine,
+.routeStopLine {
+  flex-basis: 2rem;
+  flex-shrink: 0;
+}
+
+.originLine,
+.destLine {
   padding-top: 0.3rem;
 }
 
 .routeStopLine {
-  width: 2rem;
   padding-top: 0.2rem;
-}
-
-.destLine {
-  width: 2rem;
-  padding-top: 0.3rem;
 }
 
 .routeStopName {
