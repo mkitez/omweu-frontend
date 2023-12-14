@@ -2,14 +2,20 @@ import { FC } from 'react';
 import Image from 'next/image';
 import type { Trip } from '../components/Trips';
 import styles from '../styles/TripDetails.module.css';
-import { useTranslation } from 'next-i18next';
+import { Trans, useTranslation } from 'next-i18next';
 import TripOutline from './TripOutline';
+import { signIn, useSession } from 'next-auth/react';
+import { Alert } from 'antd';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 interface Props {
   trip: Trip;
 }
 
 const TripDetails: FC<Props> = ({ trip }) => {
+  const session = useSession();
+  const { asPath } = useRouter();
   const { t, i18n } = useTranslation('trip');
   const tripTime = new Date(trip.date).toLocaleTimeString(i18n.language, {
     timeStyle: 'short',
@@ -69,7 +75,35 @@ const TripDetails: FC<Props> = ({ trip }) => {
           )}
         </ul>
       </div>
-      <div className={styles.reach}>{t('reachDriver')}</div>
+      {session.status === 'authenticated' ? (
+        <div className={styles.reach}>{t('reachDriver')}</div>
+      ) : (
+        <Alert
+          type="info"
+          className={styles.loginMessage}
+          message={
+            <Trans
+              components={[
+                <Link
+                  key={0}
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    signIn(undefined, { callbackUrl: asPath });
+                  }}
+                >
+                  x
+                </Link>,
+                <Link key={1} href="/auth/signup">
+                  x
+                </Link>,
+              ]}
+            >
+              {t('loginForDetails')}
+            </Trans>
+          }
+        />
+      )}
     </div>
   );
 };

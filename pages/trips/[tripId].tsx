@@ -63,8 +63,6 @@ const TripDetailsPage = ({
   );
 };
 
-TripDetailsPage.auth = true;
-
 type Props = {
   trip: Trip | null;
   session: Session | null;
@@ -86,19 +84,17 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 
   let notFound = false;
   let trip: Trip | null = null;
-  if (session) {
-    try {
-      const tripResponse = await api.get(`/trips/${params?.tripId}/`, {
-        headers: {
-          Authorization: `Bearer ${session.accessToken}`,
-          'Accept-Language': locale,
-        },
-      });
-      trip = tripResponse.data;
-    } catch (e) {
-      if (axios.isAxiosError(e) && e.response?.status === 404) {
-        notFound = true;
-      }
+  try {
+    const tripResponse = await api.get(`/trips/${params?.tripId}/`, {
+      headers: {
+        Authorization: session ? `Bearer ${session.accessToken}` : undefined,
+        'Accept-Language': locale,
+      },
+    });
+    trip = tripResponse.data;
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response?.status === 404) {
+      notFound = true;
     }
   }
 
