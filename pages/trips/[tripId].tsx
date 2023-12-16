@@ -14,6 +14,7 @@ import Error from 'next/error';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import { formatDate } from '../../utils/formatDate';
+import { LeftOutlined } from '@ant-design/icons';
 
 const BackButton = ({ trip }: { trip: Trip }) => {
   const { t } = useTranslation('trip');
@@ -27,7 +28,7 @@ const BackButton = ({ trip }: { trip: Trip }) => {
       <Link
         href={`/search?from=${origin.place_id}&to=${dest.place_id}&date=${formattedDate}&from_input=${fromInput}&to_input=${toInput}`}
       >
-        {t('back')}
+        <LeftOutlined /> {t('back')} {origin.name} – {dest.name}
       </Link>
     </div>
   );
@@ -63,8 +64,6 @@ const TripDetailsPage = ({
   );
 };
 
-TripDetailsPage.auth = true;
-
 type Props = {
   trip: Trip | null;
   session: Session | null;
@@ -86,19 +85,17 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 
   let notFound = false;
   let trip: Trip | null = null;
-  if (session) {
-    try {
-      const tripResponse = await api.get(`/trips/${params?.tripId}/`, {
-        headers: {
-          Authorization: `Bearer ${session.accessToken}`,
-          'Accept-Language': locale,
-        },
-      });
-      trip = tripResponse.data;
-    } catch (e) {
-      if (axios.isAxiosError(e) && e.response?.status === 404) {
-        notFound = true;
-      }
+  try {
+    const tripResponse = await api.get(`/trips/${params?.tripId}/`, {
+      headers: {
+        Authorization: session ? `Bearer ${session.accessToken}` : undefined,
+        'Accept-Language': locale,
+      },
+    });
+    trip = tripResponse.data;
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response?.status === 404) {
+      notFound = true;
     }
   }
 
