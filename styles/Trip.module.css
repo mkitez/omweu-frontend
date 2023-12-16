@@ -7,8 +7,3 @@
   font-size: 0.8rem;
   color: rgba(0, 0, 0, 0.45);
 }
-
-.back a::before {
-  content: '<';
-  padding: 0 0.3rem;
-}

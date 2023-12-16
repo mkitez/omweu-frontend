@@ -14,6 +14,7 @@ import Error from 'next/error';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import { formatDate } from '../../utils/formatDate';
+import { LeftOutlined } from '@ant-design/icons';
 
 const BackButton = ({ trip }: { trip: Trip }) => {
   const { t } = useTranslation('trip');
@@ -27,7 +28,7 @@ const BackButton = ({ trip }: { trip: Trip }) => {
       <Link
         href={`/search?from=${origin.place_id}&to=${dest.place_id}&date=${formattedDate}&from_input=${fromInput}&to_input=${toInput}`}
       >
-        {t('back')}
+        <LeftOutlined /> {t('back')} {origin.name} – {dest.name}
       </Link>
     </div>
   );
