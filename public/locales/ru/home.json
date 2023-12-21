@@ -51,5 +51,8 @@
       }
     ],
     "findTrip": "Найти поездку"
+  },
+  "sectionUpcoming": {
+    "title": "<mark>Ближайшие</mark> поездки"
   }
 }

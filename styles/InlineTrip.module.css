@@ -17,6 +17,12 @@
   border-color: transparent;
 }
 
+.date {
+  font-size: 0.8rem;
+  margin-bottom: 0.4rem;
+  color: rgba(0, 0, 0, 0.5);
+}
+
 .tripDetails {
   display: flex;
   height: 5rem;

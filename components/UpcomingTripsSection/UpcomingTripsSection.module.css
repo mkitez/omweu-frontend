@@ -1,0 +1,33 @@
+.root {
+  padding: 2rem 0 1rem;
+}
+
+.root :global(.carousel .slide) {
+  text-align: unset;
+}
+
+.root :global(.carousel .control-dots .dot) {
+  background: rgba(0, 0, 0, 0.45);
+  box-shadow: none;
+}
+
+.root h2 {
+  font-size: 40px;
+  text-align: center;
+}
+
+.tripWrapper {
+  margin: 0 0.8rem 2rem;
+}
+
+@media screen and (max-width: 767px) {
+  .root h2 {
+    font-size: 32px;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1199px) {
+  .root h2 {
+    font-size: 28px;
+  }
+}
