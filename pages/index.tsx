@@ -8,6 +8,7 @@ import PopularTripsSection from '../components/PopularTripsSection';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GetStaticProps } from 'next';
 import styles from '../styles/Home.module.css';
+import UpcomingTripsSection from '../components/UpcomingTripsSection';
 
 const Home = () => {
   const { t } = useTranslation('home');
@@ -22,6 +23,7 @@ const Home = () => {
       <PromoSection />
       <ForWhoSection />
       <DriverSection />
+      <UpcomingTripsSection />
       <PopularTripsSection />
     </div>
   );

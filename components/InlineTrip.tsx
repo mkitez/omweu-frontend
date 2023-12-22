@@ -4,12 +4,15 @@ import type { Trip } from '../components/Trips';
 import { useTranslation } from 'next-i18next';
 import TripOutline from './TripOutline';
 import styles from '../styles/InlineTrip.module.css';
+import { formatDate } from '../utils/formatDate';
 
 interface Props {
   trip: Trip;
+  hidePrice?: boolean;
+  showDate?: boolean;
 }
 
-const InlineTrip: FC<Props> = ({ trip }) => {
+const InlineTrip: FC<Props> = ({ trip, hidePrice, showDate }) => {
   const { i18n } = useTranslation('common');
   const tripTime = new Date(trip.date).toLocaleTimeString(i18n.language, {
     timeStyle: 'short',
@@ -19,6 +22,11 @@ const InlineTrip: FC<Props> = ({ trip }) => {
     : [];
   return (
     <div className={styles.root}>
+      {showDate && (
+        <div className={styles.date}>
+          {formatDate(new Date(trip.date), i18n.language)}
+        </div>
+      )}
       <div className={styles.tripDetails}>
         <div className={styles.time}>{tripTime}</div>
         <TripOutline
@@ -27,12 +35,14 @@ const InlineTrip: FC<Props> = ({ trip }) => {
           routeStops={routeStops}
           inline={true}
         />
-        <div className={styles.price}>
-          &euro;
-          {Number(trip.price).toLocaleString(i18n.language, {
-            minimumFractionDigits: 2,
-          })}
-        </div>
+        {!hidePrice && (
+          <div className={styles.price}>
+            &euro;
+            {Number(trip.price).toLocaleString(i18n.language, {
+              minimumFractionDigits: 2,
+            })}
+          </div>
+        )}
       </div>
       <div className={styles.driver}>
         <div className={styles.imgContainer}>

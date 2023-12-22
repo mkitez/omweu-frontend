@@ -10,7 +10,7 @@ type InlinePlaceRowProps = {
 } & PlaceRowProps;
 
 const OriginRow: FC<InlinePlaceRowProps> = ({ value, inline }) => (
-  <div className={`${styles.origin} ${inline && styles.inlineOrigin}`}>
+  <div className={`${styles.origin} ${inline ? styles.inlineOrigin : ''}`}>
     <div className={styles.originLine}>
       <div className={styles.circle}></div>
       <div className={styles.box}></div>
