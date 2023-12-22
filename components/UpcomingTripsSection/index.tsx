@@ -1,4 +1,4 @@
-import useSWR from 'swr';
+import useSWRImmutable from 'swr/immutable';
 import { Trans, useTranslation } from 'next-i18next';
 import { API_URL } from '../../utils/constants';
 import InlineTrip from '../InlineTrip';
@@ -19,7 +19,7 @@ const LinkedTrip: FC<{ trip: Trip }> = ({ trip }) => (
 const UpcomingTripsSection = () => {
   const { t, i18n } = useTranslation('home');
   const { lg } = Grid.useBreakpoint();
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading } = useSWRImmutable(
     `${API_URL}/trips/upcoming/`,
     async (url) => {
       const response = await fetch(url, {
