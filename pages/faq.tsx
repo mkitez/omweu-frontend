@@ -4,6 +4,7 @@ import cmsApi from '../services/cmsApi';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { SSRConfig } from 'next-i18next';
+import { REVALIDATE_INTERVAL } from '../utils/constants';
 
 const FAQ = ({
   title,
@@ -36,7 +37,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => {
   const { title, content } = response.data.data.attributes;
 
   return {
-    revalidate: 60,
+    revalidate: REVALIDATE_INTERVAL,
     props: {
       ...translations,
       title,
