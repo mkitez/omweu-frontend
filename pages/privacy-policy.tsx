@@ -1,14 +1,13 @@
 import Head from 'next/head';
+import Markdown from 'react-markdown';
+import cmsApi from '../services/cmsApi';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import * as contentful from 'contentful';
-import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
-import { Document } from '@contentful/rich-text-types';
 import { SSRConfig } from 'next-i18next';
 
 const PrivacyPolicy = ({
   title,
-  body,
+  content,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <div className="container">
@@ -16,14 +15,15 @@ const PrivacyPolicy = ({
         <title>{`${title} | EUbyCar.com`}</title>
         <meta name="robots" content="noindex" />
       </Head>
-      <div dangerouslySetInnerHTML={{ __html: body }} />
+      <h1>{title}</h1>
+      <Markdown>{content}</Markdown>
     </div>
   );
 };
 
 type Props = {
   title: string;
-  body: string;
+  content: string;
 } & SSRConfig;
 
 export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => {
@@ -31,18 +31,17 @@ export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => {
     'common',
   ]);
 
-  const client = contentful.createClient({
-    space: process.env.CONTENTFUL_SPACE_ID as string,
-    accessToken: process.env.CONTENTFUL_ACCESS_TOKEN as string,
+  const response = await cmsApi.get('privacy-policy', {
+    params: { locale },
   });
+  const { title, content } = response.data.data.attributes;
 
-  const entry = await client.getEntry('1tPukCMhfcUZ46UsUSurhz', { locale });
   return {
     revalidate: 60,
     props: {
       ...translations,
-      title: entry.fields.title as string,
-      body: documentToHtmlString(entry.fields.body as Document),
+      title,
+      content,
     },
   };
 };
