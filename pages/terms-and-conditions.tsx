@@ -1,14 +1,14 @@
 import Head from 'next/head';
+import Markdown from 'react-markdown';
+import cmsApi from '../services/cmsApi';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import * as contentful from 'contentful';
-import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
-import { Document } from '@contentful/rich-text-types';
 import { SSRConfig } from 'next-i18next';
+import { REVALIDATE_INTERVAL } from '../utils/constants';
 
 const TermsAndConditions = ({
   title,
-  body,
+  content,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <div className="container">
@@ -16,14 +16,15 @@ const TermsAndConditions = ({
         <title>{`${title} | EUbyCar.com`}</title>
         <meta name="robots" content="noindex" />
       </Head>
-      <div dangerouslySetInnerHTML={{ __html: body }} />
+      <h1>{title}</h1>
+      <Markdown>{content}</Markdown>
     </div>
   );
 };
 
 type Props = {
   title: string;
-  body: string;
+  content: string;
 } & SSRConfig;
 
 export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => {
@@ -31,18 +32,17 @@ export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => {
     'common',
   ]);
 
-  const client = contentful.createClient({
-    space: process.env.CONTENTFUL_SPACE_ID as string,
-    accessToken: process.env.CONTENTFUL_ACCESS_TOKEN as string,
+  const response = await cmsApi.get('terms-and-conditions', {
+    params: { locale },
   });
+  const { title, content } = response.data.data.attributes;
 
-  const entry = await client.getEntry('4TB1EQgO6beJwdnZFY3Rgc', { locale });
   return {
-    revalidate: 60,
+    revalidate: REVALIDATE_INTERVAL,
     props: {
       ...translations,
-      title: entry.fields.title as string,
-      body: documentToHtmlString(entry.fields.body as Document),
+      title,
+      content,
     },
   };
 };

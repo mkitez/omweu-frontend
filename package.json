@@ -9,11 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@contentful/rich-text-html-renderer": "^16.1.0",
     "@svgr/webpack": "^8.0.1",
     "antd": "^5.1.4",
     "axios": "^1.1.2",
-    "contentful": "^10.2.4",
     "i18next": "^22.4.9",
     "jwt-decode": "^3.1.2",
     "lodash.debounce": "^4.0.8",
@@ -24,6 +22,7 @@
     "react-dom": "^18.2.0",
     "react-google-recaptcha": "^2.1.0",
     "react-i18next": "^12.2.2",
+    "react-markdown": "^9.0.1",
     "react-responsive-carousel": "^3.2.23",
     "swr": "^2.0.4"
   },

@@ -6,7 +6,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { SSRConfig } from 'next-i18next';
 import { REVALIDATE_INTERVAL } from '../utils/constants';
 
-const PrivacyPolicy = ({
+const FAQ = ({
   title,
   content,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -14,7 +14,6 @@ const PrivacyPolicy = ({
     <div className="container">
       <Head>
         <title>{`${title} | EUbyCar.com`}</title>
-        <meta name="robots" content="noindex" />
       </Head>
       <h1>{title}</h1>
       <Markdown>{content}</Markdown>
@@ -32,7 +31,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => {
     'common',
   ]);
 
-  const response = await cmsApi.get('privacy-policy', {
+  const response = await cmsApi.get('faq', {
     params: { locale },
   });
   const { title, content } = response.data.data.attributes;
@@ -47,4 +46,4 @@ export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => {
   };
 };
 
-export default PrivacyPolicy;
+export default FAQ;
