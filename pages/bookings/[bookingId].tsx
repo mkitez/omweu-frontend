@@ -1,65 +1,48 @@
-import { InferGetServerSidePropsType } from 'next';
+import axios from 'axios';
 import Head from 'next/head';
+import { InferGetServerSidePropsType } from 'next';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import api from '../../services/api';
 import styles from '../../styles/Trip.module.css';
-import TripDetails from '../../components/TripDetails';
 import { GetServerSideProps } from 'next';
 import { Session, unstable_getServerSession } from 'next-auth';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { authOptions } from '../api/auth/[...nextauth]';
-import axios from 'axios';
-import type { Trip } from '../../components/Trips';
 import Error from 'next/error';
-import Link from 'next/link';
-import dayjs from 'dayjs';
+import type { Trip, User } from '../../components/Trips';
 import { formatDate } from '../../utils/formatDate';
-import { LeftOutlined } from '@ant-design/icons';
-import InlineBooking from '../../components/InlineBooking';
 
-const BackButton = ({ trip }: { trip: Trip }) => {
-  const { t } = useTranslation('trip');
-  const { origin, dest } = trip;
-  const fromInput = `${origin.name}, ${origin.country_name}`;
-  const toInput = `${dest.name}, ${dest.country_name}`;
-  const formattedDate = dayjs(trip.date).format('YYYY-MM-DD');
+export interface Booking {
+  trip: Trip
+  driver: User
+  passenger: User
+  is_confirmed: boolean
+  response_timestamp: string
+  booking_date: string
+}
 
-  return (
-    <div className={styles.back}>
-      <Link
-        href={`/search?from=${origin.place_id}&to=${dest.place_id}&date=${formattedDate}&from_input=${fromInput}&to_input=${toInput}`}
-      >
-        <LeftOutlined /> {t('back')} {origin.name} – {dest.name}
-      </Link>
-    </div>
-  );
-};
-
-const TripDetailsPage = ({
-  trip: data,
+const BookingDetailsPage = ({
+  booking,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t, i18n } = useTranslation(['trip', 'common']);
 
-  if (data === null) {
+  if (booking === null) {
     return <Error statusCode={500} />;
   }
 
-  const formattedDate = formatDate(new Date(data.date), i18n.language);
+  const formattedDate = formatDate(new Date(booking.trip.date), i18n.language);
   return (
     <>
       <Head>
-        <title>{`${t('title')} ${data.origin.name} – ${
-          data.dest.name
+        <title>{`${t('title')} ${booking.trip.origin.name} – ${
+          booking.trip.dest.name
         } ${formattedDate} | EUbyCar.com`}</title>
       </Head>
       <div className="container">
         <div className={styles.root}>
-          <BackButton trip={data} />
           <h1>
             {t('title')} {formattedDate}
           </h1>
-          <TripDetails trip={data} />
-          <InlineBooking tripId={data.id} />
         </div>
       </div>
     </>
@@ -67,7 +50,7 @@ const TripDetailsPage = ({
 };
 
 type Props = {
-  trip: Trip | null;
+  booking: Booking | null;
   session: Session | null;
 } & SSRConfig;
 
@@ -86,15 +69,15 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   const session = await unstable_getServerSession(req, res, authOptions);
 
   let notFound = false;
-  let trip: Trip | null = null;
+  let booking: Booking | null = null;
   try {
-    const tripResponse = await api.get(`/trips/${params?.tripId}/`, {
+    const bookingResponse = await api.get(`/bookings/${params?.bookingId}/`, {
       headers: {
         Authorization: session ? `Bearer ${session.accessToken}` : undefined,
         'Accept-Language': locale,
       },
     });
-    trip = tripResponse.data;
+    booking = bookingResponse.data;
   } catch (e) {
     if (axios.isAxiosError(e) && e.response?.status === 404) {
       notFound = true;
@@ -106,9 +89,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     props: {
       ...translations,
       session,
-      trip,
+      booking,
     },
   };
 };
 
-export default TripDetailsPage;
+export default BookingDetailsPage;
