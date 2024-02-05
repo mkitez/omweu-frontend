@@ -20,7 +20,7 @@ const TripDetails: FC<Props> = ({ trip }) => {
   const tripTime = new Date(trip.date).toLocaleTimeString(i18n.language, {
     timeStyle: 'short',
   });
-  const { phone_number, telegram_username } = trip.driver;
+  const { phone_number, telegram_username } = trip.driver || {};
   return (
     <div className={styles.root}>
       <div className={styles.tripDetails}>
@@ -37,16 +37,18 @@ const TripDetails: FC<Props> = ({ trip }) => {
           })}
         </div>
       </div>
-      <div className={styles.driver}>
-        <div className={styles.imgContainer}>
-          {trip.driver.photo ? (
-            <Image src={trip.driver.photo} width={100} height={100} alt="" />
-          ) : (
-            trip.driver.first_name.charAt(0)
-          )}
+      {trip.driver && (
+        <div className={styles.driver}>
+          <div className={styles.imgContainer}>
+            {trip.driver.photo ? (
+              <Image src={trip.driver.photo} width={100} height={100} alt="" />
+            ) : (
+              trip.driver.first_name.charAt(0)
+            )}
+          </div>
+          <div className={styles.driverName}>{trip.driver.first_name}</div>
         </div>
-        <div className={styles.driverName}>{trip.driver.first_name}</div>
-      </div>
+      )}
       {trip.description && (
         <div className={styles.description}>{trip.description}</div>
       )}
@@ -75,9 +77,7 @@ const TripDetails: FC<Props> = ({ trip }) => {
           )}
         </ul>
       </div>
-      {session.status === 'authenticated' ? (
-        <div className={styles.reach}>{t('reachDriver')}</div>
-      ) : (
+      {session.status === 'unauthenticated' && (
         <Alert
           type="info"
           className={styles.loginMessage}

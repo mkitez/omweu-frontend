@@ -16,6 +16,7 @@ import dayjs from 'dayjs';
 import { formatDate } from '../../utils/formatDate';
 import { LeftOutlined } from '@ant-design/icons';
 import InlineBooking from '../../components/InlineBooking';
+import { useSession } from 'next-auth/react';
 
 const BackButton = ({ trip }: { trip: Trip }) => {
   const { t } = useTranslation('trip');
@@ -36,30 +37,32 @@ const BackButton = ({ trip }: { trip: Trip }) => {
 };
 
 const TripDetailsPage = ({
-  trip: data,
+  trip,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t, i18n } = useTranslation(['trip', 'common']);
+  const { data: session } = useSession();
+  const isDriver = trip?.driver?.id === session?.user.id;
 
-  if (data === null) {
+  if (trip === null) {
     return <Error statusCode={500} />;
   }
 
-  const formattedDate = formatDate(new Date(data.date), i18n.language);
+  const formattedDate = formatDate(new Date(trip.date), i18n.language);
   return (
     <>
       <Head>
-        <title>{`${t('title')} ${data.origin.name} – ${
-          data.dest.name
+        <title>{`${t('title')} ${trip.origin.name} – ${
+          trip.dest.name
         } ${formattedDate} | EUbyCar.com`}</title>
       </Head>
       <div className="container">
         <div className={styles.root}>
-          <BackButton trip={data} />
+          <BackButton trip={trip} />
           <h1>
             {t('title')} {formattedDate}
           </h1>
-          <TripDetails trip={data} />
-          <InlineBooking tripId={data.id} />
+          <TripDetails trip={trip} />
+          {!isDriver && <InlineBooking tripId={trip.id} />}
         </div>
       </div>
     </>

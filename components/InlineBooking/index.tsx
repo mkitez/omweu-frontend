@@ -1,17 +1,19 @@
 import useSWR from 'swr';
-import { FC } from "react"
-import { Booking } from "../../pages/bookings/[bookingId]"
-import { useTranslation } from "next-i18next"
-import { useSession } from "next-auth/react"
-import api from "../../services/api"
+import { FC } from 'react';
+import { Booking } from '../../pages/bookings/[bookingId]';
+import { useTranslation } from 'next-i18next';
+import { useSession } from 'next-auth/react';
+import api from '../../services/api';
+import { Button } from 'antd';
+import Link from 'next/link';
 
 type Props = {
-  tripId: number
-}
+  tripId: number;
+};
 
 const InlineBooking: FC<Props> = ({ tripId }) => {
   const { data: session } = useSession();
-  const { i18n } = useTranslation(['dashboard', 'common']);
+  const { t, i18n } = useTranslation(['dashboard', 'common']);
   const {
     data: booking,
     error,
@@ -25,14 +27,39 @@ const InlineBooking: FC<Props> = ({ tripId }) => {
     });
     return response.data;
   });
-  
-  if (isLoading || !booking) {
+
+  if (isLoading || error) {
     return null;
   }
 
-  return <div>
-    {booking.is_confirmed ? "Booking confirmed" : "Booking not yet confirmed"}
-  </div>
-}
+  if (!booking) {
+    return <Button type="primary">{t('book_trip')}</Button>;
+  }
+
+  const bookingLink = (
+    <Link href={`/bookings/${booking.booking_id}`}>
+      {t('view_booking_details')}
+    </Link>
+  );
+  if (booking.is_confirmed) {
+    return (
+      <div>
+        {t('booking_confirmed')}
+        <div>{bookingLink}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      {booking.response_timestamp ? (
+        <div>{t('booking_rejected')}</div>
+      ) : (
+        <Button>{t('cancel_booking')}</Button>
+      )}
+      <div>{bookingLink}</div>
+    </div>
+  );
+};
 
 export default InlineBooking;

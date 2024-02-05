@@ -11,20 +11,22 @@ import { authOptions } from '../api/auth/[...nextauth]';
 import Error from 'next/error';
 import type { Trip, User } from '../../components/Trips';
 import { formatDate } from '../../utils/formatDate';
+import BookingDetails from '../../components/BookingDetails';
 
 export interface Booking {
-  trip: Trip
-  driver: User
-  passenger: User
-  is_confirmed: boolean
-  response_timestamp: string
-  booking_date: string
+  booking_id: string;
+  trip: Trip;
+  driver: User;
+  passenger: User;
+  is_confirmed: boolean;
+  response_timestamp: string;
+  booking_date: string;
 }
 
 const BookingDetailsPage = ({
   booking,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t, i18n } = useTranslation(['trip', 'common']);
+  const { t, i18n } = useTranslation(['booking', 'common']);
 
   if (booking === null) {
     return <Error statusCode={500} />;
@@ -43,6 +45,7 @@ const BookingDetailsPage = ({
           <h1>
             {t('title')} {formattedDate}
           </h1>
+          <BookingDetails booking={booking} />
         </div>
       </div>
     </>
@@ -63,7 +66,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   const translations = await serverSideTranslations(locale as string, [
     'common',
     'dashboard',
-    'trip',
+    'booking',
   ]);
 
   const session = await unstable_getServerSession(req, res, authOptions);

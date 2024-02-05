@@ -30,7 +30,7 @@ export interface Trip {
   dest: Destination;
   date: string;
   date_created: string;
-  driver: User;
+  driver?: User;
   price: string;
   description: string;
   route_stops: Destination[];
