@@ -55,7 +55,7 @@ const InlineBooking: FC<Props> = ({ tripId }) => {
       {booking.response_timestamp ? (
         <div>{t('status.rejected')}</div>
       ) : (
-        <Button>{t('cancel_booking')}</Button>
+        <Button>{t('actions.cancel')}</Button>
       )}
       <div>{bookingLink}</div>
     </div>

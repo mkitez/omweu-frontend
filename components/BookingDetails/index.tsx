@@ -1,22 +1,19 @@
 import { Booking } from '../../pages/bookings/[bookingId]';
-import { useIsDriver } from '../../hooks/useIsDriver';
-import { BookingStatus } from './BookingStatus';
-import TripData from '../TripDetails/TripData';
-import UserData from '../TripDetails/UserData';
+import { useIsAuthenticatedUser } from '../../hooks/useIsAuthenticatedUser';
+import PassengerBookingView from './PassengerBookingView';
+import DriverBookingView from './DriverBookingView';
 
-export type Props = {
+type Props = {
   booking: Booking;
 };
 
 const BookingDetails: React.FC<Props> = ({ booking }) => {
-  const isDriver = useIsDriver(booking.driver);
+  const currentUserIsDriver = useIsAuthenticatedUser(booking.driver);
 
-  return (
-    <div>
-      {!isDriver && <BookingStatus booking={booking} />}
-      <TripData trip={booking.trip} />
-      <UserData user={isDriver ? booking.passenger : booking.driver} />
-    </div>
+  return currentUserIsDriver ? (
+    <DriverBookingView booking={booking} />
+  ) : (
+    <PassengerBookingView booking={booking} />
   );
 };
 

@@ -16,7 +16,7 @@ import dayjs from 'dayjs';
 import { formatDate } from '../../utils/formatDate';
 import { LeftOutlined } from '@ant-design/icons';
 import InlineBooking from '../../components/InlineBooking';
-import { useIsDriver } from '../../hooks/useIsDriver';
+import { useIsAuthenticatedUser } from '../../hooks/useIsAuthenticatedUser';
 
 const BackButton = ({ trip }: { trip: Trip }) => {
   const { t } = useTranslation('trip');
@@ -40,7 +40,7 @@ const TripDetailsPage = ({
   trip,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t, i18n } = useTranslation(['trip', 'common']);
-  const isDriver = useIsDriver(trip?.driver);
+  const isCurrentUserDriver = useIsAuthenticatedUser(trip?.driver);
 
   if (trip === null) {
     return <Error statusCode={500} />;
@@ -61,7 +61,7 @@ const TripDetailsPage = ({
             {t('title')} {formattedDate}
           </h1>
           <TripDetails trip={trip} />
-          {!isDriver && <InlineBooking tripId={trip.id} />}
+          {!isCurrentUserDriver && <InlineBooking tripId={trip.id} />}
         </div>
       </div>
     </>
