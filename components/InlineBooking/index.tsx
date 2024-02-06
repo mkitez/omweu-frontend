@@ -13,7 +13,7 @@ type Props = {
 
 const InlineBooking: FC<Props> = ({ tripId }) => {
   const { data: session } = useSession();
-  const { t, i18n } = useTranslation(['dashboard', 'common']);
+  const { t, i18n } = useTranslation('booking');
   const {
     data: booking,
     error,
@@ -44,7 +44,7 @@ const InlineBooking: FC<Props> = ({ tripId }) => {
   if (booking.is_confirmed) {
     return (
       <div>
-        {t('booking_confirmed')}
+        {t('status.confirmed')}
         <div>{bookingLink}</div>
       </div>
     );
@@ -53,7 +53,7 @@ const InlineBooking: FC<Props> = ({ tripId }) => {
   return (
     <div>
       {booking.response_timestamp ? (
-        <div>{t('booking_rejected')}</div>
+        <div>{t('status.rejected')}</div>
       ) : (
         <Button>{t('cancel_booking')}</Button>
       )}

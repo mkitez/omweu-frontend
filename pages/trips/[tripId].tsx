@@ -16,7 +16,7 @@ import dayjs from 'dayjs';
 import { formatDate } from '../../utils/formatDate';
 import { LeftOutlined } from '@ant-design/icons';
 import InlineBooking from '../../components/InlineBooking';
-import { useSession } from 'next-auth/react';
+import { useIsDriver } from '../../hooks/useIsDriver';
 
 const BackButton = ({ trip }: { trip: Trip }) => {
   const { t } = useTranslation('trip');
@@ -40,8 +40,7 @@ const TripDetailsPage = ({
   trip,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t, i18n } = useTranslation(['trip', 'common']);
-  const { data: session } = useSession();
-  const isDriver = trip?.driver?.id === session?.user.id;
+  const isDriver = useIsDriver(trip?.driver);
 
   if (trip === null) {
     return <Error statusCode={500} />;
@@ -84,6 +83,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     'common',
     'dashboard',
     'trip',
+    'booking',
   ]);
 
   const session = await unstable_getServerSession(req, res, authOptions);

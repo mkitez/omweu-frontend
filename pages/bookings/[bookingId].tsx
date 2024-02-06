@@ -13,9 +13,11 @@ import type { Trip, User } from '../../components/Trips';
 import { formatDate } from '../../utils/formatDate';
 import BookingDetails from '../../components/BookingDetails';
 
+export type InBookingTrip = Omit<Trip, 'driver'>;
+
 export interface Booking {
   booking_id: string;
-  trip: Trip;
+  trip: InBookingTrip;
   driver: User;
   passenger: User;
   is_confirmed: boolean;
@@ -82,8 +84,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     });
     booking = bookingResponse.data;
   } catch (e) {
-    if (axios.isAxiosError(e) && e.response?.status === 404) {
-      notFound = true;
+    if (axios.isAxiosError(e)) {
+      if (e.response?.status === 403) {
+        return {
+          redirect: {
+            permanent: false,
+            destination: '/',
+          },
+        };
+      }
+      if (e.response?.status === 404) {
+        notFound = true;
+      }
     }
   }
 

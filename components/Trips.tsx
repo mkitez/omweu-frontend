@@ -14,8 +14,8 @@ export interface User {
   first_name: string;
   last_name: string;
   photo: string;
-  phone_number: string;
-  telegram_username: string;
+  phone_number?: string;
+  telegram_username?: string;
 }
 
 export interface Destination {
@@ -30,7 +30,7 @@ export interface Trip {
   dest: Destination;
   date: string;
   date_created: string;
-  driver?: User;
+  driver: User;
   price: string;
   description: string;
   route_stops: Destination[];
