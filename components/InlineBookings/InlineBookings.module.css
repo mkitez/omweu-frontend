@@ -1,0 +1,8 @@
+.bookings {
+  list-style-type: none;
+}
+
+.inlineBooking {
+  display: flex;
+  align-items: center;
+}

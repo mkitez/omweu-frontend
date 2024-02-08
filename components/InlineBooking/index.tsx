@@ -1,5 +1,4 @@
 import useSWR from 'swr';
-import { FC } from 'react';
 import { Booking } from '../../pages/bookings/[bookingId]';
 import { useTranslation } from 'next-i18next';
 import { useSession } from 'next-auth/react';
@@ -11,7 +10,7 @@ type Props = {
   tripId: number;
 };
 
-const InlineBooking: FC<Props> = ({ tripId }) => {
+const InlineBooking: React.FC<Props> = ({ tripId }) => {
   const { data: session } = useSession();
   const { t, i18n } = useTranslation('booking');
   const {

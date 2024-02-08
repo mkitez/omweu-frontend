@@ -17,6 +17,7 @@ import { formatDate } from '../../utils/formatDate';
 import { LeftOutlined } from '@ant-design/icons';
 import InlineBooking from '../../components/InlineBooking';
 import { useIsAuthenticatedUser } from '../../hooks/useIsAuthenticatedUser';
+import InlineBookings from '../../components/InlineBookings';
 
 const BackButton = ({ trip }: { trip: Trip }) => {
   const { t } = useTranslation('trip');
@@ -40,7 +41,7 @@ const TripDetailsPage = ({
   trip,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t, i18n } = useTranslation(['trip', 'common']);
-  const isCurrentUserDriver = useIsAuthenticatedUser(trip?.driver);
+  const isDriver = useIsAuthenticatedUser(trip?.driver);
 
   if (trip === null) {
     return <Error statusCode={500} />;
@@ -61,7 +62,19 @@ const TripDetailsPage = ({
             {t('title')} {formattedDate}
           </h1>
           <TripDetails trip={trip} />
-          {!isCurrentUserDriver && <InlineBooking tripId={trip.id} />}
+          {isDriver ? (
+            <>
+              <InlineBookings tripId={trip.id} />
+              <div>
+                <Link href={`/tripedit/${trip.id}`}>{t('edit')}</Link>
+              </div>
+              <div>
+                <Link href={`/tripcopy?tripId=${trip.id}`}>{t('copy')}</Link>
+              </div>
+            </>
+          ) : (
+            <InlineBooking tripId={trip.id} />
+          )}
         </div>
       </div>
     </>
