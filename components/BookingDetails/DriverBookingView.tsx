@@ -16,10 +16,10 @@ const DriverBookingView: React.FC<Props> = ({ booking }) => {
     <div>
       <TripData trip={booking.trip} />
       <UserData user={booking.passenger} />
+      <DriverActions booking={booking} />
       <div>
         <Link href={`/trips/${booking.trip.id}`}>{t('go_to_trip')}</Link>
       </div>
-      <DriverActions booking={booking} />
     </div>
   );
 };

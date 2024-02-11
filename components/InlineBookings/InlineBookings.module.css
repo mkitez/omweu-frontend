@@ -6,3 +6,7 @@
   display: flex;
   align-items: center;
 }
+
+.passengerName {
+  flex-grow: 1;
+}

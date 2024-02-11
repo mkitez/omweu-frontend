@@ -8,9 +8,9 @@ type Props = {
 };
 
 const BookingDetails: React.FC<Props> = ({ booking }) => {
-  const currentUserIsDriver = useIsAuthenticatedUser(booking.driver);
+  const isDriver = useIsAuthenticatedUser(booking.driver);
 
-  return currentUserIsDriver ? (
+  return isDriver ? (
     <DriverBookingView booking={booking} />
   ) : (
     <PassengerBookingView booking={booking} />

@@ -1,38 +1,42 @@
-import useSWR from 'swr';
-import { Booking } from '../../pages/bookings/[bookingId]';
-import { useTranslation } from 'next-i18next';
-import { useSession } from 'next-auth/react';
-import api from '../../services/api';
-import { Button } from 'antd';
 import Link from 'next/link';
+import useSWR from 'swr';
+import { Button } from 'antd';
+import { useTranslation } from 'next-i18next';
+import { Booking } from '../../pages/bookings/[bookingId]';
+import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
+import { useBookingApi } from '../../hooks/api/useBookingApi';
 
 type Props = {
   tripId: number;
 };
 
 const InlineBooking: React.FC<Props> = ({ tripId }) => {
-  const { data: session } = useSession();
-  const { t, i18n } = useTranslation('booking');
+  const { t } = useTranslation('booking');
+  const fetcher = useAuthorizedFetcher();
   const {
     data: booking,
     error,
     isLoading,
-  } = useSWR<Booking>(`/trips/${tripId}/booking/`, async (url) => {
-    const response = await api.get(url, {
-      headers: {
-        Authorization: `Bearer ${session?.accessToken}`,
-        'Accept-Language': i18n.language,
-      },
-    });
-    return response.data;
-  });
+    mutate,
+  } = useSWR<Booking>(`/trips/${tripId}/booking/`, fetcher);
+  const bookingApi = useBookingApi();
 
   if (isLoading || error) {
     return null;
   }
 
   if (!booking) {
-    return <Button type="primary">{t('book_trip')}</Button>;
+    return (
+      <Button
+        type="primary"
+        onClick={async () => {
+          const bookingData = await bookingApi.submitBookingForTrip(tripId);
+          mutate(bookingData);
+        }}
+      >
+        {t('book_trip')}
+      </Button>
+    );
   }
 
   const bookingLink = (
@@ -54,7 +58,16 @@ const InlineBooking: React.FC<Props> = ({ tripId }) => {
       {booking.response_timestamp ? (
         <div>{t('status.rejected')}</div>
       ) : (
-        <Button>{t('actions.cancel')}</Button>
+        <Button
+          onClick={async () => {
+            const bookingData = await bookingApi.cancelBooking(
+              booking.booking_id
+            );
+            mutate(bookingData);
+          }}
+        >
+          {t('actions.cancel')}
+        </Button>
       )}
       <div>{bookingLink}</div>
     </div>

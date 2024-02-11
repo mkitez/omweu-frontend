@@ -1,33 +1,24 @@
 import useSWR from 'swr';
-import { Booking } from '../../pages/bookings/[bookingId]';
-import { useTranslation } from 'next-i18next';
-import { useSession } from 'next-auth/react';
-import api from '../../services/api';
-import UserAvatar from '../TripDetails/UserAvatar';
-import styles from './InlineBookings.module.css';
 import Link from 'next/link';
-import InlineBookingActions from './InlineBookingActions';
+import { useTranslation } from 'next-i18next';
+import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
+import { Booking } from '../../pages/bookings/[bookingId]';
+import UserAvatar from '../TripDetails/UserAvatar';
+import InlineBookingStatus from './InlineBookingStatus';
+import styles from './InlineBookings.module.css';
 
 type Props = {
   tripId: number;
 };
 
 const InlineBookings: React.FC<Props> = ({ tripId }) => {
-  const { data: session } = useSession();
-  const { t, i18n } = useTranslation('booking');
+  const { t } = useTranslation('booking');
+  const fetcher = useAuthorizedFetcher();
   const {
     data: bookings,
     error,
     isLoading,
-  } = useSWR<Booking[]>(`/trips/${tripId}/bookings/`, async (url) => {
-    const response = await api.get(url, {
-      headers: {
-        Authorization: `Bearer ${session?.accessToken}`,
-        'Accept-Language': i18n.language,
-      },
-    });
-    return response.data;
-  });
+  } = useSWR<Booking[]>(`/trips/${tripId}/bookings/`, fetcher);
 
   if (isLoading || error) {
     return null;
@@ -41,9 +32,11 @@ const InlineBookings: React.FC<Props> = ({ tripId }) => {
           <li key={booking.booking_id}>
             <Link href={`/bookings/${booking.booking_id}`}>
               <div className={styles.inlineBooking}>
-                <UserAvatar user={booking.passenger} />{' '}
-                {booking.passenger.first_name}
-                <InlineBookingActions booking={booking} />
+                <UserAvatar user={booking.passenger} />
+                <div className={styles.passengerName}>
+                  {booking.passenger.first_name}
+                </div>
+                <InlineBookingStatus booking={booking} />
               </div>
             </Link>
           </li>
