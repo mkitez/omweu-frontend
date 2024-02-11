@@ -15,7 +15,7 @@ type Props = {
 const PassengerBookingView: React.FC<Props> = ({ booking }) => {
   const router = useRouter();
   const { t } = useTranslation('booking');
-  const bookingApi = useBookingApi();
+  const api = useBookingApi();
 
   const tripURL = `/trips/${booking.trip.id}`;
   return (
@@ -31,7 +31,7 @@ const PassengerBookingView: React.FC<Props> = ({ booking }) => {
         <div>
           <Button
             onClick={async () => {
-              await bookingApi.cancelBooking(booking.booking_id);
+              await api.cancelBooking(booking.booking_id);
               router.push(tripURL);
             }}
           >

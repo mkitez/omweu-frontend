@@ -7,27 +7,38 @@ const reloadSession = () => {
   document.dispatchEvent(event);
 };
 
-const instance = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+type Headers = Record<string, string | null>;
 
-instance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  async (error) => {
-    const originalConfig = error.config;
-    if (error.response) {
+const getInstance = (headers: Headers = {}) => {
+  const instance = axios.create({
+    baseURL: API_URL,
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json',
+    },
+  });
+  return instance;
+};
+
+const getClientInstance = (headers: Headers = {}) => {
+  const instance = getInstance(headers);
+
+  instance.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const originalConfig = error.config;
+
       if (
-        error.response?.status === 403 &&
-        error.response?.data.code === 'token_not_valid' &&
-        !originalConfig._retry &&
-        typeof window !== 'undefined'
+        !error.response ||
+        originalConfig.__retry ||
+        typeof window === 'undefined' // TODO: remove after refactoring
       ) {
-        originalConfig._retry = true;
+        return Promise.reject(error);
+      }
+
+      const { status, data } = error.response;
+      if (status === 403 && data.code === 'token_not_valid') {
+        originalConfig.__retry = true;
         let session;
         try {
           session = await getSession();
@@ -45,9 +56,13 @@ instance.interceptors.response.use(
         return axios(originalConfig);
       }
     }
+  );
 
-    return Promise.reject(error);
-  }
-);
+  return instance;
+};
 
-export default instance;
+// TODO: refactor all components/pages to use proper client
+const api = getClientInstance();
+
+export { getClientInstance, getInstance };
+export default api;

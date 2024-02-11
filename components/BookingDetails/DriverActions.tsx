@@ -11,7 +11,7 @@ type Props = {
 const DriverActions: React.FC<Props> = ({ booking }) => {
   const router = useRouter();
   const { t } = useTranslation('booking');
-  const bookingApi = useBookingApi();
+  const api = useBookingApi();
 
   const refreshData = () => {
     router.replace(router.asPath);
@@ -29,7 +29,7 @@ const DriverActions: React.FC<Props> = ({ booking }) => {
     <div>
       <Button
         onClick={async () => {
-          await bookingApi.confirmBooking(booking.booking_id);
+          await api.confirmBooking(booking.booking_id);
           refreshData();
         }}
       >
@@ -37,7 +37,7 @@ const DriverActions: React.FC<Props> = ({ booking }) => {
       </Button>
       <Button
         onClick={async () => {
-          await bookingApi.rejectBooking(booking.booking_id);
+          await api.rejectBooking(booking.booking_id);
           refreshData();
         }}
       >
