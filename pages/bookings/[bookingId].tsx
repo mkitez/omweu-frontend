@@ -2,8 +2,6 @@ import axios from 'axios';
 import Head from 'next/head';
 import { InferGetServerSidePropsType } from 'next';
 import { SSRConfig, useTranslation } from 'next-i18next';
-import api from '../../services/api';
-import styles from '../../styles/Trip.module.css';
 import { GetServerSideProps } from 'next';
 import { Session, unstable_getServerSession } from 'next-auth';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -12,6 +10,8 @@ import Error from 'next/error';
 import type { Trip, User } from '../../components/Trips';
 import { formatDate } from '../../utils/formatDate';
 import BookingDetails from '../../components/BookingDetails';
+import { getBookingApi } from '../../services/serverSide/bookingApi';
+import styles from '../../styles/Trip.module.css';
 
 export type InBookingTrip = Omit<Trip, 'driver'>;
 
@@ -72,17 +72,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   ]);
 
   const session = await unstable_getServerSession(req, res, authOptions);
+  const api = getBookingApi(session, locale);
 
   let notFound = false;
   let booking: Booking | null = null;
   try {
-    const bookingResponse = await api.get(`/bookings/${params?.bookingId}/`, {
-      headers: {
-        Authorization: session ? `Bearer ${session.accessToken}` : undefined,
-        'Accept-Language': locale,
-      },
-    });
-    booking = bookingResponse.data;
+    booking = await api.getBooking(params?.bookingId as string);
   } catch (e) {
     if (axios.isAxiosError(e)) {
       if (e.response?.status === 403) {

@@ -18,6 +18,7 @@ import { LeftOutlined } from '@ant-design/icons';
 import InlineBooking from '../../components/InlineBooking';
 import { useIsAuthenticatedUser } from '../../hooks/useIsAuthenticatedUser';
 import InlineBookings from '../../components/InlineBookings';
+import { useSession } from 'next-auth/react';
 
 const BackButton = ({ trip }: { trip: Trip }) => {
   const { t } = useTranslation('trip');
@@ -41,6 +42,7 @@ const TripDetailsPage = ({
   trip,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t, i18n } = useTranslation(['trip', 'common']);
+  const { status } = useSession();
   const isDriver = useIsAuthenticatedUser(trip?.driver);
 
   if (trip === null) {
@@ -73,7 +75,7 @@ const TripDetailsPage = ({
               </div>
             </>
           ) : (
-            <InlineBooking tripId={trip.id} />
+            status === 'authenticated' && <InlineBooking tripId={trip.id} />
           )}
         </div>
       </div>
