@@ -5,6 +5,13 @@
   padding: 1.5rem;
   transition: 0.3s;
   font-size: 1.125rem;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 575px) {
+  .root {
+    padding: 1rem;
+  }
 }
 
 :global(a:hover) .root {
@@ -15,6 +22,10 @@
   box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.16),
     0 3px 6px 0 rgba(0, 0, 0, 0.12), 0 5px 12px 4px rgba(0, 0, 0, 0.09);
   border-color: transparent;
+}
+
+.header {
+  margin-bottom: 0.5rem;
 }
 
 .date {

@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { useTranslation } from 'next-i18next';
 import {
   QuestionCircleOutlined,
@@ -11,7 +10,7 @@ type Props = {
   booking: Booking;
 };
 
-export const BookingStatus: FC<Props> = ({ booking }) => {
+export const BookingStatus: React.FC<Props> = ({ booking }) => {
   const { t } = useTranslation('booking');
 
   if (booking.is_confirmed) {

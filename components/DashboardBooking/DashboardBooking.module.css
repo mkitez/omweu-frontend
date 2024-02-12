@@ -1,0 +1,15 @@
+.status {
+  font-size: 0.9rem;
+}
+
+.confirmed {
+  color: #0d730d;
+}
+
+.pending {
+  color: #c8850b;
+}
+
+.rejected {
+  color: #910b0b;
+}

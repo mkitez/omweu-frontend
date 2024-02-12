@@ -1,12 +1,13 @@
 import useSWR from 'swr';
-import { useSession } from 'next-auth/react';
-import { List, Tooltip } from 'antd';
 import Link from 'next/link';
 import dayjs from 'dayjs';
-import api from '../services/api';
 import { useTranslation } from 'next-i18next';
-import { LoadingOutlined, CopyOutlined } from '@ant-design/icons';
+import { LoadingOutlined } from '@ant-design/icons';
+import { useAuthorizedFetcher } from '../hooks/useAuthorizedFetcher';
+import { Booking } from '../pages/bookings/[bookingId]';
+import InlineTrip from './InlineTrip';
 import styles from '../styles/Trips.module.css';
+import DashboardBooking from './DashboardBooking';
 
 export interface User {
   id: number;
@@ -36,81 +37,72 @@ export interface Trip {
   route_stops: Destination[];
 }
 
+export interface InlineBooking extends Booking {
+  trip: Trip;
+}
+
 const Trips = () => {
-  const { data: session } = useSession();
-  const { t, i18n } = useTranslation(['dashboard', 'common']);
+  const { t } = useTranslation(['dashboard', 'common']);
+  const fetcher = useAuthorizedFetcher();
   const {
     data: trips,
-    error,
-    isLoading,
-  } = useSWR<Trip[]>('/trips/', async (url) => {
-    const response = await api.get(url, {
-      headers: {
-        Authorization: `Bearer ${session?.accessToken}`,
-        'Accept-Language': i18n.language,
-      },
-    });
-    return response.data;
-  });
+    error: tripsError,
+    isLoading: tripsLoading,
+  } = useSWR<Trip[]>('/trips/', fetcher);
+  const {
+    data: bookings,
+    error: bookingsError,
+    isLoading: bookingsLoading,
+  } = useSWR<InlineBooking[]>('/bookings/', fetcher);
 
   return (
     <div className={styles.root}>
       {(() => {
-        if (error) {
+        if (tripsError || bookingsError) {
           return (
             <div className={styles.errorLoadingContainer}>
               {t('errors.common', { ns: 'common' })}
             </div>
           );
         }
-        if (isLoading) {
+        if (tripsLoading || bookingsLoading) {
           return (
             <div className={styles.errorLoadingContainer}>
               <LoadingOutlined style={{ fontSize: '2rem' }} />
             </div>
           );
         }
-        if (trips?.length === 0) {
+        if (trips?.length === 0 && bookings?.length === 0) {
           return <div>{t('trips.noTrips')}</div>;
         }
+        const tripsAndBookings = [...(trips || []), ...(bookings || [])];
+        const tripsAndBookingsSorted = tripsAndBookings.sort(
+          (entityA, entityB) => {
+            const tripA = 'booking_id' in entityA ? entityA.trip : entityA;
+            const tripB = 'booking_id' in entityB ? entityB.trip : entityB;
+            return dayjs(tripB.date).diff(dayjs(tripA.date));
+          }
+        );
+
         return (
-          <List
-            itemLayout="horizontal"
-            size="small"
-            dataSource={trips
-              ?.slice()
-              .sort((tripA, tripB) =>
-                dayjs(tripB.date).diff(dayjs(tripA.date))
-              )}
-            renderItem={(trip) => (
-              <List.Item
-                className={styles.row}
-                actions={[
-                  <Tooltip key={trip.id} title={t('trips.copyTrip')}>
-                    <Link
-                      href={{
-                        pathname: '/tripcopy',
-                        query: { tripId: trip.id },
-                      }}
-                    >
-                      <CopyOutlined />
-                    </Link>
-                  </Tooltip>,
-                ]}
-              >
-                <List.Item.Meta
-                  title={
-                    <Link key="trip-edit" href={`/tripedit/${trip.id}`}>
-                      {trip.origin.name} – {trip.dest.name}
-                    </Link>
-                  }
-                  description={new Date(trip.date).toLocaleString(
-                    i18n.language
+          <div>
+            {tripsAndBookingsSorted.map((entity) => {
+              const isBooking = 'booking_id' in entity;
+              const entityId = isBooking ? entity.booking_id : entity.id;
+              const entityPath = isBooking
+                ? `/bookings/${entityId}`
+                : `/trips/${entityId}`;
+              return (
+                <Link key={entityId} href={entityPath}>
+                  {isBooking ? (
+                    <DashboardBooking booking={entity} />
+                  ) : (
+                    <InlineTrip trip={entity} showDate hidePrice hideDriver />
                   )}
-                />
-              </List.Item>
-            )}
-          />
+                </Link>
+              );
+            })}
+          </div>
         );
       })()}
     </div>
