@@ -4,6 +4,7 @@ import { useTranslation } from 'next-i18next';
 import type { Trip } from '../components/Trips';
 import TripOutline from './TripOutline';
 import { formatDate } from '../utils/formatDate';
+import UserAvatar from './TripDetails/UserAvatar';
 import styles from '../styles/InlineTrip.module.css';
 
 interface Props {
@@ -55,13 +56,7 @@ const InlineTrip: React.FC<Props> = ({
       </div>
       {!hideDriver && (
         <div className={styles.driver}>
-          <div className={styles.imgContainer}>
-            {trip.driver.photo ? (
-              <Image src={trip.driver.photo} width={100} height={100} alt="" />
-            ) : (
-              trip.driver.first_name.charAt(0)
-            )}
-          </div>
+          <UserAvatar user={trip.driver} small />
           <div className={styles.driverName}>{trip.driver.first_name}</div>
         </div>
       )}

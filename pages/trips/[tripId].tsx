@@ -2,7 +2,6 @@ import { InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import api from '../../services/api';
-import styles from '../../styles/Trip.module.css';
 import TripDetails from '../../components/TripDetails';
 import { GetServerSideProps } from 'next';
 import { Session, unstable_getServerSession } from 'next-auth';
@@ -14,11 +13,12 @@ import Error from 'next/error';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import { formatDate } from '../../utils/formatDate';
-import { LeftOutlined } from '@ant-design/icons';
+import { LeftOutlined, FormOutlined, CopyOutlined } from '@ant-design/icons';
 import InlineBooking from '../../components/InlineBooking';
 import { useIsAuthenticatedUser } from '../../hooks/useIsAuthenticatedUser';
 import InlineBookings from '../../components/InlineBookings';
 import { useSession } from 'next-auth/react';
+import styles from '../../styles/Trip.module.css';
 
 const BackButton = ({ trip }: { trip: Trip }) => {
   const { t } = useTranslation('trip');
@@ -67,11 +67,17 @@ const TripDetailsPage = ({
           {isDriver ? (
             <>
               <InlineBookings tripId={trip.id} />
-              <div>
-                <Link href={`/tripedit/${trip.id}`}>{t('edit')}</Link>
-              </div>
-              <div>
-                <Link href={`/tripcopy?tripId=${trip.id}`}>{t('copy')}</Link>
+              <div className={styles.tripActionsContainer}>
+                <div className={styles.tripAction}>
+                  <Link href={`/tripedit/${trip.id}`}>
+                    <FormOutlined /> {t('edit')}
+                  </Link>
+                </div>
+                <div className={styles.tripAction}>
+                  <Link href={`/tripcopy?tripId=${trip.id}`}>
+                    <CopyOutlined /> {t('copy')}
+                  </Link>
+                </div>
               </div>
             </>
           ) : (

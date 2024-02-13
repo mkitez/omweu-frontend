@@ -1,12 +1,16 @@
-.bookings {
-  list-style-type: none;
+.root {
+  margin-top: 1rem;
 }
 
-.inlineBooking {
-  display: flex;
-  align-items: center;
+.bookingList {
+  margin: 0.5rem auto;
+}
+
+.bookingList .booking {
+  padding: 0.5rem;
 }
 
 .passengerName {
   flex-grow: 1;
+  color: rgba(0, 0, 0, 0.55);
 }

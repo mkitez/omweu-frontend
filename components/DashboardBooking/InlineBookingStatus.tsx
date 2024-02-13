@@ -11,7 +11,7 @@ type Props = {
   booking: Booking;
 };
 
-export const DashboardBookingStatus: React.FC<Props> = ({ booking }) => {
+export const InlineBookingStatus: React.FC<Props> = ({ booking }) => {
   const { t } = useTranslation('booking');
 
   return (

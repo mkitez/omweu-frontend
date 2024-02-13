@@ -1,10 +1,11 @@
 import useSWR from 'swr';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
+import { List } from 'antd';
 import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
 import { Booking } from '../../pages/bookings/[bookingId]';
 import UserAvatar from '../TripDetails/UserAvatar';
-import InlineBookingStatus from './InlineBookingStatus';
+import { InlineBookingStatus } from '../DashboardBooking/InlineBookingStatus';
 import styles from './InlineBookings.module.css';
 
 type Props = {
@@ -25,24 +26,28 @@ const InlineBookings: React.FC<Props> = ({ tripId }) => {
   }
 
   return (
-    <>
+    <div className={styles.root}>
       <h3>{t('bookings_title')}</h3>
-      <ul className={styles.bookings}>
-        {bookings?.map((booking) => (
-          <li key={booking.booking_id}>
-            <Link href={`/bookings/${booking.booking_id}`}>
-              <div className={styles.inlineBooking}>
-                <UserAvatar user={booking.passenger} />
-                <div className={styles.passengerName}>
-                  {booking.passenger.first_name}
-                </div>
-                <InlineBookingStatus booking={booking} />
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </>
+      <List
+        className={styles.bookingList}
+        dataSource={bookings}
+        renderItem={(booking) => {
+          return (
+            <List.Item className={styles.booking}>
+              <List.Item.Meta
+                avatar={<UserAvatar user={booking.passenger} small />}
+                description={
+                  <Link href={`/bookings/${booking.booking_id}`}>
+                    {booking.passenger.first_name}
+                  </Link>
+                }
+              />
+              <InlineBookingStatus booking={booking} />
+            </List.Item>
+          );
+        }}
+      />
+    </div>
   );
 };
 

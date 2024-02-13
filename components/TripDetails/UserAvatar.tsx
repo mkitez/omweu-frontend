@@ -4,11 +4,16 @@ import styles from './TripDetails.module.css';
 
 type Props = {
   user: User;
+  small?: boolean;
 };
 
-const UserAvatar: React.FC<Props> = ({ user }) => {
+const UserAvatar: React.FC<Props> = ({ user, small }) => {
+  const classNames = [styles.imgContainer];
+  if (small) {
+    classNames.push(styles.imgContainerSmall);
+  }
   return (
-    <div className={styles.imgContainer}>
+    <div className={classNames.join(' ')}>
       {user.photo ? (
         <Image src={user.photo} width={100} height={100} alt="" />
       ) : (
