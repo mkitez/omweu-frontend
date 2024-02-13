@@ -7,7 +7,6 @@ import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
 import { useBookingApi } from '../../hooks/api/useBookingApi';
 import {
   CalendarOutlined,
-  CarryOutOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
   QuestionCircleOutlined,
@@ -60,7 +59,7 @@ const InlineBooking: React.FC<Props> = ({ tripId }) => {
 
         const bookingLink = (
           <Link href={`/bookings/${booking.booking_id}`}>
-            <CarryOutOutlined /> {t('view_booking_details')}
+            <CalendarOutlined /> {t('view_booking_details')}
           </Link>
         );
         if (booking.is_confirmed) {

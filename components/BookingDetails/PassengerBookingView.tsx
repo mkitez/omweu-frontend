@@ -9,6 +9,7 @@ import { useBookingApi } from '../../hooks/api/useBookingApi';
 import { useRouter } from 'next/router';
 import { CloseCircleOutlined, ExportOutlined } from '@ant-design/icons';
 import styles from './BookingDetails.module.css';
+import TripDescription from '../TripDetails/TripDescription';
 
 type Props = {
   booking: Booking;
@@ -25,8 +26,7 @@ const PassengerBookingView: React.FC<Props> = ({ booking }) => {
       <BookingStatus booking={booking} />
       <TripData trip={booking.trip} />
       <UserData user={booking.driver} />
-      {/* TODO: style description */}
-      {booking.trip.description && <div>{booking.trip.description}</div>}
+      <TripDescription content={booking.trip.description} />
       {!booking.response_timestamp && (
         <div className={styles.cancelBtnContainer}>
           <Button

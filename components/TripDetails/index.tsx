@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import TripData from './TripData';
 import styles from './TripDetails.module.css';
 import UserData from './UserData';
+import TripDescription from './TripDescription';
 
 type Props = {
   trip: Trip;
@@ -21,9 +22,7 @@ const TripDetails: React.FC<Props> = ({ trip }) => {
     <div className={styles.root}>
       <TripData trip={trip} />
       <UserData user={trip.driver} />
-      {trip.description && (
-        <div className={styles.description}>{trip.description}</div>
-      )}
+      <TripDescription content={trip.description} />
       {session.status === 'unauthenticated' && (
         <Alert
           type="info"
