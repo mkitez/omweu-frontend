@@ -1,4 +1,4 @@
-.root {
+.bookingView {
   margin-top: 2rem;
   font-size: 1.125rem;
 }
@@ -8,15 +8,18 @@
   margin: 1rem auto;
 }
 
-.cancelBtnContainer button {
-  height: 2.5rem;
-}
-
 .tripLinkContainer {
   font-size: 0.9rem;
   text-align: center;
   color: rgba(0, 0, 0, 0.55);
   margin-top: 1rem;
+}
+
+.driverActions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 2rem;
 }
 
 .status {

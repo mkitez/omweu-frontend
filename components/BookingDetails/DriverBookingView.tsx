@@ -1,25 +1,21 @@
-import Link from 'next/link';
 import { Booking } from '../../pages/bookings/[bookingId]';
 import TripData from '../TripDetails/TripData';
 import UserData from '../TripDetails/UserData';
 import DriverActions from './DriverActions';
-import { useTranslation } from 'next-i18next';
+import TripLink from './TripLink';
+import styles from './BookingDetails.module.css';
 
 type Props = {
   booking: Booking;
 };
 
 const DriverBookingView: React.FC<Props> = ({ booking }) => {
-  const { t } = useTranslation('booking');
-
   return (
-    <div>
+    <div className={styles.bookingView}>
       <TripData trip={booking.trip} />
       <UserData user={booking.passenger} />
       <DriverActions booking={booking} />
-      <div>
-        <Link href={`/trips/${booking.trip.id}`}>{t('go_to_trip')}</Link>
-      </div>
+      <TripLink tripId={booking.trip.id} />
     </div>
   );
 };
