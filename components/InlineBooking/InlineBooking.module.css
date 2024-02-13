@@ -1,0 +1,32 @@
+.root {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.root button {
+  height: 2.5rem;
+}
+
+.bookingLink {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.55)
+}
+
+.confirmed,
+.pending,
+.rejected {
+  font-size: 1.125rem;
+}
+
+.confirmed {
+  color: #0d730d;
+}
+
+.pending {
+  color: #976916;
+}
+
+.rejected {
+  color: #910b0b;
+}

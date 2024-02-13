@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { Button } from 'antd';
 import { useBookingApi } from '../../hooks/api/useBookingApi';
 import { useRouter } from 'next/router';
+import { CloseCircleOutlined, ExportOutlined } from '@ant-design/icons';
+import styles from './BookingDetails.module.css';
 
 type Props = {
   booking: Booking;
@@ -19,17 +21,16 @@ const PassengerBookingView: React.FC<Props> = ({ booking }) => {
 
   const tripURL = `/trips/${booking.trip.id}`;
   return (
-    <div>
+    <div className={styles.root}>
       <BookingStatus booking={booking} />
       <TripData trip={booking.trip} />
       <UserData user={booking.driver} />
+      {/* TODO: style description */}
       {booking.trip.description && <div>{booking.trip.description}</div>}
-      <div>
-        <Link href={tripURL}>{t('go_to_trip')}</Link>
-      </div>
       {!booking.response_timestamp && (
-        <div>
+        <div className={styles.cancelBtnContainer}>
           <Button
+            icon={<CloseCircleOutlined />}
             onClick={async () => {
               await api.cancelBooking(booking.booking_id);
               router.push(tripURL);
@@ -39,6 +40,11 @@ const PassengerBookingView: React.FC<Props> = ({ booking }) => {
           </Button>
         </div>
       )}
+      <div className={styles.tripLinkContainer}>
+        <Link href={tripURL}>
+          <ExportOutlined /> {t('go_to_trip')}
+        </Link>
+      </div>
     </div>
   );
 };

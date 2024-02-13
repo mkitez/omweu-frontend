@@ -1,0 +1,36 @@
+.root {
+  margin-top: 2rem;
+  font-size: 1.125rem;
+}
+
+.cancelBtnContainer {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.cancelBtnContainer button {
+  height: 2.5rem;
+}
+
+.tripLinkContainer {
+  font-size: 0.9rem;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.55);
+  margin-top: 1.5rem;
+}
+
+.status {
+  margin: 1rem auto;
+}
+
+.confirmed {
+  color: #0d730d;
+}
+
+.pending {
+  color: #976916;
+}
+
+.rejected {
+  color: #910b0b;
+}

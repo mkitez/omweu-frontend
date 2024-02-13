@@ -11,7 +11,7 @@ type Props = {
   booking: Booking;
 };
 
-export const BookingStatus: React.FC<Props> = ({ booking }) => {
+export const DashboardBookingStatus: React.FC<Props> = ({ booking }) => {
   const { t } = useTranslation('booking');
 
   return (

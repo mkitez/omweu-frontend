@@ -5,6 +5,7 @@ import {
   CloseCircleOutlined,
 } from '@ant-design/icons';
 import { Booking } from '../../pages/bookings/[bookingId]';
+import styles from './BookingDetails.module.css';
 
 type Props = {
   booking: Booking;
@@ -13,25 +14,21 @@ type Props = {
 export const BookingStatus: React.FC<Props> = ({ booking }) => {
   const { t } = useTranslation('booking');
 
-  if (booking.is_confirmed) {
-    return (
-      <div>
-        <CheckCircleOutlined /> {t('status.confirmed')}
-      </div>
-    );
-  }
-
-  if (booking.response_timestamp) {
-    return (
-      <div>
-        <CloseCircleOutlined /> {t('status.rejected')}
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <QuestionCircleOutlined /> {t('status.pending')}
+    <div className={styles.status}>
+      {booking.is_confirmed ? (
+        <div className={styles.confirmed}>
+          <CheckCircleOutlined /> {t('status.confirmed')}
+        </div>
+      ) : booking.response_timestamp ? (
+        <div className={styles.rejected}>
+          <CloseCircleOutlined /> {t('status.rejected')}
+        </div>
+      ) : (
+        <div className={styles.pending}>
+          <QuestionCircleOutlined /> {t('status_short.pending')}
+        </div>
+      )}
     </div>
   );
 };
