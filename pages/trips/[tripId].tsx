@@ -50,6 +50,9 @@ const TripDetailsPage = ({
   }
 
   const formattedDate = formatDate(new Date(trip.date), i18n.language);
+  const isTripInPast = dayjs(trip.date) < dayjs();
+  const isTripBookable =
+    !isDriver && status === 'authenticated' && !isTripInPast;
   return (
     <>
       <Head>
@@ -68,11 +71,13 @@ const TripDetailsPage = ({
             <>
               <InlineBookings tripId={trip.id} />
               <div className={styles.tripActionsContainer}>
-                <div className={styles.tripAction}>
-                  <Link href={`/tripedit/${trip.id}`}>
-                    <FormOutlined /> {t('edit')}
-                  </Link>
-                </div>
+                {!isTripInPast && (
+                  <div className={styles.tripAction}>
+                    <Link href={`/tripedit/${trip.id}`}>
+                      <FormOutlined /> {t('edit')}
+                    </Link>
+                  </div>
+                )}
                 <div className={styles.tripAction}>
                   <Link href={`/tripcopy?tripId=${trip.id}`}>
                     <CopyOutlined /> {t('copy')}
@@ -81,7 +86,7 @@ const TripDetailsPage = ({
               </div>
             </>
           ) : (
-            status === 'authenticated' && <InlineBooking tripId={trip.id} />
+            isTripBookable && <InlineBooking tripId={trip.id} />
           )}
         </div>
       </div>

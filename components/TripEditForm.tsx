@@ -1,3 +1,5 @@
+import axios from 'axios';
+import dayjs from 'dayjs';
 import { useEffect, useState, useMemo } from 'react';
 import { Alert, Button, Col, Form, Input, InputNumber, Row } from 'antd';
 import PlaceInput from './PlaceInput';
@@ -5,12 +7,10 @@ import DateTimeInput from './DateTimeInput';
 import type { DefaultOptionType } from 'antd/es/select';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { Destination } from './Trips';
-import dayjs from 'dayjs';
 import { Rule } from 'antd/es/form';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import styles from '../styles/TripEditForm.module.css';
-import axios from 'axios';
 
 export interface FormData {
   from: DefaultOptionType;
@@ -40,7 +40,6 @@ const TripEditForm = ({
   initialDescription,
   submitValue,
   submit,
-  onDelete,
 }: any) => {
   const { t } = useTranslation('common');
   const router = useRouter();
@@ -150,8 +149,7 @@ const TripEditForm = ({
     }),
   ];
 
-  const tripIsInPast = initialDate && dayjs(initialDate) < dayjs();
-
+  const isTripInPast = initialDate && dayjs(initialDate) < dayjs();
   return (
     <>
       <Form
@@ -159,7 +157,7 @@ const TripEditForm = ({
         initialValues={initialValues}
         requiredMark={false}
         onFinish={handleSubmit}
-        disabled={tripIsInPast || loading}
+        disabled={isTripInPast || loading}
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 14 }}
         className={styles.root}
@@ -173,7 +171,7 @@ const TripEditForm = ({
         <Form.List name="routeStops">
           {(fields, { add, remove }, { errors }) => (
             <>
-              {fields.length === 0 && !tripIsInPast && (
+              {fields.length === 0 && !isTripInPast && (
                 <Row>
                   <Col sm={{ offset: 5 }} className={styles.stopsTooltip}>
                     {t('addStopTooltip')}
@@ -194,7 +192,7 @@ const TripEditForm = ({
                   <MinusCircleOutlined
                     className={styles.removeStopBtn}
                     onClick={
-                      tripIsInPast ? undefined : () => remove(field.name)
+                      isTripInPast ? undefined : () => remove(field.name)
                     }
                   />
                 </Form.Item>
@@ -248,11 +246,6 @@ const TripEditForm = ({
           >
             {t('cancel')}
           </Button>
-          {onDelete && (
-            <Button type="text" danger onClick={() => onDelete()}>
-              {t('delete')}
-            </Button>
-          )}
         </Form.Item>
       </Form>
       {error && <Alert type="error" message={error} />}
