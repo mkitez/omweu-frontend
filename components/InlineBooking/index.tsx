@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import useSWR from 'swr';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
 import { useTranslation } from 'next-i18next';
 import { Booking } from '../../pages/bookings/[bookingId]';
 import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
@@ -19,6 +19,7 @@ type Props = {
 };
 
 const InlineBooking: React.FC<Props> = ({ tripId }) => {
+  const api = useBookingApi();
   const { t } = useTranslation('booking');
   const fetcher = useAuthorizedFetcher();
   const {
@@ -27,8 +28,9 @@ const InlineBooking: React.FC<Props> = ({ tripId }) => {
     isLoading,
     mutate,
   } = useSWR<Booking>(`/trips/${tripId}/booking/`, fetcher);
-  const bookingApi = useBookingApi();
+
   const [bookingSubmitLoading, setBookingSubmitLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   if (isLoading || error) {
     return null;
@@ -36,7 +38,8 @@ const InlineBooking: React.FC<Props> = ({ tripId }) => {
 
   const bookingSubmitHandler = async () => {
     setBookingSubmitLoading(true);
-    const bookingData = await bookingApi.submitBookingForTrip(tripId);
+    const bookingData = await api.submitBookingForTrip(tripId);
+    setModalOpen(false);
     await mutate(bookingData);
     setBookingSubmitLoading(false);
   };
@@ -49,8 +52,8 @@ const InlineBooking: React.FC<Props> = ({ tripId }) => {
             <Button
               icon={<CalendarOutlined />}
               type="primary"
-              loading={bookingSubmitLoading}
-              onClick={bookingSubmitHandler}
+              disabled={bookingSubmitLoading}
+              onClick={() => setModalOpen(true)}
             >
               {t('book_trip')}
             </Button>
@@ -88,6 +91,17 @@ const InlineBooking: React.FC<Props> = ({ tripId }) => {
           </>
         );
       })()}
+      <Modal
+        open={modalOpen}
+        title={t('modals.book.title')}
+        okText={t('response.yes', { ns: 'common' })}
+        cancelText={t('response.no', { ns: 'common' })}
+        onOk={bookingSubmitHandler}
+        confirmLoading={bookingSubmitLoading}
+        onCancel={() => setModalOpen(false)}
+      >
+        {t('modals.book.body')}
+      </Modal>
     </div>
   );
 };

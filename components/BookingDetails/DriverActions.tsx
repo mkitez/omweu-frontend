@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { Booking } from '../../pages/bookings/[bookingId]';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
 import { useRouter } from 'next/router';
 import { useBookingApi } from '../../hooks/api/useBookingApi';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
@@ -12,23 +12,32 @@ type Props = {
 };
 
 const DriverActions: React.FC<Props> = ({ booking }) => {
+  const api = useBookingApi();
   const router = useRouter();
   const { t } = useTranslation('booking');
-  const api = useBookingApi();
+
   const [isLoading, setLoading] = useState(false);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [rejectModalOpen, setRejectModalOpen] = useState(false);
 
   const refreshData = () => {
-    router.replace(router.asPath);
+    return router.replace(router.asPath);
   };
 
   const getActionHandler = (callback: () => Promise<void>) => {
     return async () => {
       setLoading(true);
       await callback();
-      refreshData();
+      await refreshData();
       setLoading(false);
     };
   };
+  const confirmHandler = getActionHandler(() =>
+    api.confirmBooking(booking.booking_id)
+  );
+  const rejectHandler = getActionHandler(() =>
+    api.rejectBooking(booking.booking_id)
+  );
 
   return (
     <div className={styles.driverActions}>
@@ -51,23 +60,41 @@ const DriverActions: React.FC<Props> = ({ booking }) => {
           <>
             <Button
               type="primary"
-              loading={isLoading}
+              disabled={isLoading}
               icon={<CheckCircleOutlined />}
-              onClick={getActionHandler(() =>
-                api.confirmBooking(booking.booking_id)
-              )}
+              onClick={() => setConfirmModalOpen(true)}
             >
               {t('actions.confirm')}
             </Button>
             <Button
               icon={<CloseCircleOutlined />}
-              loading={isLoading}
-              onClick={getActionHandler(() =>
-                api.rejectBooking(booking.booking_id)
-              )}
+              disabled={isLoading}
+              onClick={() => setRejectModalOpen(true)}
             >
               {t('actions.reject')}
             </Button>
+            <Modal
+              open={confirmModalOpen}
+              title={t('modals.confirm.title')}
+              okText={t('response.yes', { ns: 'common' })}
+              cancelText={t('response.no', { ns: 'common' })}
+              onOk={confirmHandler}
+              confirmLoading={isLoading}
+              onCancel={() => setConfirmModalOpen(false)}
+            >
+              {t('modals.confirm.body')}
+            </Modal>
+            <Modal
+              open={rejectModalOpen}
+              title={t('modals.reject.title')}
+              okText={t('response.yes', { ns: 'common' })}
+              cancelText={t('response.no', { ns: 'common' })}
+              onOk={rejectHandler}
+              confirmLoading={isLoading}
+              onCancel={() => setRejectModalOpen(false)}
+            >
+              {t('modals.reject.body')}
+            </Modal>
           </>
         );
       })()}
