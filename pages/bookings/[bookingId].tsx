@@ -15,12 +15,14 @@ import styles from '../../styles/Trip.module.css';
 
 export type InBookingTrip = Omit<Trip, 'driver'>;
 
+export type BookingState = 'PENDING' | 'CONFIRMED' | 'REJECTED' | 'CANCELLED';
+
 export interface Booking {
   booking_id: string;
   trip: InBookingTrip;
   driver: User;
   passenger: User;
-  is_confirmed: boolean;
+  state: BookingState;
   response_timestamp: string;
   booking_date: string;
 }

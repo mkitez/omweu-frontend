@@ -21,7 +21,7 @@ const InlineBookings: React.FC<Props> = ({ tripId }) => {
     isLoading,
   } = useSWR<Booking[]>(`/trips/${tripId}/bookings/`, fetcher);
 
-  if (isLoading || error || !bookings?.length) {
+  if (isLoading || error || bookings?.length === 0) {
     return null;
   }
 

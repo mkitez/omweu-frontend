@@ -1,8 +1,8 @@
 import { Trip } from '../Trips';
-import styles from './TripDetails.module.css';
 import TripOutline from '../TripOutline';
 import { useTranslation } from 'next-i18next';
 import { InBookingTrip } from '../../pages/bookings/[bookingId]';
+import styles from './TripDetails.module.css';
 
 type Props = {
   trip: Trip | InBookingTrip;

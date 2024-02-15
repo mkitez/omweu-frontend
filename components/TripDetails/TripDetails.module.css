@@ -20,6 +20,10 @@
   margin-top: 2rem;
 }
 
+.price {
+  color: #434343;
+}
+
 .driver {
   display: flex;
   font-size: 1rem;

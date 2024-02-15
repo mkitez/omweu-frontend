@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Button, Modal } from 'antd';
 import { CloseCircleOutlined } from '@ant-design/icons';
 import { Booking } from '../../pages/bookings/[bookingId]';
@@ -5,7 +6,6 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useBookingApi } from '../../hooks/api/useBookingApi';
 import styles from './BookingDetails.module.css';
-import { useState } from 'react';
 
 type Props = {
   booking: Booking;
@@ -19,16 +19,20 @@ const PassengerActions: React.FC<Props> = ({ booking }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
 
+  if (booking.state !== 'PENDING') {
+    return null;
+  }
+
+  const refreshData = () => {
+    return router.replace(router.asPath);
+  };
+
   const cancelBooking = async () => {
     setCancelLoading(true);
     await api.cancelBooking(booking.booking_id);
-    router.push(`/trips/${booking.trip.id}`);
+    await refreshData();
     setCancelLoading(false);
   };
-
-  if (booking.response_timestamp) {
-    return null;
-  }
 
   return (
     <div className={styles.cancelBtnContainer}>

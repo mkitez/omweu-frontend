@@ -14,3 +14,7 @@
 .rejected {
   color: #910b0b;
 }
+
+.cancelled {
+  color: #717171;
+}

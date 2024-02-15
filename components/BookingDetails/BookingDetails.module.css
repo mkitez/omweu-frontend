@@ -23,7 +23,14 @@
 }
 
 .status {
+  font-size: 1rem;
   margin: 1rem auto;
+}
+
+.confirmed,
+.pending,
+.rejected {
+  font-size: 1rem;
 }
 
 .confirmed {
@@ -36,4 +43,8 @@
 
 .rejected {
   color: #910b0b;
+}
+
+.cancelled {
+  color: #717171;
 }

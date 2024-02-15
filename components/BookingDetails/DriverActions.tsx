@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { Booking } from '../../pages/bookings/[bookingId]';
 import { Button, Modal } from 'antd';
@@ -5,7 +6,6 @@ import { useRouter } from 'next/router';
 import { useBookingApi } from '../../hooks/api/useBookingApi';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import styles from './BookingDetails.module.css';
-import { useState } from 'react';
 
 type Props = {
   booking: Booking;
@@ -42,16 +42,23 @@ const DriverActions: React.FC<Props> = ({ booking }) => {
   return (
     <div className={styles.driverActions}>
       {(() => {
-        if (booking.is_confirmed) {
+        if (booking.state === 'CONFIRMED') {
           return (
             <div className={styles.confirmed}>
               <CheckCircleOutlined /> {t('status_driver.confirmed')}
             </div>
           );
         }
-        if (booking.response_timestamp) {
+        if (booking.state === 'REJECTED') {
           return (
             <div className={styles.rejected}>
+              <CloseCircleOutlined /> {t('status_driver.rejected')}
+            </div>
+          );
+        }
+        if (booking.state === 'CANCELLED') {
+          return (
+            <div className={styles.cancelled}>
               <CloseCircleOutlined /> {t('status_driver.rejected')}
             </div>
           );

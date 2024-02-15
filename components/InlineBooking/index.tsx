@@ -65,7 +65,7 @@ const InlineBooking: React.FC<Props> = ({ tripId }) => {
             <CalendarOutlined /> {t('view_booking_details')}
           </Link>
         );
-        if (booking.is_confirmed) {
+        if (booking.state === 'CONFIRMED') {
           return (
             <>
               <div className={styles.confirmed}>
@@ -75,14 +75,14 @@ const InlineBooking: React.FC<Props> = ({ tripId }) => {
             </>
           );
         }
-
         return (
           <>
-            {booking.response_timestamp ? (
+            {booking.state === 'REJECTED' && (
               <div className={styles.rejected}>
                 <CloseCircleOutlined /> {t('status.rejected')}
               </div>
-            ) : (
+            )}
+            {booking.state === 'PENDING' && (
               <div className={styles.pending}>
                 <QuestionCircleOutlined /> {t('status.pending')}
               </div>

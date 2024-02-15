@@ -16,17 +16,24 @@ export const InlineBookingStatus: React.FC<Props> = ({ booking }) => {
 
   return (
     <div className={styles.status}>
-      {booking.is_confirmed ? (
+      {booking.state === 'CONFIRMED' && (
         <div className={styles.confirmed}>
           <CheckCircleOutlined /> {t('status_short.confirmed')}
         </div>
-      ) : booking.response_timestamp ? (
+      )}
+      {booking.state === 'REJECTED' && (
         <div className={styles.rejected}>
           <CloseCircleOutlined /> {t('status_short.rejected')}
         </div>
-      ) : (
+      )}
+      {booking.state === 'PENDING' && (
         <div className={styles.pending}>
           <QuestionCircleOutlined /> {t('status_short.pending')}
+        </div>
+      )}
+      {booking.state === 'CANCELLED' && (
+        <div className={styles.cancelled}>
+          <CloseCircleOutlined /> {t('status_short.cancelled')}
         </div>
       )}
     </div>
