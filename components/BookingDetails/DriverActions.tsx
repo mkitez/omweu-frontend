@@ -5,6 +5,11 @@ import { Button, Modal } from 'antd';
 import { useRouter } from 'next/router';
 import { useBookingApi } from '../../hooks/api/useBookingApi';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import {
+  StatusCancelled,
+  StatusConfirmed,
+  StatusRejected,
+} from '../BookingStatus';
 import styles from './BookingDetails.module.css';
 
 type Props = {
@@ -43,25 +48,13 @@ const DriverActions: React.FC<Props> = ({ booking }) => {
     <div className={styles.driverActions}>
       {(() => {
         if (booking.state === 'CONFIRMED') {
-          return (
-            <div className={styles.confirmed}>
-              <CheckCircleOutlined /> {t('status_driver.confirmed')}
-            </div>
-          );
+          return <StatusConfirmed mode="driver" />;
         }
         if (booking.state === 'REJECTED') {
-          return (
-            <div className={styles.rejected}>
-              <CloseCircleOutlined /> {t('status_driver.rejected')}
-            </div>
-          );
+          return <StatusRejected mode="driver" />;
         }
         if (booking.state === 'CANCELLED') {
-          return (
-            <div className={styles.cancelled}>
-              <CloseCircleOutlined /> {t('status_driver.rejected')}
-            </div>
-          );
+          return <StatusCancelled mode="driver" />;
         }
         return (
           <>

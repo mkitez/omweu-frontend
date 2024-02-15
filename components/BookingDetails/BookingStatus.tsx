@@ -1,10 +1,10 @@
-import { useTranslation } from 'next-i18next';
-import {
-  QuestionCircleOutlined,
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-} from '@ant-design/icons';
 import { Booking } from '../../pages/bookings/[bookingId]';
+import {
+  StatusPending,
+  StatusConfirmed,
+  StatusRejected,
+  StatusCancelled,
+} from '../BookingStatus';
 import styles from './BookingDetails.module.css';
 
 type Props = {
@@ -12,30 +12,12 @@ type Props = {
 };
 
 export const BookingStatus: React.FC<Props> = ({ booking }) => {
-  const { t } = useTranslation('booking');
-
   return (
     <div className={styles.status}>
-      {booking.state === 'CONFIRMED' && (
-        <div className={styles.confirmed}>
-          <CheckCircleOutlined /> {t('status.confirmed')}
-        </div>
-      )}
-      {booking.state === 'REJECTED' && (
-        <div className={styles.rejected}>
-          <CloseCircleOutlined /> {t('status.rejected')}
-        </div>
-      )}
-      {booking.state === 'PENDING' && (
-        <div className={styles.pending}>
-          <QuestionCircleOutlined /> {t('status_short.pending')}
-        </div>
-      )}
-      {booking.state === 'CANCELLED' && (
-        <div className={styles.cancelled}>
-          <CloseCircleOutlined /> {t('status.cancelled')}
-        </div>
-      )}
+      {booking.state === 'CONFIRMED' && <StatusConfirmed />}
+      {booking.state === 'REJECTED' && <StatusRejected />}
+      {booking.state === 'PENDING' && <StatusPending mode="short" />}
+      {booking.state === 'CANCELLED' && <StatusCancelled />}
     </div>
   );
 };

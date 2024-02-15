@@ -5,7 +5,7 @@ import { List } from 'antd';
 import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
 import { Booking } from '../../pages/bookings/[bookingId]';
 import UserAvatar from '../TripDetails/UserAvatar';
-import { InlineBookingStatus } from '../DashboardBooking/InlineBookingStatus';
+import { InlineBookingStatus } from './InlineBookingStatus';
 import styles from './InlineBookings.module.css';
 
 type Props = {

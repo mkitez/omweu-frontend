@@ -20,31 +20,10 @@
   gap: 0.5rem;
   justify-content: center;
   margin-top: 2rem;
+  font-size: 1rem;
 }
 
 .status {
   font-size: 1rem;
   margin: 1rem auto;
-}
-
-.confirmed,
-.pending,
-.rejected {
-  font-size: 1rem;
-}
-
-.confirmed {
-  color: #0d730d;
-}
-
-.pending {
-  color: #976916;
-}
-
-.rejected {
-  color: #910b0b;
-}
-
-.cancelled {
-  color: #717171;
 }

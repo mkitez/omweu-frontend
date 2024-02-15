@@ -1,20 +1,3 @@
 .status {
   font-size: 0.9rem;
-  line-height: 1;
-}
-
-.confirmed {
-  color: #0d730d;
-}
-
-.pending {
-  color: #976916;
-}
-
-.rejected {
-  color: #910b0b;
-}
-
-.cancelled {
-  color: #717171;
 }
