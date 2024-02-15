@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Link from 'next/link';
 import useSWR from 'swr';
 import { Button, Modal } from 'antd';
 import { useTranslation } from 'next-i18next';
@@ -12,6 +11,7 @@ import {
   StatusPending,
   StatusRejected,
 } from '../BookingStatus';
+import BookingLink from './BookingLink';
 import styles from './InlineBooking.module.css';
 
 type Props = {
@@ -51,11 +51,7 @@ const InlineBooking: React.FC<Props> = ({ tripId }) => {
           {booking.state === 'CONFIRMED' && <StatusConfirmed />}
           {booking.state === 'REJECTED' && <StatusRejected />}
           {booking.state === 'PENDING' && <StatusPending />}
-          <div className={styles.bookingLink}>
-            <Link href={`/bookings/${booking.booking_id}`}>
-              <CalendarOutlined /> {t('view_booking_details')}
-            </Link>
-          </div>
+          <BookingLink bookingId={booking.booking_id} />
         </>
       ) : (
         <Button
