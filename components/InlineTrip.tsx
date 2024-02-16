@@ -1,8 +1,8 @@
 import { ReactElement } from 'react';
-import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import type { Trip } from '../components/Trips';
 import TripOutline from './TripOutline';
+import TripTime from './TripDetails/TripTime';
 import { formatDate } from '../utils/formatDate';
 import UserAvatar from './TripDetails/UserAvatar';
 import styles from '../styles/InlineTrip.module.css';
@@ -22,10 +22,7 @@ const InlineTrip: React.FC<Props> = ({
   showDate,
   header,
 }) => {
-  const { i18n } = useTranslation('common');
-  const tripTime = new Date(trip.date).toLocaleTimeString(i18n.language, {
-    timeStyle: 'short',
-  });
+  const { i18n } = useTranslation();
   const routeStops = trip.route_stops.length
     ? [trip.route_stops.map((stop) => stop.name).join(' — ')]
     : [];
@@ -38,7 +35,7 @@ const InlineTrip: React.FC<Props> = ({
         </div>
       )}
       <div className={styles.tripDetails}>
-        <div className={styles.time}>{tripTime}</div>
+        <TripTime date={trip.date} />
         <TripOutline
           origin={trip.origin.name}
           dest={trip.dest.name}
