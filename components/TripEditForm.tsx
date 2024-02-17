@@ -38,6 +38,7 @@ const TripEditForm = ({
   initialDate,
   initialPrice,
   initialDescription,
+  tripTimezone,
   submitValue,
   submit,
 }: any) => {
@@ -56,7 +57,7 @@ const TripEditForm = ({
       routeStops: (initialRouteStops || [])
         .map((stop: any) => getInitialPlaceValue(stop))
         .filter((stop: any) => !!stop),
-      date: initialDate ? dayjs(initialDate, 'YYYY-MM-DD HH:mm') : null,
+      date: initialDate ? dayjs(initialDate).tz(tripTimezone) : null,
       price: initialPrice ?? null,
       description: initialDescription || '',
     }),
@@ -67,6 +68,7 @@ const TripEditForm = ({
       initialOrigin,
       initialPrice,
       initialDescription,
+      tripTimezone,
     ]
   );
   useEffect(() => {

@@ -25,7 +25,9 @@ const BackButton = ({ trip }: { trip: Trip }) => {
   const { origin, dest } = trip;
   const fromInput = `${origin.name}, ${origin.country_name}`;
   const toInput = `${dest.name}, ${dest.country_name}`;
-  const formattedDate = dayjs(trip.date).format('YYYY-MM-DD');
+  const formattedDate = dayjs(trip.date)
+    .tz(trip.origin.time_zone)
+    .format('YYYY-MM-DD');
 
   return (
     <div className={styles.back}>
@@ -49,7 +51,11 @@ const TripDetailsPage = ({
     return <Error statusCode={500} />;
   }
 
-  const formattedDate = formatDate(new Date(trip.date), i18n.language);
+  const formattedDate = formatDate(
+    new Date(trip.date),
+    i18n.language,
+    trip.origin.time_zone
+  );
   const isTripInPast = dayjs(trip.date) < dayjs();
   const isTripBookable =
     !isDriver && status === 'authenticated' && !isTripInPast;

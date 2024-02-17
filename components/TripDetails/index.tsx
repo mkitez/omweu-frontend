@@ -5,9 +5,9 @@ import { Alert } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import TripData from './TripData';
-import styles from './TripDetails.module.css';
 import UserData from './UserData';
 import TripDescription from './TripDescription';
+import styles from './TripDetails.module.css';
 
 type Props = {
   trip: Trip;
