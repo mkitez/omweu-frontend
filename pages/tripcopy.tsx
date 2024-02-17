@@ -45,6 +45,7 @@ const TripCopy = ({
           initialDate={newTripDate}
           initialPrice={data.price}
           initialDescription={data.description}
+          tripTimezone={data.origin.time_zone}
           submitValue={t('create', { ns: 'common' })}
           submit={async (data: any) => {
             await TripService.createTrip(data, session?.accessToken as string);

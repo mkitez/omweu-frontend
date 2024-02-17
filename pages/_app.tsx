@@ -1,6 +1,10 @@
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import { ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
 import { Session } from 'next-auth';
@@ -8,15 +12,17 @@ import { ConfigProvider } from 'antd';
 import { appWithTranslation } from 'next-i18next';
 import AppLayout from '../components/AppLayout';
 import AuthWrapper from '../components/AuthWrapper';
+import { StyleProvider } from '@ant-design/cssinjs';
+import theme from '../theme';
 import '../styles/globals.css';
 import 'antd/dist/reset.css';
-import { StyleProvider } from '@ant-design/cssinjs';
 
 import type { Locale } from 'antd/lib/locale';
 import ru from 'antd/locale/ru_RU';
 import 'dayjs/locale/ru';
-import theme from '../theme';
-import Head from 'next/head';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const locales: Record<string, Locale> = {
   ru,

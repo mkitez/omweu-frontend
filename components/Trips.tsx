@@ -23,6 +23,7 @@ export interface Destination {
   place_id: string;
   name: string;
   country_name: string;
+  time_zone: string;
 }
 
 export interface Trip {

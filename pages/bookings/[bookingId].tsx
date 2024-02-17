@@ -36,7 +36,11 @@ const BookingDetailsPage = ({
     return <Error statusCode={500} />;
   }
 
-  const formattedDate = formatDate(new Date(booking.trip.date), i18n.language);
+  const formattedDate = formatDate(
+    new Date(booking.trip.date),
+    i18n.language,
+    booking.trip.origin.time_zone
+  );
   return (
     <>
       <Head>

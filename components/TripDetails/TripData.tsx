@@ -3,6 +3,7 @@ import TripOutline from '../TripOutline';
 import { useTranslation } from 'next-i18next';
 import { InBookingTrip } from '../../pages/bookings/[bookingId]';
 import styles from './TripDetails.module.css';
+import TripTime from './TripTime';
 
 type Props = {
   trip: Trip | InBookingTrip;
@@ -10,12 +11,9 @@ type Props = {
 
 const TripData: React.FC<Props> = ({ trip }) => {
   const { i18n } = useTranslation();
-  const tripTime = new Date(trip.date).toLocaleTimeString(i18n.language, {
-    timeStyle: 'short',
-  });
   return (
     <div className={styles.tripDetails}>
-      <div className={styles.time}>{tripTime}</div>
+      <TripTime trip={trip} />
       <TripOutline
         origin={trip.origin.name}
         dest={trip.dest.name}

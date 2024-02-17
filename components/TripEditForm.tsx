@@ -21,6 +21,27 @@ export interface FormData {
   description: string;
 }
 
+type SubmitData = {
+  origin_id: string;
+  dest_id: string;
+  date: string;
+  price: string;
+  description: string;
+  route_stop_ids: string[];
+};
+
+type Props = {
+  initialOrigin: Destination;
+  initialDest: Destination;
+  initialRouteStops: Destination[];
+  initialDate: dayjs.Dayjs | string;
+  initialPrice: string;
+  initialDescription: string | null;
+  tripTimezone: string;
+  submitValue: string;
+  submit: (data: SubmitData) => Promise<void>;
+};
+
 const getInitialPlaceValue = (place: Destination): DefaultOptionType | null => {
   if (!place) {
     return null;
@@ -38,9 +59,10 @@ const TripEditForm = ({
   initialDate,
   initialPrice,
   initialDescription,
+  tripTimezone,
   submitValue,
   submit,
-}: any) => {
+}: Props) => {
   const { t } = useTranslation('common');
   const router = useRouter();
 
@@ -54,9 +76,9 @@ const TripEditForm = ({
       from: getInitialPlaceValue(initialOrigin),
       to: getInitialPlaceValue(initialDest),
       routeStops: (initialRouteStops || [])
-        .map((stop: any) => getInitialPlaceValue(stop))
-        .filter((stop: any) => !!stop),
-      date: initialDate ? dayjs(initialDate, 'YYYY-MM-DD HH:mm') : null,
+        .map((stop) => getInitialPlaceValue(stop))
+        .filter((stop) => !!stop),
+      date: initialDate ? dayjs(initialDate).tz(tripTimezone) : null,
       price: initialPrice ?? null,
       description: initialDescription || '',
     }),
@@ -67,6 +89,7 @@ const TripEditForm = ({
       initialOrigin,
       initialPrice,
       initialDescription,
+      tripTimezone,
     ]
   );
   useEffect(() => {
@@ -76,13 +99,13 @@ const TripEditForm = ({
   const handleSubmit = async (formData: FormData) => {
     const date = formData.date.format('YYYY-MM-DDTHH:mm:00');
 
-    const data = {
-      origin_id: formData.from.value,
-      dest_id: formData.to.value,
+    const data: SubmitData = {
+      origin_id: formData.from.value as string,
+      dest_id: formData.to.value as string,
       date,
       price: formData.price,
       description: formData.description || '',
-      route_stop_ids: formData.routeStops.map((stop) => stop.value),
+      route_stop_ids: formData.routeStops.map((stop) => stop.value as string),
     };
     setLoading(true);
     try {
