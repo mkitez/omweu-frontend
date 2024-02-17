@@ -17,6 +17,14 @@
   flex-shrink: 0;
 }
 
+@media screen and (max-width: 575px) {
+  .originLine,
+  .destLine,
+  .routeStopLine {
+    flex-basis: 1.5rem;
+  }
+}
+
 .originLine,
 .destLine {
   padding-top: 0.3rem;

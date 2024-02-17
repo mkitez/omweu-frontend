@@ -1,18 +1,27 @@
-import { FC } from 'react';
+import { ReactElement } from 'react';
 import Image from 'next/image';
-import type { Trip } from '../components/Trips';
 import { useTranslation } from 'next-i18next';
+import type { Trip } from '../components/Trips';
 import TripOutline from './TripOutline';
-import styles from '../styles/InlineTrip.module.css';
 import { formatDate } from '../utils/formatDate';
+import UserAvatar from './TripDetails/UserAvatar';
+import styles from '../styles/InlineTrip.module.css';
 
 interface Props {
   trip: Trip;
   hidePrice?: boolean;
+  hideDriver?: boolean;
   showDate?: boolean;
+  header?: ReactElement;
 }
 
-const InlineTrip: FC<Props> = ({ trip, hidePrice, showDate }) => {
+const InlineTrip: React.FC<Props> = ({
+  trip,
+  hidePrice,
+  hideDriver,
+  showDate,
+  header,
+}) => {
   const { i18n } = useTranslation('common');
   const tripTime = new Date(trip.date).toLocaleTimeString(i18n.language, {
     timeStyle: 'short',
@@ -22,6 +31,7 @@ const InlineTrip: FC<Props> = ({ trip, hidePrice, showDate }) => {
     : [];
   return (
     <div className={styles.root}>
+      {header && <div className={styles.header}>{header}</div>}
       {showDate && (
         <div className={styles.date}>
           {formatDate(new Date(trip.date), i18n.language)}
@@ -44,16 +54,12 @@ const InlineTrip: FC<Props> = ({ trip, hidePrice, showDate }) => {
           </div>
         )}
       </div>
-      <div className={styles.driver}>
-        <div className={styles.imgContainer}>
-          {trip.driver.photo ? (
-            <Image src={trip.driver.photo} width={100} height={100} alt="" />
-          ) : (
-            trip.driver.first_name.charAt(0)
-          )}
+      {!hideDriver && (
+        <div className={styles.driver}>
+          <UserAvatar user={trip.driver} small />
+          <div className={styles.driverName}>{trip.driver.first_name}</div>
         </div>
-        <div className={styles.driverName}>{trip.driver.first_name}</div>
-      </div>
+      )}
     </div>
   );
 };

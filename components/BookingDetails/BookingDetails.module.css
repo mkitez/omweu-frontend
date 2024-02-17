@@ -1,0 +1,29 @@
+.bookingView {
+  margin-top: 2rem;
+  font-size: 1.125rem;
+}
+
+.cancelBtnContainer {
+  text-align: center;
+  margin: 1rem auto;
+}
+
+.tripLinkContainer {
+  font-size: 0.9rem;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.55);
+  margin-top: 1rem;
+}
+
+.driverActions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 2rem;
+  font-size: 1rem;
+}
+
+.status {
+  font-size: 1rem;
+  margin: 1rem auto;
+}

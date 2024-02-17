@@ -7,3 +7,14 @@
   font-size: 0.8rem;
   color: rgba(0, 0, 0, 0.45);
 }
+
+.tripActionsContainer {
+  margin-top: 2rem;
+}
+
+.tripAction {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.55);
+  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+}

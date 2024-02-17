@@ -44,6 +44,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     'common',
     'dashboard',
     'trip',
+    'booking',
   ]);
 
   return {

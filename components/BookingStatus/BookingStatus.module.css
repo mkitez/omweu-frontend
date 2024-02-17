@@ -1,0 +1,15 @@
+.confirmed {
+  color: #0d730d;
+}
+
+.pending {
+  color: #976916;
+}
+
+.rejected {
+  color: #910b0b;
+}
+
+.cancelled {
+  color: #717171;
+}

@@ -7,47 +7,59 @@ const reloadSession = () => {
   document.dispatchEvent(event);
 };
 
-const instance = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+const errorInterceptor = async (error: any) => {
+  const originalConfig = error.config;
 
-instance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  async (error) => {
-    const originalConfig = error.config;
-    if (error.response) {
-      if (
-        error.response?.status === 403 &&
-        error.response?.data.code === 'token_not_valid' &&
-        !originalConfig._retry &&
-        typeof window !== 'undefined'
-      ) {
-        originalConfig._retry = true;
-        let session;
-        try {
-          session = await getSession();
-          reloadSession(); // workaround for NextAuth issue: https://github.com/nextauthjs/next-auth/pull/4744
-        } catch (getSessionError) {
-          return Promise.reject(getSessionError);
-        }
-        if (session?.error) {
-          return Promise.reject(session.error);
-        }
-        originalConfig.headers = {
-          ...originalConfig.headers,
-          Authorization: `Bearer ${session?.accessToken}`,
-        };
-        return axios(originalConfig);
-      }
-    }
-
+  if (
+    !error.response ||
+    originalConfig.__retry ||
+    typeof window === 'undefined' // TODO: remove after refactoring
+  ) {
     return Promise.reject(error);
   }
-);
 
-export default instance;
+  const { status, data } = error.response;
+  if (status === 403 && data.code === 'token_not_valid') {
+    originalConfig.__retry = true;
+    let session;
+    try {
+      session = await getSession();
+      reloadSession(); // workaround for NextAuth issue: https://github.com/nextauthjs/next-auth/pull/4744
+    } catch (getSessionError) {
+      return Promise.reject(getSessionError);
+    }
+    if (session?.error) {
+      return Promise.reject(session.error);
+    }
+    originalConfig.headers = {
+      ...originalConfig.headers,
+      Authorization: `Bearer ${session?.accessToken}`,
+    };
+    return axios(originalConfig);
+  }
+};
+
+type Headers = Record<string, string | null>;
+
+const getInstance = (headers: Headers = {}) => {
+  const instance = axios.create({
+    baseURL: API_URL,
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json',
+    },
+  });
+  return instance;
+};
+
+const getClientInstance = (headers: Headers = {}) => {
+  const instance = getInstance(headers);
+  instance.interceptors.response.use((response) => response, errorInterceptor);
+  return instance;
+};
+
+// TODO: refactor all components/pages to use proper client
+const api = getClientInstance();
+
+export { getClientInstance, getInstance };
+export default api;
