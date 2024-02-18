@@ -54,7 +54,10 @@ export const getServerSideProps: GetServerSideProps = async ({
       },
     });
     const userData = userResponse.data as User;
-    if (!userData.phone_number && !userData.telegram_username) {
+    if (
+      (!userData.phone_number && !userData.telegram_username) ||
+      !userData.is_email_confirmed
+    ) {
       return {
         redirect: { destination: '/add-contacts' },
         props: {},

@@ -3,17 +3,22 @@ import api from '../services/api';
 import { useTranslation } from 'next-i18next';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
-import styles from '../styles/ContactDetailsForm.module.css';
 import { useRouter } from 'next/router';
+import styles from '../styles/ContactDetailsForm.module.css';
 
 const { Item } = Form;
 
 interface FormData {
+  email?: string;
   phone_number: string;
   telegram_username: string;
 }
 
-const ContactDetailsForm = () => {
+type Props = {
+  updateEmail?: boolean;
+};
+
+const ContactDetailsForm: React.FC<Props> = ({ updateEmail }) => {
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -21,6 +26,7 @@ const ContactDetailsForm = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showEmailSentAlert, setShowEmailSentAlert] = useState(false);
 
   const { t, i18n } = useTranslation(['dashboard', 'common']);
 
@@ -36,12 +42,27 @@ const ContactDetailsForm = () => {
           'Accept-Language': i18n.language,
         },
       });
-      await router.push('/newtrip');
+      if (updateEmail) {
+        setShowEmailSentAlert(true);
+      } else {
+        await router.push('/newtrip');
+      }
     } catch (e) {
       setError(t('errors.common', { ns: 'common' }) as string);
-      setLoading(false);
     }
+    setLoading(false);
   };
+
+  if (showEmailSentAlert) {
+    return (
+      <Alert
+        type="success"
+        showIcon
+        message={t('addContacts.emailUpdatedTitle')}
+        description={t('addContacts.emailUpdatedBody')}
+      />
+    );
+  }
 
   return (
     <>
@@ -53,6 +74,15 @@ const ContactDetailsForm = () => {
         className={styles.root}
         form={form}
       >
+        {updateEmail && (
+          <Item
+            label="Email"
+            name="email"
+            rules={[{ required: true }, { type: 'email' }]}
+          >
+            <Input placeholder="Email" />
+          </Item>
+        )}
         <Item
           label={t('profile.phoneNumber')}
           name="phone_number"

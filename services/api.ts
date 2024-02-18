@@ -37,6 +37,8 @@ const errorInterceptor = async (error: any) => {
     };
     return axios(originalConfig);
   }
+
+  return Promise.reject(error);
 };
 
 type Headers = Record<string, string | null>;
