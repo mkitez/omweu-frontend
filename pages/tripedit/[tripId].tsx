@@ -62,7 +62,6 @@ const TripEdit = () => {
               initialDate={data.date}
               initialPrice={data.price}
               initialDescription={data.description}
-              tripTimezone={data.origin.time_zone}
               submitValue={t('save', { ns: 'common' })}
               submit={async (data: any) => {
                 await TripService.updateTrip(

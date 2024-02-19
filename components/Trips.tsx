@@ -17,6 +17,7 @@ export interface User {
   photo: string;
   phone_number?: string;
   telegram_username?: string;
+  is_email_confirmed: boolean;
 }
 
 export interface Destination {

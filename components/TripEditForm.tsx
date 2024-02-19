@@ -31,18 +31,19 @@ type SubmitData = {
 };
 
 type Props = {
-  initialOrigin: Destination;
-  initialDest: Destination;
-  initialRouteStops: Destination[];
-  initialDate: dayjs.Dayjs | string;
-  initialPrice: string;
-  initialDescription: string | null;
-  tripTimezone: string;
+  initialOrigin?: Destination;
+  initialDest?: Destination;
+  initialRouteStops?: Destination[];
+  initialDate?: dayjs.Dayjs | string;
+  initialPrice?: string;
+  initialDescription?: string;
   submitValue: string;
   submit: (data: SubmitData) => Promise<void>;
 };
 
-const getInitialPlaceValue = (place: Destination): DefaultOptionType | null => {
+const getInitialPlaceValue = (
+  place: Destination | undefined
+): DefaultOptionType | null => {
   if (!place) {
     return null;
   }
@@ -59,7 +60,6 @@ const TripEditForm = ({
   initialDate,
   initialPrice,
   initialDescription,
-  tripTimezone,
   submitValue,
   submit,
 }: Props) => {
@@ -78,7 +78,9 @@ const TripEditForm = ({
       routeStops: (initialRouteStops || [])
         .map((stop) => getInitialPlaceValue(stop))
         .filter((stop) => !!stop),
-      date: initialDate ? dayjs(initialDate).tz(tripTimezone) : null,
+      date: initialDate
+        ? dayjs(initialDate).tz(initialOrigin?.time_zone)
+        : null,
       price: initialPrice ?? null,
       description: initialDescription || '',
     }),
@@ -89,7 +91,6 @@ const TripEditForm = ({
       initialOrigin,
       initialPrice,
       initialDescription,
-      tripTimezone,
     ]
   );
   useEffect(() => {
