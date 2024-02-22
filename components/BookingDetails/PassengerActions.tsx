@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Modal } from 'antd';
+import { Button, Input, Modal } from 'antd';
 import { CloseCircleOutlined } from '@ant-design/icons';
 import { Booking } from '../../pages/bookings/[bookingId]';
 import { useRouter } from 'next/router';
@@ -18,6 +18,7 @@ const PassengerActions: React.FC<Props> = ({ booking }) => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
+  const [cancellationReason, setCancellationReason] = useState('');
 
   if (booking.state !== 'PENDING') {
     return null;
@@ -29,7 +30,9 @@ const PassengerActions: React.FC<Props> = ({ booking }) => {
 
   const cancelBooking = async () => {
     setCancelLoading(true);
-    await api.cancelBooking(booking.booking_id);
+    await api.cancelBooking(booking.booking_id, {
+      cancellationReason,
+    });
     await refreshData();
     setCancelLoading(false);
   };
@@ -42,13 +45,21 @@ const PassengerActions: React.FC<Props> = ({ booking }) => {
       <Modal
         open={modalOpen}
         title={t('modals.cancel.title')}
-        okText={t('response.yes', { ns: 'common' })}
-        cancelText={t('response.no', { ns: 'common' })}
+        okText={t('modals.cancel.confirm')}
+        cancelText={t('modals.cancel.dismiss')}
+        okButtonProps={{ disabled: cancellationReason === '' }}
         onOk={cancelBooking}
         confirmLoading={cancelLoading}
         onCancel={() => setModalOpen(false)}
       >
-        {t('modals.cancel.body')}
+        <p>{t('modals.cancel.body')}</p>
+        <Input.TextArea
+          value={cancellationReason}
+          onChange={(e) => setCancellationReason(e.target.value)}
+          placeholder={t('modals.cancel.placeholder') as string}
+          autoSize={{ minRows: 3, maxRows: 5 }}
+          maxLength={300}
+        />
       </Modal>
     </div>
   );

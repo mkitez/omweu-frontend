@@ -11,8 +11,13 @@ class BookingService extends BaseService {
     return response.data;
   }
 
-  async submitBookingForTrip(tripId: number) {
-    const response = await this.api.post(`/trips/${tripId}/booking/`);
+  async submitBookingForTrip(
+    tripId: number,
+    params: { bookingMessage: string }
+  ) {
+    const response = await this.api.post(`/trips/${tripId}/booking/`, {
+      booking_message: params.bookingMessage,
+    });
     return response.data;
   }
 
@@ -21,8 +26,13 @@ class BookingService extends BaseService {
     return response.data;
   }
 
-  async cancelBooking(bookingId: string) {
-    const response = await this.api.post(`/bookings/${bookingId}/cancel/`);
+  async cancelBooking(
+    bookingId: string,
+    params: { cancellationReason: string }
+  ) {
+    const response = await this.api.post(`/bookings/${bookingId}/cancel/`, {
+      cancellation_reason: params.cancellationReason,
+    });
     return response.data;
   }
 
@@ -31,8 +41,10 @@ class BookingService extends BaseService {
     return response.data;
   }
 
-  async rejectBooking(bookingId: string) {
-    const response = await this.api.post(`/bookings/${bookingId}/reject/`);
+  async rejectBooking(bookingId: string, params: { rejectionReason: string }) {
+    const response = await this.api.post(`/bookings/${bookingId}/reject/`, {
+      rejection_reason: params.rejectionReason,
+    });
     return response.data;
   }
 }
