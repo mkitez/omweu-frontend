@@ -25,6 +25,9 @@ export interface Booking {
   state: BookingState;
   response_timestamp: string;
   booking_date: string;
+  booking_message: string;
+  cancellation_reason: string;
+  rejection_reason: string;
 }
 
 const BookingDetailsPage = ({
