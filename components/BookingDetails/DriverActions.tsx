@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { Booking } from '../../pages/bookings/[bookingId]';
-import { Button, Modal } from 'antd';
+import { Button, Input, Modal } from 'antd';
 import { useRouter } from 'next/router';
 import { useBookingApi } from '../../hooks/api/useBookingApi';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import CancelRejectReason from './CancelRejectReason';
 import {
   StatusCancelled,
   StatusConfirmed,
@@ -24,6 +25,7 @@ const DriverActions: React.FC<Props> = ({ booking }) => {
   const [isLoading, setLoading] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState('');
 
   const refreshData = () => {
     return router.replace(router.asPath);
@@ -41,7 +43,7 @@ const DriverActions: React.FC<Props> = ({ booking }) => {
     api.confirmBooking(booking.booking_id)
   );
   const rejectHandler = getActionHandler(() =>
-    api.rejectBooking(booking.booking_id)
+    api.rejectBooking(booking.booking_id, { rejectionReason })
   );
 
   return (
@@ -51,10 +53,28 @@ const DriverActions: React.FC<Props> = ({ booking }) => {
           return <StatusConfirmed mode="driver" />;
         }
         if (booking.state === 'REJECTED') {
-          return <StatusRejected mode="driver" />;
+          return (
+            <>
+              <StatusRejected mode="driver" />
+              <CancelRejectReason
+                label={t('rejection_reason.show')}
+                title={t('rejection_reason.title')}
+                content={booking.rejection_reason}
+              />
+            </>
+          );
         }
         if (booking.state === 'CANCELLED') {
-          return <StatusCancelled mode="driver" />;
+          return (
+            <>
+              <StatusCancelled mode="driver" />
+              <CancelRejectReason
+                label={t('cancellation_reason.show')}
+                title={t('cancellation_reason.title')}
+                content={booking.cancellation_reason}
+              />
+            </>
+          );
         }
         return (
           <>
@@ -87,13 +107,21 @@ const DriverActions: React.FC<Props> = ({ booking }) => {
             <Modal
               open={rejectModalOpen}
               title={t('modals.reject.title')}
-              okText={t('response.yes', { ns: 'common' })}
-              cancelText={t('response.no', { ns: 'common' })}
+              okText={t('modals.reject.confirm')}
+              cancelText={t('modals.reject.dismiss')}
+              okButtonProps={{ disabled: rejectionReason === '' }}
               onOk={rejectHandler}
               confirmLoading={isLoading}
               onCancel={() => setRejectModalOpen(false)}
             >
-              {t('modals.reject.body')}
+              <p>{t('modals.reject.body')}</p>
+              <Input.TextArea
+                value={rejectionReason}
+                onChange={(e) => setRejectionReason(e.target.value)}
+                placeholder={t('modals.reject.placeholder') as string}
+                autoSize={{ minRows: 3, maxRows: 5 }}
+                maxLength={300}
+              />
             </Modal>
           </>
         );

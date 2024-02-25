@@ -1,8 +1,8 @@
 import { Booking } from '../../pages/bookings/[bookingId]';
 import TripData from '../TripDetails/TripData';
 import UserData from '../TripDetails/UserData';
-import TripDescription from '../TripDetails/TripDescription';
 import { BookingStatus } from './BookingStatus';
+import BookingMessage from './BookingMessage';
 import TripLink from './TripLink';
 import PassengerActions from './PassengerActions';
 import styles from './BookingDetails.module.css';
@@ -17,7 +17,7 @@ const PassengerBookingView: React.FC<Props> = ({ booking }) => {
       <BookingStatus booking={booking} />
       <TripData trip={booking.trip} />
       <UserData user={booking.driver} />
-      <TripDescription content={booking.trip.description} />
+      <BookingMessage content={booking.booking_message} />
       <PassengerActions booking={booking} />
       <TripLink tripId={booking.trip.id} />
     </div>

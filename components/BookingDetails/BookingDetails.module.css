@@ -16,14 +16,35 @@
 }
 
 .driverActions {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
+  text-align: center;
   margin-top: 2rem;
   font-size: 1rem;
+}
+
+.driverActions button {
+  margin: 0 0.25rem;
 }
 
 .status {
   font-size: 1rem;
   margin: 1rem auto;
+}
+
+.messageContent {
+  color: rgba(0, 0, 0, 0.55);
+  font-size: 0.9rem;
+  border: 1px solid #f0f0f0;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.cancelRejectReason {
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.55)
+}
+
+.cancelRejectReason .link {
+  text-decoration: underline;
+  text-decoration-style: dotted;
 }

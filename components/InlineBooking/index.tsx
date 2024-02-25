@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import useSWR from 'swr';
-import { Button, Modal } from 'antd';
+import { Button, Input, Modal } from 'antd';
 import { useTranslation } from 'next-i18next';
 import { Booking } from '../../pages/bookings/[bookingId]';
 import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
@@ -31,6 +31,7 @@ const InlineBooking: React.FC<Props> = ({ tripId }) => {
 
   const [bookingSubmitLoading, setBookingSubmitLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [bookingMessage, setBookingMessage] = useState('');
 
   if (isLoading || error) {
     return null;
@@ -38,7 +39,9 @@ const InlineBooking: React.FC<Props> = ({ tripId }) => {
 
   const bookingSubmitHandler = async () => {
     setBookingSubmitLoading(true);
-    const bookingData = await api.submitBookingForTrip(tripId);
+    const bookingData = await api.submitBookingForTrip(tripId, {
+      bookingMessage,
+    });
     setModalOpen(false);
     await mutate(bookingData);
     setBookingSubmitLoading(false);
@@ -66,13 +69,20 @@ const InlineBooking: React.FC<Props> = ({ tripId }) => {
       <Modal
         open={modalOpen}
         title={t('modals.book.title')}
-        okText={t('response.yes', { ns: 'common' })}
-        cancelText={t('response.no', { ns: 'common' })}
+        okText={t('modals.book.confirm')}
+        cancelText={t('modals.book.dismiss')}
         onOk={bookingSubmitHandler}
         confirmLoading={bookingSubmitLoading}
         onCancel={() => setModalOpen(false)}
       >
-        {t('modals.book.body')}
+        <p>{t('modals.book.body')}</p>
+        <Input.TextArea
+          value={bookingMessage}
+          onChange={(e) => setBookingMessage(e.target.value)}
+          placeholder={t('modals.book.placeholder') as string}
+          autoSize={{ minRows: 3, maxRows: 5 }}
+          maxLength={300}
+        />
       </Modal>
     </div>
   );
