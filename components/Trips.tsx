@@ -6,8 +6,18 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { useAuthorizedFetcher } from '../hooks/useAuthorizedFetcher';
 import { Booking } from '../pages/bookings/[bookingId]';
 import InlineTrip from './InlineTrip';
-import styles from '../styles/Trips.module.css';
 import DashboardBooking from './DashboardBooking';
+import styles from '../styles/Trips.module.css';
+
+export interface DriverPreferences {
+  smoking_allowed: boolean;
+  pets_allowed: boolean;
+  max_two_on_backseat: boolean;
+  food_allowed: boolean;
+  can_deliver: boolean;
+  gender: boolean | null;
+  music_allowed: boolean;
+}
 
 export interface User {
   id: number;
@@ -18,6 +28,7 @@ export interface User {
   phone_number?: string;
   telegram_username?: string;
   is_email_confirmed: boolean;
+  driver_preferences: DriverPreferences | null;
 }
 
 export interface Destination {
@@ -37,6 +48,7 @@ export interface Trip {
   price: string;
   description: string;
   route_stops: Destination[];
+  amenities: DriverPreferences | null;
 }
 
 export interface InlineBooking extends Booking {

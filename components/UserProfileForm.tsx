@@ -1,12 +1,12 @@
 import Image from 'next/image';
 import { Form, Input, Button, Row, Col, Alert } from 'antd';
-import { API_URL } from '../utils/constants';
 import api from '../services/api';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { User } from './Trips';
 import { useSession } from 'next-auth/react';
-import { FC, useState } from 'react';
+import { useState } from 'react';
+import DriverPreferencesFormFields from './DriverPreferencesFormFields';
 import styles from '../styles/UserProfileForm.module.css';
 
 const { Item } = Form;
@@ -23,7 +23,7 @@ interface Props {
   onSubmit?: () => Promise<unknown>;
 }
 
-const UserProfileForm: FC<Props> = ({ data, onSubmit }) => {
+const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
   const { data: session } = useSession();
 
   const [loading, setLoading] = useState(false);
@@ -35,7 +35,7 @@ const UserProfileForm: FC<Props> = ({ data, onSubmit }) => {
   const handleSubmit = async (formData: FormData) => {
     setError('');
     setLoading(true);
-    const url = `${API_URL}/users/${session?.user.id}/`;
+    const url = `/users/${session?.user.id}/`;
     try {
       await api.put(url, formData, {
         headers: {
@@ -119,6 +119,8 @@ const UserProfileForm: FC<Props> = ({ data, onSubmit }) => {
             </Item>
           </Col>
         </Row>
+        <h3>{t('driver_preferences.title')}</h3>
+        <DriverPreferencesFormFields data={data.driver_preferences} />
         {data?.photo && (
           <Row>
             <Col
