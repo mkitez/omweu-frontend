@@ -3,7 +3,7 @@ import { Form, Input, Button, Row, Col, Alert } from 'antd';
 import api from '../services/api';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { User } from './Trips';
+import { DriverPreferences, User } from './Trips';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import DriverPreferencesFormFields from './DriverPreferencesFormFields';
@@ -12,10 +12,12 @@ import styles from '../styles/UserProfileForm.module.css';
 const { Item } = Form;
 
 interface FormData {
+  email: string;
   first_name: string;
   last_name: string;
   phone_number: string;
   telegram_username: string;
+  driver_preferences: DriverPreferences | null;
 }
 
 interface Props {
@@ -33,11 +35,12 @@ const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
   const router = useRouter();
 
   const handleSubmit = async (formData: FormData) => {
+    const { email: _, ...dataToSubmit } = formData;
     setError('');
     setLoading(true);
     const url = `/users/${session?.user.id}/`;
     try {
-      await api.put(url, formData, {
+      await api.put(url, dataToSubmit, {
         headers: {
           Authorization: `Bearer ${session?.accessToken}`,
           'Accept-Language': i18n.language,
@@ -120,7 +123,7 @@ const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
           </Col>
         </Row>
         <h3>{t('driver_preferences.title')}</h3>
-        <DriverPreferencesFormFields data={data.driver_preferences} />
+        <DriverPreferencesFormFields />
         {data?.photo && (
           <Row>
             <Col
