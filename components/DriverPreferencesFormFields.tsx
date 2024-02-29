@@ -6,7 +6,7 @@ import styles from '../styles/UserProfileForm.module.css';
 
 const { Item } = Form;
 
-const defaultValues: DriverPreferences = {
+export const defaultValues: DriverPreferences = {
   smoking_allowed: false,
   pets_allowed: false,
   music_allowed: false,
@@ -15,6 +15,15 @@ const defaultValues: DriverPreferences = {
   max_two_on_backseat: false,
   gender: null,
 };
+
+export const booleanFields: (keyof DriverPreferences)[] = [
+  'can_deliver',
+  'pets_allowed',
+  'max_two_on_backseat',
+  'music_allowed',
+  'food_allowed',
+  'smoking_allowed',
+];
 
 const DriverPreferencesFormFields: React.FC<{}> = () => {
   const { t } = useTranslation(['dashboard', 'common']);
@@ -42,14 +51,6 @@ const DriverPreferencesFormFields: React.FC<{}> = () => {
             );
           }
 
-          const booleanFields: (keyof DriverPreferences)[] = [
-            'can_deliver',
-            'pets_allowed',
-            'max_two_on_backseat',
-            'music_allowed',
-            'food_allowed',
-            'smoking_allowed',
-          ];
           return (
             <>
               <Row gutter={20}>

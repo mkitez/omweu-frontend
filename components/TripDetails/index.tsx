@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import TripData from './TripData';
 import UserData from './UserData';
 import TripDescription from './TripDescription';
+import Amenities from './Amenities';
 import styles from './TripDetails.module.css';
 
 type Props = {
@@ -21,7 +22,10 @@ const TripDetails: React.FC<Props> = ({ trip }) => {
   return (
     <div className={styles.root}>
       <TripData trip={trip} />
-      <UserData user={trip.driver} />
+      <div className={styles.userAndAmenitiesContainer}>
+        <UserData user={trip.driver} />
+        <Amenities amenities={trip.amenities} />
+      </div>
       <TripDescription content={trip.description} />
       {session.status === 'unauthenticated' && (
         <Alert

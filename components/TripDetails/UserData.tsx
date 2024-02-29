@@ -13,7 +13,7 @@ const UserData: React.FC<Props> = ({ user }) => {
   const hasContacts = phone_number || telegram_username;
 
   return (
-    <>
+    <div className={styles.userData}>
       <div className={styles.driver}>
         <UserAvatar user={user} />
         <div className={styles.driverName}>{user.first_name}</div>
@@ -45,7 +45,7 @@ const UserData: React.FC<Props> = ({ user }) => {
           </ul>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
