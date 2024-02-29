@@ -1,21 +1,23 @@
 import Image from 'next/image';
 import { Form, Input, Button, Row, Col, Alert } from 'antd';
-import { API_URL } from '../utils/constants';
 import api from '../services/api';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { User } from './Trips';
+import { DriverPreferences, User } from './Trips';
 import { useSession } from 'next-auth/react';
-import { FC, useState } from 'react';
+import { useState } from 'react';
+import DriverPreferencesFormFields from './DriverPreferencesFormFields';
 import styles from '../styles/UserProfileForm.module.css';
 
 const { Item } = Form;
 
 interface FormData {
+  email: string;
   first_name: string;
   last_name: string;
   phone_number: string;
   telegram_username: string;
+  driver_preferences: DriverPreferences | null;
 }
 
 interface Props {
@@ -23,7 +25,7 @@ interface Props {
   onSubmit?: () => Promise<unknown>;
 }
 
-const UserProfileForm: FC<Props> = ({ data, onSubmit }) => {
+const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
   const { data: session } = useSession();
 
   const [loading, setLoading] = useState(false);
@@ -33,11 +35,12 @@ const UserProfileForm: FC<Props> = ({ data, onSubmit }) => {
   const router = useRouter();
 
   const handleSubmit = async (formData: FormData) => {
+    const { email: _, ...dataToSubmit } = formData;
     setError('');
     setLoading(true);
-    const url = `${API_URL}/users/${session?.user.id}/`;
+    const url = `/users/${session?.user.id}/`;
     try {
-      await api.put(url, formData, {
+      await api.put(url, dataToSubmit, {
         headers: {
           Authorization: `Bearer ${session?.accessToken}`,
           'Accept-Language': i18n.language,
@@ -119,6 +122,8 @@ const UserProfileForm: FC<Props> = ({ data, onSubmit }) => {
             </Item>
           </Col>
         </Row>
+        <h3>{t('driver_preferences.title')}</h3>
+        <DriverPreferencesFormFields />
         {data?.photo && (
           <Row>
             <Col
