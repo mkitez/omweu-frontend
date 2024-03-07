@@ -12,6 +12,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: '*.userapi.com',
       },
+      {
+        protocol: 'https',
+        hostname: '*.r2.dev',
+      },
     ],
   },
   webpack(config) {

@@ -17,7 +17,8 @@
     "lastName": "Фамилия",
     "phoneNumber": "Телефон",
     "telegram": "Telegram",
-    "telegramPlaceholder": "Имя пользователя без @"
+    "telegramPlaceholder": "Имя пользователя без @",
+    "upload_image": "Загрузить фото"
   },
   "driver_preferences": {
     "title": "Водительские предпочтения",
