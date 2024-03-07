@@ -123,7 +123,7 @@ const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
             </Item>
           </Col>
         </Row>
-        <AvatarUpload initialImageUrl={data.photo} />
+        <AvatarUpload initialImageUrl={data.photo} onUpload={onSubmit} />
         <h3>{t('driver_preferences.title')}</h3>
         <DriverPreferencesFormFields />
         <Row gutter={[10, 10]}>

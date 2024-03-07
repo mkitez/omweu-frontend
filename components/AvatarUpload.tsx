@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import axios from 'axios';
+import { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { UploadOutlined, UserOutlined } from '@ant-design/icons';
 import {
+  type UploadProps,
   message,
   Upload,
   Avatar,
-  type UploadProps,
   Button,
   Row,
   Col,
@@ -14,29 +15,35 @@ import api from '../services/api';
 import { useDefaultHeaders } from '../hooks/useDefaultHeaders';
 import { useTranslation } from 'next-i18next';
 import styles from '../styles/UserProfileForm.module.css';
-
-const beforeUpload: UploadProps['beforeUpload'] = (file) => {
-  const isJpgOrPng = ['image/jpeg', 'image/png'].includes(file.type);
-  if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!');
-  }
-  const isSmallerThan2Mb = file.size / 1024 / 1024 < 2;
-  if (!isSmallerThan2Mb) {
-    message.error('Image must be smaller than 2MB!');
-  }
-  return isJpgOrPng && isSmallerThan2Mb;
-};
+import { RcFile } from 'antd/es/upload';
 
 type Props = {
   initialImageUrl: string | null;
+  onUpload?: () => Promise<unknown>;
 };
 
-const AvatarUpload: React.FC<Props> = ({ initialImageUrl }) => {
+const AvatarUpload: React.FC<Props> = ({ initialImageUrl, onUpload }) => {
   const headers = useDefaultHeaders();
 
-  const { t } = useTranslation('dashboard');
+  const { t, i18n } = useTranslation(['dashboard', 'common']);
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(initialImageUrl);
+
+  const beforeUpload: UploadProps['beforeUpload'] = useCallback(
+    (file: RcFile) => {
+      const isJpgOrPng = ['image/jpeg', 'image/png'].includes(file.type);
+      if (!isJpgOrPng) {
+        message.error(t('errors.imageFormatConstraint') + ' PNG, JPG');
+      }
+      const isSmallerThan2Mb = file.size / 1024 / 1024 < 2;
+      if (!isSmallerThan2Mb) {
+        message.error(t('errors.imageSizeConstraint'));
+      }
+      return isJpgOrPng && isSmallerThan2Mb;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [i18n.language]
+  );
 
   const handleChange: UploadProps['onChange'] = (info) => {
     if (info.file.status === 'uploading') {
@@ -45,11 +52,15 @@ const AvatarUpload: React.FC<Props> = ({ initialImageUrl }) => {
     }
     if (info.file.status === 'error') {
       setLoading(false);
+      message.error(t('errors.common', { ns: 'common' }));
       return;
     }
     if (info.file.status === 'done') {
       setLoading(false);
-      return;
+      setImageUrl(info.file.response.photo);
+      if (onUpload) {
+        onUpload();
+      }
     }
   };
 
@@ -66,20 +77,26 @@ const AvatarUpload: React.FC<Props> = ({ initialImageUrl }) => {
       </Col>
       <Col className={styles.avatarActions}>
         <Upload
-          name="avatar"
+          name="file"
           showUploadList={false}
-          customRequest={async ({ file, onSuccess }) => {
+          customRequest={async ({ file, onSuccess, onError }) => {
             const formData = new FormData();
             formData.append('file', file);
-            const response = await api.put('/users/photo/', formData, {
-              headers: {
-                ...headers,
-                'Content-Type': 'multipart/form-data',
-              },
-            });
-            setImageUrl(response.data.photo);
-            if (onSuccess) {
-              onSuccess(response.data.photo);
+            let response;
+            try {
+              response = await api.put('/users/photo/', formData, {
+                headers: {
+                  ...headers,
+                  'Content-Type': 'multipart/form-data',
+                },
+              });
+              if (onSuccess) {
+                onSuccess(response.data);
+              }
+            } catch (e) {
+              if (onError && axios.isAxiosError(e)) {
+                onError(e, response);
+              }
             }
           }}
           beforeUpload={beforeUpload}
