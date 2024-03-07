@@ -1,18 +1,19 @@
 import Link from 'next/link';
+import Image from 'next/image';
+import { useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
-import { Layout, Button, theme } from 'antd';
+import { Layout, Button, theme, Avatar } from 'antd';
 import { PlusCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import styles from '../styles/AppHeader.module.css';
 import Logo from '../assets/logo.svg';
 import LogoXs from '../assets/logoXs.svg';
-import { useEffect } from 'react';
+import styles from '../styles/AppHeader.module.css';
 
 const { Header } = Layout;
 
 const AppHeader = () => {
   const {
-    token: { colorPrimary, colorBgContainer },
+    token: { colorBgContainer },
   } = theme.useToken();
   const { status, data: session } = useSession();
   const { t } = useTranslation('common');
@@ -69,7 +70,20 @@ const AppHeader = () => {
                 </Button>
               </Link>
               <Link href="/dashboard" className={styles.profileBtn}>
-                <UserOutlined style={{ color: colorPrimary }} />
+                <Avatar
+                  size="large"
+                  icon={<UserOutlined />}
+                  src={
+                    session.user.image && (
+                      <Image
+                        src={session.user.image}
+                        alt="user photo"
+                        height={100}
+                        width={100}
+                      />
+                    )
+                  }
+                />
               </Link>
             </div>
           );
