@@ -18,7 +18,8 @@
     "phoneNumber": "Телефон",
     "telegram": "Telegram",
     "telegramPlaceholder": "Имя пользователя без @",
-    "upload_image": "Загрузить фото"
+    "upload_image": "Загрузить фото",
+    "delete_image": "Удалить фото"
   },
   "driver_preferences": {
     "title": "Водительские предпочтения",

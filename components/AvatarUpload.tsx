@@ -1,7 +1,11 @@
 import axios from 'axios';
 import { useState, useCallback } from 'react';
 import Image from 'next/image';
-import { UploadOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  UploadOutlined,
+  UserOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons';
 import {
   type UploadProps,
   message,
@@ -75,41 +79,69 @@ const AvatarUpload: React.FC<Props> = ({ initialImageUrl, onUpload }) => {
           )}
         </div>
       </Col>
-      <Col className={styles.avatarActions}>
-        <Upload
-          name="file"
-          showUploadList={false}
-          customRequest={async ({ file, onSuccess, onError }) => {
-            const formData = new FormData();
-            formData.append('file', file);
-            let response;
-            try {
-              response = await api.put('/users/photo/', formData, {
-                headers: {
-                  ...headers,
-                  'Content-Type': 'multipart/form-data',
-                },
-              });
-              if (onSuccess) {
-                onSuccess(response.data);
+      <Col>
+        <div className={styles.avatarActions}>
+          <Upload
+            name="file"
+            showUploadList={false}
+            customRequest={async ({ file, onSuccess, onError }) => {
+              const formData = new FormData();
+              formData.append('file', file);
+              let response;
+              try {
+                response = await api.put('/users/photo/', formData, {
+                  headers: {
+                    ...headers,
+                    'Content-Type': 'multipart/form-data',
+                  },
+                });
+                if (onSuccess) {
+                  onSuccess(response.data);
+                }
+              } catch (e) {
+                if (onError && axios.isAxiosError(e)) {
+                  onError(e, response);
+                }
               }
-            } catch (e) {
-              if (onError && axios.isAxiosError(e)) {
-                onError(e, response);
-              }
-            }
-          }}
-          beforeUpload={beforeUpload}
-          onChange={handleChange}
-        >
-          <Button
-            icon={<UploadOutlined />}
-            loading={loading}
-            disabled={loading}
+            }}
+            beforeUpload={beforeUpload}
+            onChange={handleChange}
           >
-            {t('profile.upload_image')}
-          </Button>
-        </Upload>
+            <Button
+              icon={<UploadOutlined />}
+              loading={loading}
+              disabled={loading}
+            >
+              {t('profile.upload_image')}
+            </Button>
+          </Upload>
+          {imageUrl && (
+            <Button
+              danger
+              type="text"
+              icon={<DeleteOutlined />}
+              disabled={loading}
+              onClick={async () => {
+                setLoading(true);
+                try {
+                  await api.delete('/users/photo/', { headers });
+                  setImageUrl(null);
+                  setLoading(false);
+                  if (onUpload) {
+                    onUpload();
+                  }
+                } catch (e) {
+                  setLoading(false);
+                  if (axios.isAxiosError(e)) {
+                    message.error(t('errors.common', { ns: 'common' }));
+                  }
+                }
+              }}
+            >
+              {t('profile.delete_image')}
+            </Button>
+          )}
+        </div>
       </Col>
     </Row>
   );
