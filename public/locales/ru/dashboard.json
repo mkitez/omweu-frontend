@@ -17,7 +17,10 @@
     "lastName": "Фамилия",
     "phoneNumber": "Телефон",
     "telegram": "Telegram",
-    "telegramPlaceholder": "Имя пользователя без @"
+    "telegramPlaceholder": "Имя пользователя без @",
+    "upload_image": "Загрузить фото",
+    "delete_image": "Удалить фото",
+    "changes_saved": "Изменения сохранены"
   },
   "driver_preferences": {
     "title": "Водительские предпочтения",
@@ -50,7 +53,9 @@
   },
   "errors": {
     "numberFormat": "Введите корректный номер телефона (включая код страны)",
-    "enterContacts": "Введите хотя бы один способ связи"
+    "enterContacts": "Введите хотя бы один способ связи",
+    "imageFormatConstraint": "Поддерживаются только следующие форматы:",
+    "imageSizeConstraint": "Размер файла не должен превышать 2 Мб."
   },
   "logout": "Выйти"
 }

@@ -11,3 +11,22 @@
   color: rgba(0, 0, 0, 0.55);
   margin-bottom: 1rem;
 }
+
+.avatarUpload {
+  margin-bottom: 1rem;
+}
+
+.avatar {
+  border-radius: 50%;
+  overflow: hidden;
+  height: 100px;
+  width: 100px;
+}
+
+.avatarActions {
+  height: 100%;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}

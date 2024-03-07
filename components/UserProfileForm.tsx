@@ -1,5 +1,4 @@
-import Image from 'next/image';
-import { Form, Input, Button, Row, Col, Alert } from 'antd';
+import { message, Form, Input, Button, Row, Col, Alert } from 'antd';
 import api from '../services/api';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -8,6 +7,7 @@ import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import DriverPreferencesFormFields from './DriverPreferencesFormFields';
 import styles from '../styles/UserProfileForm.module.css';
+import AvatarUpload from './AvatarUpload';
 
 const { Item } = Form;
 
@@ -46,6 +46,7 @@ const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
           'Accept-Language': i18n.language,
         },
       });
+      message.success(t('profile.changes_saved'));
     } catch (e) {
       setError(t('errors.common', { ns: 'common' }) as string);
     }
@@ -122,27 +123,9 @@ const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
             </Item>
           </Col>
         </Row>
+        <AvatarUpload initialImageUrl={data.photo} onUpload={onSubmit} />
         <h3>{t('driver_preferences.title')}</h3>
         <DriverPreferencesFormFields />
-        {data?.photo && (
-          <Row>
-            <Col
-              offset={3}
-              style={{
-                marginBottom: 24,
-                borderRadius: '50%',
-                overflow: 'hidden',
-              }}
-            >
-              <Image
-                src={data.photo}
-                alt="user photo"
-                width={100}
-                height={100}
-              />
-            </Col>
-          </Row>
-        )}
         <Row gutter={[10, 10]}>
           <Col>
             <Button htmlType="submit" type="primary">
