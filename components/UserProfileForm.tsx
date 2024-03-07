@@ -1,5 +1,4 @@
-import Image from 'next/image';
-import { Form, Input, Button, Row, Col, Alert } from 'antd';
+import { message, Form, Input, Button, Row, Col, Alert } from 'antd';
 import api from '../services/api';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -47,6 +46,7 @@ const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
           'Accept-Language': i18n.language,
         },
       });
+      message.success(t('profile.changes_saved'));
     } catch (e) {
       setError(t('errors.common', { ns: 'common' }) as string);
     }
