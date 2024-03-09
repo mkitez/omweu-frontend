@@ -1,4 +1,4 @@
-export const formatDate = (date: Date, lang: string, timeZone: string) => {
+export const formatDate = (date: Date, lang: string, timeZone?: string) => {
   const [weekday, comma, ...rest] = new Intl.DateTimeFormat(lang, {
     weekday: 'short',
     day: 'numeric',
