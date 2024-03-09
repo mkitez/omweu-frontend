@@ -1,18 +1,22 @@
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import TripService from '../services/trip.service';
 import TripEditForm from '../components/TripEditForm';
 import { unstable_getServerSession } from 'next-auth';
-import { useTranslation } from 'next-i18next';
+import { SSRConfig, useTranslation } from 'next-i18next';
 import { GetServerSideProps } from 'next';
+import type { InferGetServerSidePropsType } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { authOptions } from './api/auth/[...nextauth]';
 import { useSession } from 'next-auth/react';
 import api from '../services/api';
 import { User } from '../components/Trips';
 import styles from '../styles/NewTrip.module.css';
-import Head from 'next/head';
+import DriverPreferencesModal from '../components/DriverPreferencesModal';
 
-const NewTrip = () => {
+const NewTrip = ({
+  shouldShowPreferencesModal,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
   const { data: session } = useSession();
   const { t } = useTranslation(['dashboard', 'common']);
@@ -34,18 +38,28 @@ const NewTrip = () => {
           submit={handleSubmit}
         />
       </div>
+      <DriverPreferencesModal shouldShowModal={shouldShowPreferencesModal} />
     </div>
   );
 };
 
 NewTrip.auth = true;
 
-export const getServerSideProps: GetServerSideProps = async ({
+type Props = {
+  shouldShowPreferencesModal: boolean;
+} & SSRConfig;
+
+export const getServerSideProps: GetServerSideProps<Props> = async ({
   req,
   res,
   locale,
 }) => {
+  let shouldShowPreferencesModal = false;
   const session = await unstable_getServerSession(req, res, authOptions);
+  const translations = await serverSideTranslations(locale as string, [
+    'common',
+    'dashboard',
+  ]);
   if (session) {
     const userResponse = await api.get(`/users/${session.user.id}/`, {
       headers: {
@@ -54,26 +68,27 @@ export const getServerSideProps: GetServerSideProps = async ({
       },
     });
     const userData = userResponse.data as User;
+    shouldShowPreferencesModal = userData.driver_preferences === null;
     if (
       (!userData.phone_number && !userData.telegram_username) ||
       !userData.is_email_confirmed
     ) {
       return {
         redirect: { destination: '/add-contacts' },
-        props: {},
+        props: {
+          ...translations,
+          session,
+          shouldShowPreferencesModal,
+        },
       };
     }
   }
-
-  const translations = await serverSideTranslations(locale as string, [
-    'common',
-    'dashboard',
-  ]);
 
   return {
     props: {
       ...translations,
       session,
+      shouldShowPreferencesModal,
     },
   };
 };
