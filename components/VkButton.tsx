@@ -2,8 +2,8 @@ import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import { signIn } from 'next-auth/react';
 import { Alert, Button, Col, Row } from 'antd';
-import styles from '../styles/VkButton.module.css';
 import { useRouter } from 'next/router';
+import styles from '../styles/VkButton.module.css';
 
 const VkButton = () => {
   const { t } = useTranslation('auth');
@@ -35,7 +35,7 @@ const VkButton = () => {
       ) && (
         <Row>
           <Col md={{ span: 16, offset: 4 }}>
-            <Alert type="error" message={t('errors.oauth')} />
+            <Alert type="error" message={t('errors.oauth')} className={styles.error} />
           </Col>
         </Row>
       )}

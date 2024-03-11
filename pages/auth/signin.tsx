@@ -3,13 +3,13 @@ import { GetServerSideProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import LoginForm from '../../components/LoginForm';
 import { useTranslation } from 'next-i18next';
-import styles from '../../styles/SignIn.module.css';
 import { useRouter } from 'next/router';
 import { Alert, Col, Row, Divider } from 'antd';
 import VkButton from '../../components/VkButton';
 import AgreeToTermsAndPolicy from '../../components/AgreeToTermsAndPolicy';
 import { authOptions } from '../api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth';
+import styles from '../../styles/SignIn.module.css';
 
 const SignIn = () => {
   const { t } = useTranslation(['auth', 'common']);

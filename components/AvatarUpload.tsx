@@ -18,8 +18,8 @@ import {
 import api from '../services/api';
 import { useDefaultHeaders } from '../hooks/useDefaultHeaders';
 import { useTranslation } from 'next-i18next';
-import styles from '../styles/UserProfileForm.module.css';
 import { RcFile } from 'antd/es/upload';
+import styles from '../styles/UserProfileForm.module.css';
 
 type Props = {
   initialImageUrl: string | null;
