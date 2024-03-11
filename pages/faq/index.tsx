@@ -1,10 +1,10 @@
 import Head from 'next/head';
 import Markdown from 'react-markdown';
-import cmsApi from '../services/cmsApi';
+import cmsApi from '../../services/cmsApi';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { SSRConfig } from 'next-i18next';
-import { REVALIDATE_INTERVAL } from '../utils/constants';
+import { REVALIDATE_INTERVAL } from '../../utils/constants';
 
 const FAQ = ({
   title,
