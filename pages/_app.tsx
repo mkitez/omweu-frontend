@@ -29,7 +29,7 @@ const locales: Record<string, Locale> = {
 };
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
-  getLayout?: (page: ReactElement) => ReactNode;
+  getLayout?: (page: ReactElement, pageProps?: P) => ReactNode;
   auth?: boolean;
 };
 
@@ -55,9 +55,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             <link rel="icon" href="/favicon.png" />
           </Head>
           {Component.auth ? (
-            <AuthWrapper>{getLayout(<Component {...pageProps} />)}</AuthWrapper>
+            <AuthWrapper>
+              {getLayout(<Component {...pageProps} />, pageProps)}
+            </AuthWrapper>
           ) : (
-            getLayout(<Component {...pageProps} />)
+            getLayout(<Component {...pageProps} />, pageProps)
           )}
         </StyleProvider>
       </ConfigProvider>

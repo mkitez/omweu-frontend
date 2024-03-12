@@ -4,30 +4,27 @@ import { PropsWithChildren, useState, useEffect } from 'react';
 import { Layout, Menu, Breadcrumb, theme } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import AppLayout from './AppLayout';
+import { PageProps } from '../pages/faq/[categoryId]';
 
 const { Content, Sider } = Layout;
 
-const FaqLayout: React.FC<PropsWithChildren> = ({ children }) => {
+const FaqLayout: React.FC<PropsWithChildren & PageProps> = ({
+  children,
+  categories,
+}) => {
   const {
     token: { borderRadius },
   } = theme.useToken();
   const router = useRouter();
   const [selectedKey, setSelectedKey] = useState<string>();
   useEffect(() => {
-    const [key] = router.asPath.split('/').slice(-1);
-    setSelectedKey(key);
-  }, [router.asPath]);
+    setSelectedKey(router.query.categoryId as string);
+  }, [router.query.categoryId]);
 
-  const items = [
-    {
-      key: 'europe',
-      label: <Link href="europe">Europe</Link>,
-    },
-    {
-      key: 'russia',
-      label: <Link href="russia">Russia</Link>,
-    },
-  ];
+  const items = categories.map((category) => ({
+    key: category,
+    label: <Link href={category}>{category}</Link>,
+  }));
   return (
     <AppLayout>
       <div className="content">
