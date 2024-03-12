@@ -7,13 +7,15 @@ import { SSRConfig } from 'next-i18next';
 import { REVALIDATE_INTERVAL } from '../../utils/constants';
 import { Breadcrumb, Card } from 'antd';
 import { HomeFilled } from '@ant-design/icons';
+import { Category } from './[categorySlug]';
 import Link from 'next/link';
 import styles from '../../styles/FaqLayout.module.css';
 
-const FAQ = ({
+const FAQ: React.FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
   title,
   content,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+  categories,
+}) => {
   return (
     <>
       <div className="content">
@@ -23,9 +25,7 @@ const FAQ = ({
               <HomeFilled />
             </Link>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <Link href="/faq">{title}</Link>
-          </Breadcrumb.Item>
+          <Breadcrumb.Item>{title}</Breadcrumb.Item>
         </Breadcrumb>
       </div>
       <div className="container">
@@ -35,12 +35,11 @@ const FAQ = ({
         <h1>{title}</h1>
         <Markdown>{content}</Markdown>
         <div>
-          <Link href="/faq/europe">
-            <Card hoverable>Europe</Card>
-          </Link>
-          <Link href="/faq/russia">
-            <Card hoverable>Russia</Card>
-          </Link>
+          {categories.map((category) => (
+            <Link key={category.slug} href={`/faq/${category.slug}`}>
+              <Card hoverable>{category.name}</Card>
+            </Link>
+          ))}
         </div>
       </div>
     </>
@@ -50,6 +49,7 @@ const FAQ = ({
 type Props = {
   title: string;
   content: string;
+  categories: Category[];
 } & SSRConfig;
 
 export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => {
@@ -62,12 +62,21 @@ export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => {
   });
   const { title, content } = response.data.data.attributes;
 
+  const categoriesResponse = await cmsApi.get('categories', {
+    params: { locale },
+  });
+  const categories = categoriesResponse.data.data.map((category: any) => ({
+    slug: category.attributes.slug,
+    name: category.attributes.name,
+  }));
+
   return {
     revalidate: REVALIDATE_INTERVAL,
     props: {
       ...translations,
       title,
       content,
+      categories,
     },
   };
 };
