@@ -2,9 +2,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { PropsWithChildren, useState, useEffect } from 'react';
 import { Layout, Menu, Breadcrumb, theme } from 'antd';
-import { HomeOutlined } from '@ant-design/icons';
-import AppLayout from './AppLayout';
 import { PageProps } from '../pages/faq/[categoryId]';
+import { HomeFilled } from '@ant-design/icons';
+import AppLayout from './AppLayout';
+import styles from '../styles/FaqLayout.module.css';
 
 const { Content, Sider } = Layout;
 
@@ -28,10 +29,10 @@ const FaqLayout: React.FC<PropsWithChildren & PageProps> = ({
   return (
     <AppLayout>
       <div className="content">
-        <Breadcrumb>
+        <Breadcrumb className={styles.breadcrumb}>
           <Breadcrumb.Item>
             <Link href="/">
-              <HomeOutlined />
+              <HomeFilled />
             </Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
@@ -55,7 +56,7 @@ const FaqLayout: React.FC<PropsWithChildren & PageProps> = ({
               style={{ borderRadius }}
             />
           </Sider>
-          <Content>{children}</Content>
+          <Content className={styles.content}>{children}</Content>
         </Layout>
       </div>
     </AppLayout>
