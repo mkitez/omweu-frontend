@@ -2,6 +2,23 @@
   margin-bottom: 0.5rem;
 }
 
+.header {
+  margin-top: 0.5rem;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1.8rem;
+  color: #434343;
+}
+
+.header .backBtn {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.55);
+}
+
 .collapse {
   background-color: transparent;
 }
@@ -20,4 +37,10 @@
 
 .collapsePanel * {
   color: #434343;
+}
+
+@media screen and (min-width: 768px) {
+  .header {
+    display: none;
+  }  
 }

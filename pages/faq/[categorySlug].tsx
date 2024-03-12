@@ -1,9 +1,12 @@
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import Markdown from 'react-markdown';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { SSRConfig } from 'next-i18next';
-import { Collapse } from 'antd';
+import { SSRConfig, useTranslation } from 'next-i18next';
+import { Button, Collapse } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import FaqLayout from '../../components/FaqLayout';
 import { REVALIDATE_INTERVAL } from '../../utils/constants';
 import { NextPageWithLayout } from '../_app';
@@ -12,23 +15,50 @@ import styles from '../../styles/Faq.module.css';
 
 export type PageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
-const FaqCategory: NextPageWithLayout<PageProps> = ({ faqItems }) => {
+const FaqCategory: NextPageWithLayout<PageProps> = ({
+  faqItems,
+  categories,
+}) => {
+  const router = useRouter();
+  const [currentCategory, setCurrentCategory] = useState<Category>();
+  const { t } = useTranslation('common');
+  useEffect(() => {
+    const currentCategory = categories?.find(
+      (category) => category.slug === router.query.categorySlug
+    );
+    setCurrentCategory(currentCategory);
+  }, [categories, router.query.categorySlug]);
+
   return (
-    <Collapse
-      bordered={false}
-      className={styles.collapse}
-      defaultActiveKey={faqItems[0].id}
-    >
-      {faqItems.map((faqItem) => (
-        <Collapse.Panel
-          key={faqItem.id}
-          header={<h3>{faqItem.attributes.title}</h3>}
-          className={styles.collapsePanel}
-        >
-          <Markdown>{faqItem.attributes.content}</Markdown>
-        </Collapse.Panel>
-      ))}
-    </Collapse>
+    <>
+      <div className={styles.header}>
+        <Link href="/faq" passHref legacyBehavior>
+          <Button
+            icon={<ArrowLeftOutlined />}
+            type="text"
+            className={styles.backBtn}
+          >
+            {t('backToCategories')}
+          </Button>
+        </Link>
+        <h1>{currentCategory?.name}</h1>
+      </div>
+      <Collapse
+        bordered={false}
+        className={styles.collapse}
+        defaultActiveKey={faqItems[0].id}
+      >
+        {faqItems.map((faqItem) => (
+          <Collapse.Panel
+            key={faqItem.id}
+            header={<h3>{faqItem.attributes.title}</h3>}
+            className={styles.collapsePanel}
+          >
+            <Markdown>{faqItem.attributes.content}</Markdown>
+          </Collapse.Panel>
+        ))}
+      </Collapse>
+    </>
   );
 };
 
