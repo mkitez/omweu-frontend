@@ -9,7 +9,8 @@ import { Breadcrumb, Card } from 'antd';
 import { HomeFilled } from '@ant-design/icons';
 import { Category } from './[categorySlug]';
 import Link from 'next/link';
-import styles from '../../styles/FaqLayout.module.css';
+import faqLayoutStyles from '../../styles/FaqLayout.module.css';
+import styles from '../../styles/Faq.module.css';
 
 const FAQ: React.FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
   title,
@@ -19,7 +20,7 @@ const FAQ: React.FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
   return (
     <>
       <div className="content">
-        <Breadcrumb className={styles.breadcrumb}>
+        <Breadcrumb className={faqLayoutStyles.breadcrumb}>
           <Breadcrumb.Item>
             <Link href="/">
               <HomeFilled />
@@ -37,7 +38,9 @@ const FAQ: React.FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <div>
           {categories.map((category) => (
             <Link key={category.slug} href={`/faq/${category.slug}`}>
-              <Card hoverable>{category.name}</Card>
+              <Card hoverable className={styles.categoryCard}>
+                {category.name}
+              </Card>
             </Link>
           ))}
         </div>

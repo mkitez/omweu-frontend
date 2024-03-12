@@ -4,5 +4,12 @@
 }
 
 .content {
-  padding: 1rem;
+  padding: 0 1rem;
+  margin-bottom: 3rem;
+}
+
+@media screen and (max-width: 575px) {
+  .content {
+    padding: 0;
+  }
 }

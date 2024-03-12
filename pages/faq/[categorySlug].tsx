@@ -3,23 +3,32 @@ import Markdown from 'react-markdown';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { SSRConfig } from 'next-i18next';
+import { Collapse } from 'antd';
 import FaqLayout from '../../components/FaqLayout';
 import { REVALIDATE_INTERVAL } from '../../utils/constants';
 import { NextPageWithLayout } from '../_app';
 import cmsApi from '../../services/cmsApi';
+import styles from '../../styles/Faq.module.css';
 
 export type PageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
 const FaqCategory: NextPageWithLayout<PageProps> = ({ faqItems }) => {
   return (
-    <div>
+    <Collapse
+      bordered={false}
+      className={styles.collapse}
+      defaultActiveKey={faqItems[0].id}
+    >
       {faqItems.map((faqItem) => (
-        <div key={faqItem.id}>
-          <h3>{faqItem.attributes.title}</h3>
+        <Collapse.Panel
+          key={faqItem.id}
+          header={<h3>{faqItem.attributes.title}</h3>}
+          className={styles.collapsePanel}
+        >
           <Markdown>{faqItem.attributes.content}</Markdown>
-        </div>
+        </Collapse.Panel>
       ))}
-    </div>
+    </Collapse>
   );
 };
 
