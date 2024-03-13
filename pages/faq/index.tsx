@@ -20,6 +20,9 @@ const FAQ: React.FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
 }) => {
   return (
     <>
+      <Head>
+        <title>{`${title} | EUbyCar.com`}</title>
+      </Head>
       <div className="content">
         <Breadcrumb className={faqLayoutStyles.breadcrumb}>
           <Breadcrumb.Item>
@@ -30,10 +33,7 @@ const FAQ: React.FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <Breadcrumb.Item>{title}</Breadcrumb.Item>
         </Breadcrumb>
       </div>
-      <div className="container">
-        <Head>
-          <title>{`${title} | EUbyCar.com`}</title>
-        </Head>
+      <div className={`container ${styles.faqContent}`}>
         <h1>{title}</h1>
         <Markdown>{content}</Markdown>
         <div className={styles.categories}>
@@ -49,7 +49,9 @@ const FAQ: React.FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
                       height={24}
                     />
                   }
-                  title={category.name}
+                  title={
+                    <span className={styles.categoryName}>{category.name}</span>
+                  }
                 />
               </Card>
             </Link>

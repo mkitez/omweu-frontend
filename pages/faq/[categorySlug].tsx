@@ -31,7 +31,7 @@ const FaqCategory: NextPageWithLayout<PageProps> = ({
 
   return (
     <>
-      <div className={styles.header}>
+      <div className={styles.backBtnContainer}>
         <Link href="/faq" passHref legacyBehavior>
           <Button
             icon={<ArrowLeftOutlined />}
@@ -41,8 +41,8 @@ const FaqCategory: NextPageWithLayout<PageProps> = ({
             {t('backToCategories')}
           </Button>
         </Link>
-        <h1>{currentCategory?.name}</h1>
       </div>
+      <h1 className={styles.categoryTitle}>{currentCategory?.name}</h1>
       <Collapse
         bordered={false}
         className={styles.collapse}

@@ -37,7 +37,7 @@ const AppFooter: React.FC = () => {
               <Logo />
             </div>
             <div className={styles.copy}>
-              &copy; {new Date().getFullYear()} eubycar.com
+              &copy; {new Date().getFullYear()} EUbyCar.com
             </div>
           </Col>
           <Col xs={{ order: 1 }} lg={{ span: 6, order: 2 }}>
