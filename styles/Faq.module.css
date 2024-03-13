@@ -41,6 +41,14 @@
   overflow: hidden;
 }
 
+.collapsePanel a {
+  color: #1677ff;
+}
+
+.collapsePanel a:hover {
+  color: #69b1ff;
+}
+
 .faqContent *,
 .categoryName,
 .collapsePanel * {

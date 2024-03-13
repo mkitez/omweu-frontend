@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useTranslation } from 'next-i18next';
 import BannerSection from '../components/BannerSection';
 import PromoSection from '../components/PromoSection';
-import ForWhoSection from '../components/ForWhoSection';
+import HowItWorksSection from '../components/HowItWorksSection';
 import DriverSection from '../components/DriverSection';
 import PopularTripsSection from '../components/PopularTripsSection';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -21,7 +21,7 @@ const Home = () => {
       </Head>
       <BannerSection />
       <PromoSection />
-      <ForWhoSection />
+      <HowItWorksSection />
       <DriverSection />
       <UpcomingTripsSection />
       <PopularTripsSection />

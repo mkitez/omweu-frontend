@@ -110,7 +110,10 @@ export const getStaticProps: GetStaticProps<Props> = async ({
   }));
 
   const faqItemsResponse = await cmsApi.get('faq-items', {
-    params: { 'filters[category][slug][$eq]': params?.categorySlug },
+    params: {
+      'filters[category][slug][$eq]': params?.categorySlug,
+      sort: 'id',
+    },
   });
   const faqItems = faqItemsResponse.data.data;
 
