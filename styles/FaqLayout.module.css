@@ -1,0 +1,15 @@
+.breadcrumb {
+  margin: 1rem auto;
+  font-size: 0.9rem;
+}
+
+.content {
+  padding: 0 1rem;
+  margin-bottom: 3rem;
+}
+
+@media screen and (max-width: 767px) {
+  .content {
+    padding: 0;
+  }
+}

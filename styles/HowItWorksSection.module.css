@@ -9,6 +9,10 @@
   margin: 0 auto;
 }
 
+.link {
+  text-decoration: underline dotted;
+}
+
 @media screen and (max-width: 767px) {
   .root h2 {
     font-size: 32px;

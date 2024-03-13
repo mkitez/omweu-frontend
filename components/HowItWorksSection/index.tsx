@@ -1,9 +1,10 @@
+import Link from 'next/link';
 import { useTranslation, Trans } from 'next-i18next';
 import { Row, Col } from 'antd';
 import ForWhoBlock from './ForWhoBlock';
-import styles from '../../styles/ForWhoSection.module.css';
+import styles from '../../styles/HowItWorksSection.module.css';
 
-const ForWhoSection = () => {
+const HowItWorksSection = () => {
   const { t } = useTranslation('home');
   return (
     <section className={styles.root}>
@@ -30,7 +31,15 @@ const ForWhoSection = () => {
           </Col>
           <Col md={12} lg={6}>
             <ForWhoBlock title="03">
-              {t('sectionTwo.blocks.stepThree')}
+              <Trans
+                components={[
+                  <Link key={0} href="/faq" className={styles.link}>
+                    x
+                  </Link>,
+                ]}
+              >
+                {t('sectionTwo.blocks.stepThree')}
+              </Trans>
             </ForWhoBlock>
           </Col>
           <Col md={12} lg={6}>
@@ -44,4 +53,4 @@ const ForWhoSection = () => {
   );
 };
 
-export default ForWhoSection;
+export default HowItWorksSection;

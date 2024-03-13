@@ -1,6 +1,8 @@
 .root {
   color: #fff !important;
   background-color: #294a54 !important;
+  padding-top: 2rem !important;
+  padding-bottom: 2rem !important;
 }
 
 .content {
@@ -12,9 +14,23 @@
   margin-top: 0.5rem;
 }
 
-.links > * {
+.copy {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
   color: rgba(255, 255, 255, 0.7);
+}
+
+.links > * {
   font-size: 0.9rem;
+}
+
+.links h4 {
+  margin-bottom: 1rem;
+}
+
+.linkContainer {
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .logoContainer svg {

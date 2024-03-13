@@ -1,0 +1,67 @@
+.categories {
+  margin-top: 2rem;
+}
+
+.categoryCard {
+  margin: 0 auto 0.5rem;
+  max-width: 500px;
+}
+
+.header {
+  margin-top: 0.5rem;
+}
+
+.categoryTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1.8rem;
+  color: #434343;
+}
+
+.backBtn {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.collapse {
+  background-color: transparent;
+}
+
+.collapse h3 {
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+.collapse .collapsePanel {
+  border: 1px solid #f0f0f0 !important;
+  border-radius: 0.3rem !important;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  overflow: hidden;
+}
+
+.collapsePanel a {
+  color: #1677ff;
+}
+
+.collapsePanel a:hover {
+  color: #69b1ff;
+}
+
+.faqContent *,
+.categoryName,
+.collapsePanel * {
+  color: #434343;
+}
+
+@media screen and (min-width: 768px) {
+  .backBtnContainer {
+    display: none;
+  }
+
+  .categoryTitle {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+  }
+}
