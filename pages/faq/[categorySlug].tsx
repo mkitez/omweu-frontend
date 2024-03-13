@@ -46,7 +46,7 @@ const FaqCategory: NextPageWithLayout<PageProps> = ({
       <Collapse
         bordered={false}
         className={styles.collapse}
-        defaultActiveKey={faqItems[0].id}
+        defaultActiveKey={faqItems[0]?.id || []}
       >
         {faqItems.map((faqItem) => (
           <Collapse.Panel
@@ -71,7 +71,11 @@ FaqCategory.getLayout = (page: ReactElement, pageProps?: PageProps) => (
   </FaqLayout>
 );
 
-export type Category = { slug: string; name: string };
+export type Category = {
+  slug: string;
+  name: string;
+  imageUrl: string;
+};
 
 type Props = {
   categories: Category[];
@@ -102,6 +106,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({
   const categories = categoriesResponse.data.data.map((category: any) => ({
     slug: category.attributes.slug,
     name: category.attributes.name,
+    imageUrl: category.attributes.imageUrl,
   }));
 
   const faqItemsResponse = await cmsApi.get('faq-items', {

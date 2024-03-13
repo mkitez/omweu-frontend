@@ -1,5 +1,10 @@
+.categories {
+  margin-top: 2rem;
+}
+
 .categoryCard {
-  margin-bottom: 0.5rem;
+  margin: 0 auto 0.5rem;
+  max-width: 500px;
 }
 
 .header {
@@ -32,6 +37,7 @@
   border: 1px solid #f0f0f0 !important;
   border-radius: 0.3rem !important;
   margin-bottom: 1rem;
+  font-size: 0.9rem;
   overflow: hidden;
 }
 

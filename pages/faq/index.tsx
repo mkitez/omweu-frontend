@@ -1,14 +1,15 @@
-import Head from 'next/head';
-import Markdown from 'react-markdown';
-import cmsApi from '../../services/cmsApi';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
+import Image from 'next/image';
+import Link from 'next/link';
+import Markdown from 'react-markdown';
 import { SSRConfig } from 'next-i18next';
-import { REVALIDATE_INTERVAL } from '../../utils/constants';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Breadcrumb, Card } from 'antd';
 import { HomeFilled } from '@ant-design/icons';
 import { Category } from './[categorySlug]';
-import Link from 'next/link';
+import { REVALIDATE_INTERVAL } from '../../utils/constants';
+import cmsApi from '../../services/cmsApi';
 import faqLayoutStyles from '../../styles/FaqLayout.module.css';
 import styles from '../../styles/Faq.module.css';
 
@@ -35,11 +36,21 @@ const FAQ: React.FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
         </Head>
         <h1>{title}</h1>
         <Markdown>{content}</Markdown>
-        <div>
+        <div className={styles.categories}>
           {categories.map((category) => (
             <Link key={category.slug} href={`/faq/${category.slug}`}>
               <Card hoverable className={styles.categoryCard}>
-                {category.name}
+                <Card.Meta
+                  avatar={
+                    <Image
+                      src={category.imageUrl}
+                      alt="category-image"
+                      width={24}
+                      height={24}
+                    />
+                  }
+                  title={category.name}
+                />
               </Card>
             </Link>
           ))}
@@ -71,6 +82,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => {
   const categories = categoriesResponse.data.data.map((category: any) => ({
     slug: category.attributes.slug,
     name: category.attributes.name,
+    imageUrl: category.attributes.imageUrl,
   }));
 
   return {
