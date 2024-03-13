@@ -1,35 +1,58 @@
+import Link from 'next/link';
 import { Layout, Row, Col } from 'antd';
+import { useTranslation } from 'next-i18next';
 import Logo from '../assets/logoWhite.svg';
 import styles from '../styles/AppFooter.module.css';
-import Link from 'next/link';
-import { useTranslation } from 'next-i18next';
+
+type FooterLink = {
+  path: string;
+  translationKey: string;
+};
+
+const legalFooterLinks: FooterLink[] = [
+  {
+    path: '/terms-and-conditions',
+    translationKey: 'footer.terms',
+  },
+  {
+    path: '/privacy-policy',
+    translationKey: 'footer.privacy',
+  },
+  {
+    path: '/contacts',
+    translationKey: 'footer.contacts',
+  },
+];
 
 const { Footer } = Layout;
 
-const AppFooter = () => {
+const AppFooter: React.FC = () => {
   const { t } = useTranslation('common');
   return (
     <Footer className={styles.root}>
       <div className={styles.content}>
-        <Row>
-          <Col>
+        <Row className={styles.links} gutter={[10, 16]}>
+          <Col xs={{ order: 3 }} lg={{ span: 12, order: 1 }}>
             <div className={styles.logoContainer}>
               <Logo />
             </div>
+            <div className={styles.copy}>
+              &copy; {new Date().getFullYear()} eubycar.com
+            </div>
           </Col>
-        </Row>
-        <Row className={styles.links} gutter={[10, 16]}>
-          <Col xs={24} lg={8}>
-            &copy; {new Date().getFullYear()} EUbyCar.com
+          <Col xs={{ order: 1 }} lg={{ span: 6, order: 2 }}>
+            <h4>{t('footer.infoColumn')}</h4>
+            <div className={styles.linkContainer}>
+              <Link href="/faq">{t('footer.faq')}</Link>
+            </div>
           </Col>
-          <Col xs={24} lg={4}>
-            <Link href="/contacts">{t('footer.contacts')}</Link>
-          </Col>
-          <Col xs={24} lg={6}>
-            <Link href="/privacy-policy">{t('footer.privacy')}</Link>
-          </Col>
-          <Col xs={24} lg={6}>
-            <Link href="/terms-and-conditions">{t('footer.terms')}</Link>
+          <Col xs={{ order: 2 }} lg={{ span: 6, order: 3 }}>
+            <h4>{t('footer.legalColumn')}</h4>
+            {legalFooterLinks.map((link) => (
+              <div key={link.path} className={styles.linkContainer}>
+                <Link href={link.path}>{t(link.translationKey)}</Link>
+              </div>
+            ))}
           </Col>
         </Row>
       </div>
