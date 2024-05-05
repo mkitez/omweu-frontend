@@ -5,7 +5,8 @@
 }
 
 .icon {
-  width: 1.2rem;
+  width: 2rem;
+  padding-left: 0.8rem;
   flex-shrink: 0;
 }
 

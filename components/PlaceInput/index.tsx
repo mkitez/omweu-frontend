@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { ReactNode, forwardRef } from 'react';
 import { Select, SelectProps } from 'antd';
 import { useTranslation } from 'next-i18next';
-import type { DefaultOptionType } from 'antd/es/select';
+import type { DefaultOptionType, RefSelectProps } from 'antd/es/select';
 import { useHereAutocomplete } from '../../hooks/useHereAutocomplete';
 import styles from './PlaceInput.module.css';
 
@@ -9,7 +9,10 @@ interface Props extends SelectProps {
   icon?: ReactNode;
 }
 
-const PlaceInput: React.FC<Props> = (props) => {
+const PlaceInput = forwardRef<RefSelectProps, Props>(function PlaceInput(
+  props,
+  ref
+) {
   const { i18n } = useTranslation();
   const { suggestions, getSuggestions } = useHereAutocomplete({
     lang: i18n.language,
@@ -37,10 +40,11 @@ const PlaceInput: React.FC<Props> = (props) => {
           })
         )}
         className={styles.input}
+        ref={ref}
         {...props}
       />
     </div>
   );
-};
+});
 
 export default PlaceInput;

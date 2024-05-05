@@ -1,14 +1,14 @@
 import dayjs from 'dayjs';
+import { FormEventHandler, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { Button } from 'antd';
+import { DefaultOptionType, RefSelectProps } from 'antd/es/select';
 import PlaceInput from './PlaceInput';
 import SwapButton from './SwapButton';
 import DateInput from './DateInput';
 import Location from '../assets/circle-xxs-svgrepo-com.svg';
 import Calendar from '../assets/calendar-svgrepo-com.svg';
-import { FormEventHandler, useState } from 'react';
-import { DefaultOptionType } from 'antd/es/select';
 import styles from '../styles/TripSearch.module.css';
 
 const TripSearch = () => {
@@ -24,15 +24,21 @@ const TripSearch = () => {
     label: to_input,
     value: to as string | undefined,
   });
-  const [dateValue, setDateValue] = useState<dayjs.Dayjs | undefined>(
+  const [dateValue, setDateValue] = useState<dayjs.Dayjs>(
     date ? dayjs(date as string, 'YYYY-MM-DD') : dayjs()
   );
+
+  const fromRef = useRef<RefSelectProps>(null);
+  const toRef = useRef<RefSelectProps>(null);
 
   const submitForm: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    if (!fromField.value || !toField.value || !dateValue) {
-      return;
+    if (!fromField.value) {
+      return fromRef?.current?.focus();
+    }
+    if (!toField.value) {
+      return toRef?.current?.focus();
     }
     const formattedDate = dateValue.format('YYYY-MM-DD');
     router.push(
@@ -43,8 +49,10 @@ const TripSearch = () => {
   };
 
   const swapInput = () => {
-    const newTo = { ...fromField };
-    const newFrom = { ...toField };
+    if (!toField.value && !fromField.value) {
+      return;
+    }
+    const [newFrom, newTo] = [toField, fromField];
     setFromField(newFrom);
     setToField(newTo);
   };
@@ -60,6 +68,7 @@ const TripSearch = () => {
             onChange={(_, option) => setFromField(option as DefaultOptionType)}
             value={fromField.value ? fromField : undefined}
             defaultValue={fromField.label}
+            ref={fromRef}
           />
           <SwapButton onClick={swapInput} className={styles.swapBtn} />
           <PlaceInput
@@ -69,6 +78,7 @@ const TripSearch = () => {
             onChange={(_, option) => setToField(option as DefaultOptionType)}
             value={toField.value ? toField : undefined}
             defaultValue={toField.label}
+            ref={toRef}
           />
           <DateInput
             icon={<Calendar width="100%" height="100%" />}
