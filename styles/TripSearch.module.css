@@ -4,16 +4,19 @@
 }
 
 .formContainer {
-  width: 800px;
-  height: 46px;
+  width: 860px;
   padding: 5px;
-  border: 2px solid #294a54;
-  border-radius: 10px;
+  border: 2px solid #c7c7c7;
+  border-radius: 0.8rem;
+}
+
+.form {
+  display: flex;
 }
 
 .searchBtn {
   font-weight: 500;
-  width: 100%;
+  flex: 0.5 0 0%;
 }
 
 .inputFieldIcon {
@@ -37,5 +40,9 @@
 
   .searchBtn {
     margin-top: 10px;
+  }
+
+  .form {
+    flex-direction: column;
   }
 }

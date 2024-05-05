@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Button } from 'antd';
+import { Button } from 'antd';
 import { SwapOutlined } from '@ant-design/icons';
 
 interface Props {
@@ -9,16 +9,9 @@ interface Props {
 
 const SwapButton = ({ onClick, className }: Props) => {
   return (
-    <Form.Item>
-      <Button
-        onClick={onClick}
-        className={className}
-        type="text"
-        shape="circle"
-      >
-        <SwapOutlined />
-      </Button>
-    </Form.Item>
+    <Button onClick={onClick} className={className} type="text" shape="circle">
+      <SwapOutlined />
+    </Button>
   );
 };
 
