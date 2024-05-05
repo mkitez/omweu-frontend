@@ -12,37 +12,57 @@
 
 .form {
   display: flex;
+  row-gap: 0.5rem;
+}
+
+.placeInputGroup {
+  display: flex;
+  row-gap: 0.5rem;
+  flex: 3 0 0%;
+}
+
+.fromInput {
+  display: flex;
+}
+
+.toInput, .fromInput {
+  max-width: 240px;
+  flex: 1 0 0%;
+}
+
+.dateInput {
+  flex: 1 0 0%;
+}
+
+.search {
+  flex: 1 0 0%;
 }
 
 .searchBtn {
   font-weight: 500;
-  flex: 0.5 0 0%;
+  width: 100%;
 }
 
 .inputFieldIcon {
-  height: 32px;
-}
-
-.input {
-  width: 100%;
-  max-width: 80vw;
+  height: 2rem;
 }
 
 @media screen and (max-width: 767px) {
   .formContainer {
-    border: none;
     height: auto;
+    margin: 0 0.5rem;
+    padding-top: 10px;
+  }
+
+  .fromInput, .toInput {
+    max-width: unset;
   }
 
   .swapBtn {
     transform: rotate(90deg);
   }
 
-  .searchBtn {
-    margin-top: 10px;
-  }
-
-  .form {
+  .form, .placeInputGroup {
     flex-direction: column;
   }
 }

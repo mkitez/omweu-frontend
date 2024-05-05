@@ -1,7 +1,7 @@
 .root {
   display: flex;
   flex: 1 0 0%;
-  max-width: 300px;
+  max-width: 86%;
 }
 
 .icon {
@@ -11,5 +11,11 @@
 }
 
 .input {
-  width: 100%;
+  width: 90%;
+}
+
+@media screen and (max-width: 767px) {
+  .root {
+    max-width: 85vw;
+  }
 }

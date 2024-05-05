@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from 'antd';
 import { SwapOutlined } from '@ant-design/icons';
 
@@ -7,7 +6,7 @@ interface Props {
   className?: string;
 }
 
-const SwapButton = ({ onClick, className }: Props) => {
+const SwapButton: React.FC<Props> = ({ onClick, className }) => {
   return (
     <Button onClick={onClick} className={className} type="text" shape="circle">
       <SwapOutlined />

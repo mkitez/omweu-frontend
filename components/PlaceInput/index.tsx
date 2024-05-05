@@ -18,7 +18,7 @@ const PlaceInput = forwardRef<RefSelectProps, Props>(function PlaceInput(
     lang: i18n.language,
   });
 
-  const handleSearch = async (newValue: string) => {
+  const handleSearch = (newValue: string) => {
     getSuggestions(newValue);
   };
 
