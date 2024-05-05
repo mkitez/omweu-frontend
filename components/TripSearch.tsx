@@ -93,14 +93,16 @@ const TripSearch = () => {
                 <DatePicker
                   allowClear={false}
                   format="DD.MM.YYYY"
-                  showNow={false}
+                  showNow={true}
                   disabledDate={(current) =>
-                    current && current < dayjs().startOf('day')
+                    current < dayjs().startOf('day') ||
+                    current > dayjs().add(1, 'year').startOf('day')
                   }
                   placeholder={t('date.label') as string}
                   bordered={false}
                   suffixIcon={null}
                   className={styles.input}
+                  placement={xs ? 'topRight' : 'bottomLeft'}
                 />
               </Form.Item>
             </Col>
