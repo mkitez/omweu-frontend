@@ -1,7 +1,7 @@
 .root {
   display: flex;
-  flex: 1 0 0%;
-  max-width: 86%;
+  flex: 0 0 50%;
+  max-width: 50%;
 }
 
 .icon {
@@ -11,11 +11,20 @@
 }
 
 .input {
-  width: 90%;
+  flex: 0 1 100%;
+  max-width: calc(100% - 2rem);
+}
+
+.inputWithSwap {
+  max-width: calc(100% - 4rem - 5px);
+}
+
+.swap {
+  margin-right: 5px;
 }
 
 @media screen and (max-width: 767px) {
   .root {
-    max-width: 85vw;
+    max-width: 100%;
   }
 }

@@ -62,33 +62,29 @@ const TripSearch = () => {
       <div className={styles.formContainer}>
         <form className={styles.form} onSubmit={submitForm}>
           <div className={styles.placeInputGroup}>
-            <div className={styles.fromInput}>
-              <PlaceInput
-                icon={<Location width="100%" height="100%" />}
-                placeholder={t('from.label')}
-                bordered={false}
-                onChange={(_, option) =>
-                  setFromField(option as DefaultOptionType)
-                }
-                value={fromField.value ? fromField : undefined}
-                defaultValue={fromField.label}
-                ref={fromRef}
-              />
-              <SwapButton onClick={swapInput} className={styles.swapBtn} />
-            </div>
-            <div className={styles.toInput}>
-              <PlaceInput
-                icon={<Location width="100%" height="100%" />}
-                placeholder={t('to.label')}
-                bordered={false}
-                onChange={(_, option) =>
-                  setToField(option as DefaultOptionType)
-                }
-                value={toField.value ? toField : undefined}
-                defaultValue={toField.label}
-                ref={toRef}
-              />
-            </div>
+            <PlaceInput
+              icon={<Location width="100%" height="100%" />}
+              placeholder={t('from.label')}
+              bordered={false}
+              onChange={(_, option) =>
+                setFromField(option as DefaultOptionType)
+              }
+              value={fromField.value ? fromField : undefined}
+              defaultValue={fromField.label}
+              ref={fromRef}
+              swapBtn={
+                <SwapButton onClick={swapInput} className={styles.swapBtn} />
+              }
+            />
+            <PlaceInput
+              icon={<Location width="100%" height="100%" />}
+              placeholder={t('to.label')}
+              bordered={false}
+              onChange={(_, option) => setToField(option as DefaultOptionType)}
+              value={toField.value ? toField : undefined}
+              defaultValue={toField.label}
+              ref={toRef}
+            />
           </div>
           <div className={styles.dateInput}>
             <DateInput

@@ -7,6 +7,7 @@ import styles from './PlaceInput.module.css';
 
 interface Props extends SelectProps {
   icon?: ReactNode;
+  swapBtn?: ReactNode;
 }
 
 const PlaceInput = forwardRef<RefSelectProps, Props>(function PlaceInput(
@@ -22,9 +23,15 @@ const PlaceInput = forwardRef<RefSelectProps, Props>(function PlaceInput(
     getSuggestions(newValue);
   };
 
+  const { icon, swapBtn, ...restProps } = props;
+  let className = styles.input;
+  if (swapBtn) {
+    className += ` ${styles.inputWithSwap}`;
+  }
+
   return (
     <div className={styles.root}>
-      {props.icon && <div className={styles.icon}>{props.icon}</div>}
+      {icon && <div className={styles.icon}>{icon}</div>}
       <Select
         showSearch
         defaultActiveFirstOption
@@ -39,10 +46,11 @@ const PlaceInput = forwardRef<RefSelectProps, Props>(function PlaceInput(
             label: place.address.label,
           })
         )}
-        className={styles.input}
+        className={className}
         ref={ref}
-        {...props}
+        {...restProps}
       />
+      {swapBtn && <div className={styles.swap}>{swapBtn}</div>}
     </div>
   );
 });
