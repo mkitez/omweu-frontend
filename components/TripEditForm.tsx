@@ -2,7 +2,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { useEffect, useState, useMemo } from 'react';
 import { Alert, Button, Col, Form, Input, InputNumber, Row } from 'antd';
-import PlaceInput from './PlaceInput';
+import { PlaceInputEdit } from './PlaceInput';
 import DateTimeInput from './DateTimeInput';
 import type { DefaultOptionType } from 'antd/es/select';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
@@ -187,10 +187,10 @@ const TripEditForm = ({
         className={styles.root}
       >
         <Form.Item name="from" label={t('from.label')} rules={placeInputRules}>
-          <PlaceInput placeholder={t('from.placeholder')} />
+          <PlaceInputEdit placeholder={t('from.placeholder')} />
         </Form.Item>
         <Form.Item name="to" label={t('to.label')} rules={placeInputRules}>
-          <PlaceInput placeholder={t('to.placeholder')} />
+          <PlaceInputEdit placeholder={t('to.placeholder')} />
         </Form.Item>
         <Form.List name="routeStops">
           {(fields, { add, remove }, { errors }) => (
@@ -211,7 +211,7 @@ const TripEditForm = ({
                   wrapperCol={{ span: 14 }}
                 >
                   <Form.Item noStyle {...field} rules={routeStopRules}>
-                    <PlaceInput placeholder={t('stop.placeholder')} />
+                    <PlaceInputEdit placeholder={t('stop.placeholder')} />
                   </Form.Item>
                   <MinusCircleOutlined
                     className={styles.removeStopBtn}

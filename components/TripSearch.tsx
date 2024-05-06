@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { Button } from 'antd';
 import { DefaultOptionType, RefSelectProps } from 'antd/es/select';
-import PlaceInput from './PlaceInput';
+import PlaceInputSearch from './PlaceInput/PlaceInputSearch';
 import SwapButton from './SwapButton';
 import DateInput from './DateInput';
 import Location from '../assets/circle-xxs-svgrepo-com.svg';
@@ -62,7 +62,7 @@ const TripSearch = () => {
     <div className={styles.formContainer}>
       <form className={styles.form} onSubmit={submitForm}>
         <div className={styles.placeInputGroup}>
-          <PlaceInput
+          <PlaceInputSearch
             icon={<Location width="100%" height="100%" />}
             placeholder={t('from.label')}
             bordered={false}
@@ -81,7 +81,7 @@ const TripSearch = () => {
               )
             }
           />
-          <PlaceInput
+          <PlaceInputSearch
             icon={<Location width="100%" height="100%" />}
             placeholder={t('to.label')}
             bordered={false}
