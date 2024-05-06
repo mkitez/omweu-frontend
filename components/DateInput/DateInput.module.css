@@ -1,0 +1,14 @@
+.root {
+  display: flex;
+  flex: 0.6 1 0%;
+}
+
+.icon {
+  width: 2rem;
+  padding-left: 0.8rem;
+  flex-shrink: 0;
+}
+
+.input {
+  width: 100%;
+}

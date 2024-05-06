@@ -1,24 +1,16 @@
-import React from 'react';
-import { Form, Button } from 'antd';
-import { SwapOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
+import SwapIcon from '../assets/swap-horizontal-svgrepo-com.svg';
 
 interface Props {
   onClick: () => void;
   className?: string;
 }
 
-const SwapButton = ({ onClick, className }: Props) => {
+const SwapButton: React.FC<Props> = ({ onClick, className }) => {
   return (
-    <Form.Item>
-      <Button
-        onClick={onClick}
-        className={className}
-        type="text"
-        shape="circle"
-      >
-        <SwapOutlined />
-      </Button>
-    </Form.Item>
+    <Button onClick={onClick} className={className} type="text" shape="circle">
+      <SwapIcon width="100%" height="100%" />
+    </Button>
   );
 };
 

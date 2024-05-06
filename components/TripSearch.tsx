@@ -1,123 +1,114 @@
+import dayjs from 'dayjs';
+import { FormEventHandler, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { Form, Button, Row, Col, Grid, DatePicker } from 'antd';
-import PlaceInput from './PlaceInput';
-import type { FormData } from './TripEditForm';
+import { Button } from 'antd';
+import { DefaultOptionType, RefSelectProps } from 'antd/es/select';
+import PlaceInputSearch from './PlaceInput/PlaceInputSearch';
 import SwapButton from './SwapButton';
-import dayjs from 'dayjs';
+import DateInput from './DateInput';
+import Location from '../assets/circle-xxs-svgrepo-com.svg';
+import Calendar from '../assets/calendar-svgrepo-com.svg';
 import styles from '../styles/TripSearch.module.css';
-import Location from '../assets/location.svg';
-import Calendar from '../assets/calendar.svg';
 
 const TripSearch = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
-  const [form] = Form.useForm();
-  const { xs } = Grid.useBreakpoint();
 
   const { from_input, to_input, from, to, date } = router.query;
-  const initialValues = {
-    from: from_input ? { label: from_input, value: from } : undefined,
-    to: to_input ? { label: to_input, value: to } : undefined,
-    date: date ? dayjs(date as string, 'YYYY-MM-DD') : undefined,
-  };
+  const [fromField, setFromField] = useState<DefaultOptionType>({
+    label: from_input,
+    value: from as string | undefined,
+  });
+  const [toField, setToField] = useState<DefaultOptionType>({
+    label: to_input,
+    value: to as string | undefined,
+  });
+  const [dateValue, setDateValue] = useState<dayjs.Dayjs>(
+    date ? dayjs(date as string, 'YYYY-MM-DD') : dayjs()
+  );
+  const [showSwapBtn, setShowSwapBtn] = useState(!!fromField.value);
 
-  const onFinish = async (formData: FormData) => {
-    const { from, to, date } = formData;
-    if (!from || !to || !date) {
-      return;
+  const fromRef = useRef<RefSelectProps>(null);
+  const toRef = useRef<RefSelectProps>(null);
+
+  const submitForm: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+
+    if (!fromField.value) {
+      return fromRef?.current?.focus();
     }
-    const formattedDate = date.format('YYYY-MM-DD');
+    if (!toField.value) {
+      return toRef?.current?.focus();
+    }
+    const formattedDate = dateValue.format('YYYY-MM-DD');
     router.push(
-      `/search?from=${from.value}&to=${to.value}&date=${formattedDate}&from_input=${from.label}&to_input=${to.label}`,
+      `/search?from=${fromField.value}&to=${toField.value}&date=${formattedDate}&from_input=${fromField.label}&to_input=${toField.label}`,
       undefined,
       { shallow: router.pathname === '/search' }
     );
   };
 
   const swapInput = () => {
-    form.setFieldsValue({
-      to: form.getFieldValue('from'),
-      from: form.getFieldValue('to'),
-    });
-  };
-
-  const placeInputProps: React.ComponentProps<typeof Form.Item> = {
-    label: xs ? null : <Location width="100%" height="100%" />,
-    labelCol: { xs: 5, md: 3 },
-    wrapperCol: { xs: 18, md: 21 },
-    style: { margin: 0 },
+    if (!toField.value && !fromField.value) {
+      return;
+    }
+    const [newFrom, newTo] = [toField, fromField];
+    setFromField(newFrom);
+    setToField(newTo);
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.formContainer}>
-        <Form
-          form={form}
-          onFinish={onFinish}
-          layout="inline"
-          requiredMark={false}
-          initialValues={initialValues}
-          colon={false}
-        >
-          <Row style={{ width: '100%' }}>
-            <Col xs={21} md={7}>
-              <Form.Item name="from" {...placeInputProps}>
-                <PlaceInput
-                  placeholder={t('from.label')}
-                  bordered={false}
-                  className={styles.input}
-                />
-              </Form.Item>
-            </Col>
-            <Col xs={3} md={1}>
-              <SwapButton onClick={swapInput} className={styles.swapBtn} />
-            </Col>
-            <Col xs={21} md={7}>
-              <Form.Item name="to" {...placeInputProps}>
-                <PlaceInput
-                  placeholder={t('to.label')}
-                  bordered={false}
-                  className={styles.input}
-                />
-              </Form.Item>
-            </Col>
-            <Col xs={21} md={5}>
-              <Form.Item
-                name="date"
-                label={xs ? null : <Calendar width="100%" height="100%" />}
-                labelCol={{ xs: 5, md: { offset: 1, span: 5 } }}
-                wrapperCol={{ xs: 18, md: 18 }}
-                style={{ width: '100%' }}
-              >
-                <DatePicker
-                  allowClear={false}
-                  format="DD.MM.YYYY"
-                  showNow={false}
-                  disabledDate={(current) =>
-                    current && current < dayjs().startOf('day')
-                  }
-                  placeholder={t('date.label') as string}
-                  bordered={false}
-                  suffixIcon={null}
-                  className={styles.input}
-                />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={4}>
-              <Form.Item style={{ margin: 0 }}>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  className={styles.searchBtn}
-                >
-                  {t('search')}
-                </Button>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </div>
+    <div className={styles.formContainer}>
+      <form className={styles.form} onSubmit={submitForm}>
+        <div className={styles.placeInputGroup}>
+          <PlaceInputSearch
+            icon={<Location width="100%" height="100%" />}
+            placeholder={t('from.label')}
+            bordered={false}
+            onChange={(_, option) => {
+              if ((option as DefaultOptionType).value) {
+                setShowSwapBtn(true);
+              }
+              setFromField(option as DefaultOptionType);
+            }}
+            value={fromField.value ? fromField : undefined}
+            defaultValue={fromField.label}
+            ref={fromRef}
+            swapBtn={
+              showSwapBtn && (
+                <SwapButton onClick={swapInput} className={styles.swapBtn} />
+              )
+            }
+          />
+          <PlaceInputSearch
+            icon={<Location width="100%" height="100%" />}
+            placeholder={t('to.label')}
+            bordered={false}
+            onChange={(_, option) => setToField(option as DefaultOptionType)}
+            value={toField.value ? toField : undefined}
+            defaultValue={toField.label}
+            ref={toRef}
+          />
+        </div>
+        <div className={styles.dateInput}>
+          <DateInput
+            icon={<Calendar width="100%" height="100%" />}
+            onChange={(value) => {
+              if (!value) {
+                return;
+              }
+              setDateValue(value);
+            }}
+            defaultValue={dateValue}
+          />
+        </div>
+        <div className={styles.search}>
+          <Button type="primary" htmlType="submit" className={styles.searchBtn}>
+            {t('search')}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 };

@@ -1,15 +1,15 @@
 import { Select, SelectProps } from 'antd';
 import { useTranslation } from 'next-i18next';
 import type { DefaultOptionType } from 'antd/es/select';
-import { useHereAutocomplete } from '../hooks/useHereAutocomplete';
+import { useHereAutocomplete } from '../../hooks/useHereAutocomplete';
 
-const PlaceInput: React.FC<SelectProps> = (props) => {
+const PlaceInputEdit: React.FC<SelectProps> = (props) => {
   const { i18n } = useTranslation();
   const { suggestions, getSuggestions } = useHereAutocomplete({
     lang: i18n.language,
   });
 
-  const handleSearch = async (newValue: string) => {
+  const handleSearch = (newValue: string) => {
     getSuggestions(newValue);
   };
 
@@ -33,4 +33,4 @@ const PlaceInput: React.FC<SelectProps> = (props) => {
   );
 };
 
-export default PlaceInput;
+export default PlaceInputEdit;

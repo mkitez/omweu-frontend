@@ -6,7 +6,9 @@ const BannerSection = () => {
   return (
     <section className={styles.root}>
       <Banner />
-      <TripSearch />
+      <div className={styles.container}>
+        <TripSearch />
+      </div>
     </section>
   );
 };

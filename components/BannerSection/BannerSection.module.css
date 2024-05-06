@@ -1,3 +1,9 @@
 .root {
-  padding-bottom: 40px;
+  padding-bottom: 2rem;
+}
+
+.container {
+  margin: auto;
+  padding: 0 0.5rem;
+  max-width: 900px;
 }
