@@ -1,5 +1,5 @@
 import { Button } from 'antd';
-import { SwapOutlined } from '@ant-design/icons';
+import SwapIcon from '../assets/swap-horizontal-svgrepo-com.svg';
 
 interface Props {
   onClick: () => void;
@@ -9,7 +9,7 @@ interface Props {
 const SwapButton: React.FC<Props> = ({ onClick, className }) => {
   return (
     <Button onClick={onClick} className={className} type="text" shape="circle">
-      <SwapOutlined />
+      <SwapIcon width="100%" height="100%" />
     </Button>
   );
 };

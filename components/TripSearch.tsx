@@ -27,6 +27,7 @@ const TripSearch = () => {
   const [dateValue, setDateValue] = useState<dayjs.Dayjs>(
     date ? dayjs(date as string, 'YYYY-MM-DD') : dayjs()
   );
+  const [showSwapBtn, setShowSwapBtn] = useState(!!fromField.value);
 
   const fromRef = useRef<RefSelectProps>(null);
   const toRef = useRef<RefSelectProps>(null);
@@ -65,12 +66,19 @@ const TripSearch = () => {
             icon={<Location width="100%" height="100%" />}
             placeholder={t('from.label')}
             bordered={false}
-            onChange={(_, option) => setFromField(option as DefaultOptionType)}
+            onChange={(_, option) => {
+              if ((option as DefaultOptionType).value) {
+                setShowSwapBtn(true);
+              }
+              setFromField(option as DefaultOptionType);
+            }}
             value={fromField.value ? fromField : undefined}
             defaultValue={fromField.label}
             ref={fromRef}
             swapBtn={
-              <SwapButton onClick={swapInput} className={styles.swapBtn} />
+              showSwapBtn && (
+                <SwapButton onClick={swapInput} className={styles.swapBtn} />
+              )
             }
           />
           <PlaceInput
