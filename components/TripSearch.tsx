@@ -58,57 +58,49 @@ const TripSearch = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.formContainer}>
-        <form className={styles.form} onSubmit={submitForm}>
-          <div className={styles.placeInputGroup}>
-            <PlaceInput
-              icon={<Location width="100%" height="100%" />}
-              placeholder={t('from.label')}
-              bordered={false}
-              onChange={(_, option) =>
-                setFromField(option as DefaultOptionType)
+    <div className={styles.formContainer}>
+      <form className={styles.form} onSubmit={submitForm}>
+        <div className={styles.placeInputGroup}>
+          <PlaceInput
+            icon={<Location width="100%" height="100%" />}
+            placeholder={t('from.label')}
+            bordered={false}
+            onChange={(_, option) => setFromField(option as DefaultOptionType)}
+            value={fromField.value ? fromField : undefined}
+            defaultValue={fromField.label}
+            ref={fromRef}
+            swapBtn={
+              <SwapButton onClick={swapInput} className={styles.swapBtn} />
+            }
+          />
+          <PlaceInput
+            icon={<Location width="100%" height="100%" />}
+            placeholder={t('to.label')}
+            bordered={false}
+            onChange={(_, option) => setToField(option as DefaultOptionType)}
+            value={toField.value ? toField : undefined}
+            defaultValue={toField.label}
+            ref={toRef}
+          />
+        </div>
+        <div className={styles.dateInput}>
+          <DateInput
+            icon={<Calendar width="100%" height="100%" />}
+            onChange={(value) => {
+              if (!value) {
+                return;
               }
-              value={fromField.value ? fromField : undefined}
-              defaultValue={fromField.label}
-              ref={fromRef}
-              swapBtn={
-                <SwapButton onClick={swapInput} className={styles.swapBtn} />
-              }
-            />
-            <PlaceInput
-              icon={<Location width="100%" height="100%" />}
-              placeholder={t('to.label')}
-              bordered={false}
-              onChange={(_, option) => setToField(option as DefaultOptionType)}
-              value={toField.value ? toField : undefined}
-              defaultValue={toField.label}
-              ref={toRef}
-            />
-          </div>
-          <div className={styles.dateInput}>
-            <DateInput
-              icon={<Calendar width="100%" height="100%" />}
-              onChange={(value) => {
-                if (!value) {
-                  return;
-                }
-                setDateValue(value);
-              }}
-              defaultValue={dateValue}
-            />
-          </div>
-          <div className={styles.search}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className={styles.searchBtn}
-            >
-              {t('search')}
-            </Button>
-          </div>
-        </form>
-      </div>
+              setDateValue(value);
+            }}
+            defaultValue={dateValue}
+          />
+        </div>
+        <div className={styles.search}>
+          <Button type="primary" htmlType="submit" className={styles.searchBtn}>
+            {t('search')}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 };
