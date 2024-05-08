@@ -1,15 +1,17 @@
+import { LoadingOutlined } from '@ant-design/icons';
+import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
 import type { ReactElement } from 'react';
 import useSWR from 'swr';
-import { getServerSideProps } from './trips';
+
 import api from '../../services/api';
+
 import DashboardLayout from '../../components/DashboardLayout';
-import { useTranslation } from 'next-i18next';
-import { useSession } from 'next-auth/react';
-import { LoadingOutlined } from '@ant-design/icons';
 import { User } from '../../components/Trips';
 import UserProfileForm from '../../components/UserProfileForm';
 import styles from '../../styles/Profile.module.css';
+import { getServerSideProps } from './trips';
 
 const Profile = () => {
   const { data: session } = useSession();

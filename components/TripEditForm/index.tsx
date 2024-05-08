@@ -1,5 +1,5 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Alert, Button, Col, Form, Input, InputNumber, Row } from 'antd';
+import { Button, Col, Form, Input, InputNumber, message, Row } from 'antd';
 import { Rule } from 'antd/es/form';
 import type { DefaultOptionType } from 'antd/es/select';
 import axios from 'axios';
@@ -8,10 +8,10 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 
-import styles from '../styles/TripEditForm.module.css';
-import DateTimeInput from './DateTimeInput';
-import { PlaceInputEdit } from './PlaceInput';
-import { Destination } from './Trips';
+import DateTimeInput from '../DateTimeInput';
+import { PlaceInputEdit } from '../PlaceInput';
+import { Destination } from '../Trips';
+import styles from './TripEditForm.module.css';
 
 export interface FormData {
   from: DefaultOptionType;
@@ -66,12 +66,8 @@ const TripEditForm = ({
 }: Props) => {
   const { t } = useTranslation('common');
   const router = useRouter();
-
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
   const [form] = Form.useForm();
-
   const initialValues = useMemo(
     () => ({
       from: getInitialPlaceValue(initialOrigin),
@@ -114,7 +110,7 @@ const TripEditForm = ({
       await submit(data);
     } catch (e) {
       if (axios.isAxiosError(e)) {
-        setError(t('errors.common') as string);
+        message.error(t('errors.common'));
       }
       setLoading(false);
     }
@@ -176,105 +172,100 @@ const TripEditForm = ({
 
   const isTripInPast = initialDate && dayjs(initialDate) < dayjs();
   return (
-    <>
-      <Form
-        form={form}
-        initialValues={initialValues}
-        requiredMark={false}
-        onFinish={handleSubmit}
-        disabled={isTripInPast || loading}
-        labelCol={{ span: 5 }}
-        wrapperCol={{ span: 14 }}
-        className={styles.root}
-      >
-        <Form.Item name="from" label={t('from.label')} rules={placeInputRules}>
-          <PlaceInputEdit placeholder={t('from.placeholder')} />
-        </Form.Item>
-        <Form.Item name="to" label={t('to.label')} rules={placeInputRules}>
-          <PlaceInputEdit placeholder={t('to.placeholder')} />
-        </Form.Item>
-        <Form.List name="routeStops">
-          {(fields, { add, remove }, { errors }) => (
-            <>
-              {fields.length === 0 && !isTripInPast && (
-                <Row>
-                  <Col sm={{ offset: 5 }} className={styles.stopsTooltip}>
-                    {t('addStopTooltip')}
-                  </Col>
-                </Row>
-              )}
-              {fields.map((field, index) => (
-                <Form.Item
-                  key={field.key}
-                  label={`${t('stop.label')} ${index + 1}`}
-                  required={false}
-                  labelCol={{ span: 5 }}
-                  wrapperCol={{ span: 14 }}
+    <Form
+      form={form}
+      initialValues={initialValues}
+      requiredMark={false}
+      onFinish={handleSubmit}
+      disabled={isTripInPast || loading}
+      labelCol={{ span: 5 }}
+      wrapperCol={{ span: 14 }}
+      className={styles.root}
+    >
+      <Form.Item name="from" label={t('from.label')} rules={placeInputRules}>
+        <PlaceInputEdit placeholder={t('from.placeholder')} />
+      </Form.Item>
+      <Form.Item name="to" label={t('to.label')} rules={placeInputRules}>
+        <PlaceInputEdit placeholder={t('to.placeholder')} />
+      </Form.Item>
+      <Form.List name="routeStops">
+        {(fields, { add, remove }, { errors }) => (
+          <>
+            {fields.length === 0 && !isTripInPast && (
+              <Row>
+                <Col sm={{ offset: 5 }} className={styles.stopsTooltip}>
+                  {t('addStopTooltip')}
+                </Col>
+              </Row>
+            )}
+            {fields.map((field, index) => (
+              <Form.Item
+                key={field.key}
+                label={`${t('stop.label')} ${index + 1}`}
+                required={false}
+                labelCol={{ span: 5 }}
+                wrapperCol={{ span: 14 }}
+              >
+                <Form.Item noStyle {...field} rules={routeStopRules}>
+                  <PlaceInputEdit placeholder={t('stop.placeholder')} />
+                </Form.Item>
+                <MinusCircleOutlined
+                  className={styles.removeStopBtn}
+                  onClick={isTripInPast ? undefined : () => remove(field.name)}
+                />
+              </Form.Item>
+            ))}
+            {fields.length < 3 && (
+              <Form.Item wrapperCol={{ sm: { offset: 5 } }}>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  icon={<PlusOutlined />}
                 >
-                  <Form.Item noStyle {...field} rules={routeStopRules}>
-                    <PlaceInputEdit placeholder={t('stop.placeholder')} />
-                  </Form.Item>
-                  <MinusCircleOutlined
-                    className={styles.removeStopBtn}
-                    onClick={
-                      isTripInPast ? undefined : () => remove(field.name)
-                    }
-                  />
-                </Form.Item>
-              ))}
-              {fields.length < 3 && (
-                <Form.Item wrapperCol={{ sm: { offset: 5 } }}>
-                  <Button
-                    type="dashed"
-                    onClick={() => add()}
-                    icon={<PlusOutlined />}
-                  >
-                    {t('addStop')}
-                  </Button>
-                  <Form.ErrorList errors={errors} />
-                </Form.Item>
-              )}
-            </>
-          )}
-        </Form.List>
-        <DateTimeInput
-          name="date"
-          label={t('dateTime.label') as string}
-          placeholder={t('dateTime.placeholder') as string}
+                  {t('addStop')}
+                </Button>
+                <Form.ErrorList errors={errors} />
+              </Form.Item>
+            )}
+          </>
+        )}
+      </Form.List>
+      <DateTimeInput
+        name="date"
+        label={t('dateTime.label') as string}
+        placeholder={t('dateTime.placeholder') as string}
+      />
+      <Form.Item name="price" label={t('price.label')} rules={priceRules}>
+        <InputNumber
+          placeholder={t('price.placeholder') as string}
+          maxLength={5}
+          step={1}
+          addonAfter="€"
         />
-        <Form.Item name="price" label={t('price.label')} rules={priceRules}>
-          <InputNumber
-            placeholder={t('price.placeholder') as string}
-            maxLength={5}
-            step={1}
-            addonAfter="€"
-          />
-        </Form.Item>
-        <Form.Item name="description" label={t('description.label')}>
-          <Input.TextArea
-            placeholder={t('description.placeholder') as string}
-            maxLength={300}
-            rows={3}
-            className={styles.desc}
-          />
-        </Form.Item>
-        <Form.Item
-          className={styles.btnContainer}
-          wrapperCol={{ sm: { offset: 5 } }}
+      </Form.Item>
+      <Form.Item name="description" label={t('description.label')}>
+        <Input.TextArea
+          placeholder={t('description.placeholder') as string}
+          maxLength={300}
+          rows={3}
+          className={styles.desc}
+        />
+      </Form.Item>
+      <Form.Item
+        className={styles.btnContainer}
+        wrapperCol={{ sm: { offset: 5 } }}
+      >
+        <Button type="primary" htmlType="submit" loading={loading}>
+          {submitValue}
+        </Button>
+        <Button
+          disabled={false}
+          onClick={() => router.push('/dashboard/trips')}
         >
-          <Button type="primary" htmlType="submit" loading={loading}>
-            {submitValue}
-          </Button>
-          <Button
-            disabled={false}
-            onClick={() => router.push('/dashboard/trips')}
-          >
-            {t('cancel')}
-          </Button>
-        </Form.Item>
-      </Form>
-      {error && <Alert type="error" message={error} />}
-    </>
+          {t('cancel')}
+        </Button>
+      </Form.Item>
+    </Form>
   );
 };
 
