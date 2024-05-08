@@ -1,19 +1,22 @@
-import TripEditForm from '../components/TripEditForm';
-import TripService from '../services/trip.service';
-import api from '../services/api';
-import { SSRConfig, useTranslation } from 'next-i18next';
-import { Trip } from '../components/Trips';
-import styles from '../styles/TripEdit.module.css';
-import Head from 'next/head';
+import { App } from 'antd';
+import axios from 'axios';
+import dayjs from 'dayjs';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { Session, unstable_getServerSession } from 'next-auth';
-import { authOptions } from './api/auth/[...nextauth]';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import axios from 'axios';
-import Error from 'next/error';
-import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import dayjs from 'dayjs';
+import { SSRConfig, useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Error from 'next/error';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+
+import api from '../services/api';
+import TripService from '../services/trip.service';
+
+import TripEditForm from '../components/TripEditForm';
+import { Trip } from '../components/Trips';
+import styles from '../styles/TripEdit.module.css';
+import { authOptions } from './api/auth/[...nextauth]';
 
 const TripCopy = ({
   trip: data,
@@ -21,6 +24,7 @@ const TripCopy = ({
   const router = useRouter();
   const { data: session } = useSession();
   const { t } = useTranslation(['dashboard', 'common']);
+  const { message } = App.useApp();
 
   if (data === null) {
     return <Error statusCode={500} />;
@@ -47,8 +51,12 @@ const TripCopy = ({
           initialDescription={data.description}
           submitValue={t('create', { ns: 'common' })}
           submit={async (data: any) => {
-            await TripService.createTrip(data, session?.accessToken as string);
-            router.push('/dashboard');
+            const newTrip: Trip = await TripService.createTrip(
+              data,
+              session?.accessToken as string
+            );
+            message.success(t('notifications.new_trip'));
+            router.push(`/trips/${newTrip.id}`);
           }}
         />
       </div>

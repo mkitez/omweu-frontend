@@ -1,16 +1,17 @@
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Alert, Button, Col, Form, Input, InputNumber, Row } from 'antd';
+import { Rule } from 'antd/es/form';
+import type { DefaultOptionType } from 'antd/es/select';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import { useEffect, useState, useMemo } from 'react';
-import { Alert, Button, Col, Form, Input, InputNumber, Row } from 'antd';
-import { PlaceInputEdit } from './PlaceInput';
-import DateTimeInput from './DateTimeInput';
-import type { DefaultOptionType } from 'antd/es/select';
-import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import { Destination } from './Trips';
-import { Rule } from 'antd/es/form';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
+
 import styles from '../styles/TripEditForm.module.css';
+import DateTimeInput from './DateTimeInput';
+import { PlaceInputEdit } from './PlaceInput';
+import { Destination } from './Trips';
 
 export interface FormData {
   from: DefaultOptionType;

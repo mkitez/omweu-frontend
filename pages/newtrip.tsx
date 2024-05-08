@@ -1,18 +1,21 @@
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import TripService from '../services/trip.service';
-import TripEditForm from '../components/TripEditForm';
-import { unstable_getServerSession } from 'next-auth';
-import { SSRConfig, useTranslation } from 'next-i18next';
+import { App } from 'antd';
 import { GetServerSideProps } from 'next';
 import type { InferGetServerSidePropsType } from 'next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { authOptions } from './api/auth/[...nextauth]';
+import { unstable_getServerSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
+import { SSRConfig, useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+
 import api from '../services/api';
-import { User } from '../components/Trips';
-import styles from '../styles/NewTrip.module.css';
+import TripService from '../services/trip.service';
+
 import DriverPreferencesModal from '../components/DriverPreferencesModal';
+import TripEditForm from '../components/TripEditForm';
+import { Trip, User } from '../components/Trips';
+import styles from '../styles/NewTrip.module.css';
+import { authOptions } from './api/auth/[...nextauth]';
 
 const NewTrip = ({
   shouldShowPreferencesModal,
@@ -20,10 +23,15 @@ const NewTrip = ({
   const router = useRouter();
   const { data: session } = useSession();
   const { t } = useTranslation(['dashboard', 'common']);
+  const { message } = App.useApp();
 
   const handleSubmit = async (data: any) => {
-    await TripService.createTrip(data, session?.accessToken as string);
-    router.push('/dashboard');
+    const newTrip: Trip = await TripService.createTrip(
+      data,
+      session?.accessToken as string
+    );
+    message.success(t('notifications.new_trip'));
+    router.push(`/trips/${newTrip.id}`);
   };
 
   return (
