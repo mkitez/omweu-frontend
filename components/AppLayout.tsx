@@ -1,8 +1,9 @@
-import { PropsWithChildren } from 'react';
 import { Layout } from 'antd';
-import AppHeader from './AppHeader';
-import AppFooter from './AppFooter';
 import { Montserrat } from 'next/font/google';
+import { PropsWithChildren } from 'react';
+
+import AppFooter from './AppFooter';
+import AppHeader from './AppHeader';
 
 const montserrat = Montserrat({
   subsets: ['latin', 'cyrillic'],

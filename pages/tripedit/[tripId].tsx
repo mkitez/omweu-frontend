@@ -1,21 +1,27 @@
-import useSWR from 'swr';
+import { LoadingOutlined } from '@ant-design/icons';
+import { App, theme } from 'antd';
+import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
-import TripEditForm from '../../components/TripEditForm';
-import TripService from '../../services/trip.service';
-import { getServerSideProps } from '../dashboard/trips';
+import useSWR from 'swr';
+
 import api from '../../services/api';
 import AuthService from '../../services/auth.service';
-import { useTranslation } from 'next-i18next';
-import { useSession } from 'next-auth/react';
-import { LoadingOutlined } from '@ant-design/icons';
+import TripService from '../../services/trip.service';
+
+import TripEditForm from '../../components/TripEditForm';
 import { Trip } from '../../components/Trips';
 import styles from '../../styles/TripEdit.module.css';
-import Head from 'next/head';
+import { getServerSideProps } from '../dashboard/trips';
 
 const TripEdit = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const { t, i18n } = useTranslation(['dashboard', 'common']);
+  const { message } = App.useApp();
+  const { token } = theme.useToken();
+  console.log(token.colorSuccess);
   const { data, error, isLoading } = useSWR<Trip>(
     router.isReady ? `/trips/${router.query.tripId}/` : null,
     async (url) => {
@@ -64,12 +70,13 @@ const TripEdit = () => {
               initialDescription={data.description}
               submitValue={t('save', { ns: 'common' })}
               submit={async (data: any) => {
-                await TripService.updateTrip(
+                const tripData: Trip = await TripService.updateTrip(
                   router.query.tripId,
                   data,
                   session?.accessToken as string
                 );
-                router.push('/dashboard');
+                message.success(t('notifications.trip_update'));
+                router.push(`/trips/${tripData.id}`);
               }}
             />
           );

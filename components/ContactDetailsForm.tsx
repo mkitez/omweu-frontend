@@ -1,9 +1,11 @@
-import { Form, Input, Button, Alert } from 'antd';
-import api from '../services/api';
-import { useTranslation } from 'next-i18next';
+import { Alert, Button, Form, Input, message } from 'antd';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+
+import api from '../services/api';
+
 import styles from '../styles/ContactDetailsForm.module.css';
 
 const { Item } = Form;
@@ -21,17 +23,14 @@ type Props = {
 const ContactDetailsForm: React.FC<Props> = ({ updateEmail }) => {
   const router = useRouter();
   const { data: session } = useSession();
-
   const [form] = Form.useForm();
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [showEmailSentAlert, setShowEmailSentAlert] = useState(false);
 
   const { t, i18n } = useTranslation(['dashboard', 'common']);
 
   const handleSubmit = async (formData: FormData) => {
-    setError('');
     setLoading(true);
     const entries = Object.entries(formData).filter(([_, value]) => !!value);
     const url = `/users/${session?.user.id}/`;
@@ -48,7 +47,7 @@ const ContactDetailsForm: React.FC<Props> = ({ updateEmail }) => {
         await router.push('/newtrip');
       }
     } catch (e) {
-      setError(t('errors.common', { ns: 'common' }) as string);
+      message.error(t('errors.common', { ns: 'common' }));
     }
     setLoading(false);
   };
