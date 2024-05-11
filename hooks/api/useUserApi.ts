@@ -1,16 +1,16 @@
 import { useMemo } from 'react';
 
 import { getClientInstance } from '../../services/api';
-import BookingService from '../../services/booking.service';
+import UserService from '../../services/user.service';
 
 import { useDefaultHeaders } from '../useDefaultHeaders';
 
-export const useBookingApi = () => {
+export const useUserApi = () => {
   const headers = useDefaultHeaders();
 
-  const bookingService = useMemo(() => {
+  const userService = useMemo(() => {
     const api = getClientInstance(headers);
-    return new BookingService(api);
+    return new UserService(api);
   }, [headers]);
-  return bookingService;
+  return userService;
 };

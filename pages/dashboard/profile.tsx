@@ -1,28 +1,21 @@
 import { LoadingOutlined } from '@ant-design/icons';
-import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
 import type { ReactElement } from 'react';
 import useSWR from 'swr';
 
-import api from '../../services/api';
-
 import DashboardLayout from '../../components/DashboardLayout';
 import { User } from '../../components/Trips';
 import UserProfileForm from '../../components/UserProfileForm';
+import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
 import styles from '../../styles/Profile.module.css';
 import { getServerSideProps } from './trips';
 
 const Profile = () => {
-  const { data: session } = useSession();
+  const fetcher = useAuthorizedFetcher();
   const { data, error, isLoading, mutate } = useSWR<User>(
-    `/users/${session?.user.id}/`,
-    async (url) => {
-      const response = await api.get(url, {
-        headers: { Authorization: `Bearer ${session?.accessToken}` },
-      });
-      return response.data;
-    }
+    '/users/self/',
+    fetcher
   );
   const { t } = useTranslation(['dashboard', 'common']);
 
