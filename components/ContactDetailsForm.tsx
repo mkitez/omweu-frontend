@@ -111,7 +111,6 @@ const ContactDetailsForm: React.FC<Props> = ({ updateEmail }) => {
           </Button>
         </Item>
       </Form>
-      {error && <Alert type="error" message={error} />}
     </>
   );
 };
