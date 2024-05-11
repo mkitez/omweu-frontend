@@ -13,4 +13,10 @@
 .result {
   margin-top: 1.5rem;
   margin-bottom: 3rem;
+  text-align: center;
+}
+
+.statusText {
+  line-height: 1.25;
+  white-space: pre-line;
 }

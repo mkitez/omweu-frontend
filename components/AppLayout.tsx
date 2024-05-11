@@ -16,7 +16,7 @@ const AppLayout = ({ children }: PropsWithChildren) => {
   return (
     <Layout className={montserrat.variable} style={{ minHeight: '100vh' }}>
       <AppHeader />
-      <Content>{children}</Content>
+      <Content style={{ minHeight: 600 }}>{children}</Content>
       <AppFooter />
     </Layout>
   );
