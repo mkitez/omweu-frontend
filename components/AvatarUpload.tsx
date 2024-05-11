@@ -65,7 +65,7 @@ const AvatarUpload: React.FC<Props> = ({ initialImageUrl, onUpload }) => {
     }
     if (info.file.status === 'done') {
       setLoading(false);
-      message.success(t('notifications.image_updated'));
+      message.success(t('notifications.image_update'));
       setImageUrl(info.file.response.photo);
       if (onUpload) {
         onUpload();
@@ -78,7 +78,7 @@ const AvatarUpload: React.FC<Props> = ({ initialImageUrl, onUpload }) => {
     setConfirmModalOpen(false);
     try {
       await api.delete('/users/photo/', { headers });
-      message.success(t('notifications.image_updated'));
+      message.success(t('notifications.image_update'));
       setImageUrl(null);
       setLoading(false);
       if (onUpload) {
