@@ -1,24 +1,27 @@
-import axios from 'axios';
-import { useState, useCallback } from 'react';
-import Image from 'next/image';
 import {
+  DeleteOutlined,
   UploadOutlined,
   UserOutlined,
-  DeleteOutlined,
 } from '@ant-design/icons';
 import {
-  type UploadProps,
-  message,
-  Upload,
   Avatar,
   Button,
-  Row,
   Col,
+  message,
+  Modal,
+  Row,
+  Upload,
+  type UploadProps,
 } from 'antd';
-import api from '../services/api';
-import { useDefaultHeaders } from '../hooks/useDefaultHeaders';
-import { useTranslation } from 'next-i18next';
 import { RcFile } from 'antd/es/upload';
+import axios from 'axios';
+import { useTranslation } from 'next-i18next';
+import Image from 'next/image';
+import { useCallback, useState } from 'react';
+
+import api from '../services/api';
+
+import { useDefaultHeaders } from '../hooks/useDefaultHeaders';
 import styles from '../styles/UserProfileForm.module.css';
 
 type Props = {
@@ -32,6 +35,7 @@ const AvatarUpload: React.FC<Props> = ({ initialImageUrl, onUpload }) => {
   const { t, i18n } = useTranslation(['dashboard', 'common']);
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(initialImageUrl);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const beforeUpload: UploadProps['beforeUpload'] = useCallback(
     (file: RcFile) => {
@@ -61,9 +65,29 @@ const AvatarUpload: React.FC<Props> = ({ initialImageUrl, onUpload }) => {
     }
     if (info.file.status === 'done') {
       setLoading(false);
+      message.success(t('notifications.image_updated'));
       setImageUrl(info.file.response.photo);
       if (onUpload) {
         onUpload();
+      }
+    }
+  };
+
+  const handleDelete = async () => {
+    setLoading(true);
+    setConfirmModalOpen(false);
+    try {
+      await api.delete('/users/photo/', { headers });
+      message.success(t('notifications.image_updated'));
+      setImageUrl(null);
+      setLoading(false);
+      if (onUpload) {
+        onUpload();
+      }
+    } catch (e) {
+      setLoading(false);
+      if (axios.isAxiosError(e)) {
+        message.error(t('errors.common', { ns: 'common' }));
       }
     }
   };
@@ -121,28 +145,24 @@ const AvatarUpload: React.FC<Props> = ({ initialImageUrl, onUpload }) => {
               type="text"
               icon={<DeleteOutlined />}
               disabled={loading}
-              onClick={async () => {
-                setLoading(true);
-                try {
-                  await api.delete('/users/photo/', { headers });
-                  setImageUrl(null);
-                  setLoading(false);
-                  if (onUpload) {
-                    onUpload();
-                  }
-                } catch (e) {
-                  setLoading(false);
-                  if (axios.isAxiosError(e)) {
-                    message.error(t('errors.common', { ns: 'common' }));
-                  }
-                }
-              }}
+              onClick={() => setConfirmModalOpen(true)}
             >
               {t('profile.delete_image')}
             </Button>
           )}
         </div>
       </Col>
+      <Modal
+        open={confirmModalOpen}
+        title={t('modals.delete_image.title')}
+        okText={t('modals.delete_image.confirm')}
+        cancelText={t('modals.delete_image.dismiss')}
+        onOk={handleDelete}
+        confirmLoading={loading}
+        onCancel={() => setConfirmModalOpen(false)}
+      >
+        {t('modals.delete_image.body')}
+      </Modal>
     </Row>
   );
 };
