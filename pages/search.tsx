@@ -1,15 +1,16 @@
 import { GetServerSideProps } from 'next';
-import useSWR from 'swr';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { API_URL } from '../utils/constants';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import useSWR from 'swr';
+
+import InlineTrip from '../components/InlineTrip';
 import type { Trip } from '../components/Trips';
 import TripSearch from '../components/TripSearch';
 import styles from '../styles/Search.module.css';
-import InlineTrip from '../components/InlineTrip';
-import Head from 'next/head';
+import { API_URL } from '../utils/constants';
 import { formatDate } from '../utils/formatDate';
 
 const Search = () => {
@@ -44,27 +45,28 @@ const Search = () => {
       <div className={styles.root}>
         <TripSearch />
         <div className={styles.result}>
+          <h2>
+            {t('tripsFound')} {formattedDate}
+          </h2>
           {(() => {
             if (isLoading) {
-              return t('searching');
-            } else if (error) {
-              return t('errors.common');
-            } else if (data.results.length === 0) {
-              return t('tripsNotFound');
-            } else {
+              return <div className={styles.statusText}>{t('searching')}</div>;
+            }
+            if (error) {
               return (
-                <>
-                  <h2>
-                    {t('tripsFound')} {formattedDate}
-                  </h2>
-                  {data.results.map((trip: Trip) => (
-                    <Link href={`/trips/${trip.id}`} key={trip.id}>
-                      <InlineTrip trip={trip} />
-                    </Link>
-                  ))}
-                </>
+                <div className={styles.statusText}>{t('errors.common')}</div>
               );
             }
+            if (data.results.length === 0) {
+              return (
+                <div className={styles.statusText}>{t('tripsNotFound')}</div>
+              );
+            }
+            return data.results.map((trip: Trip) => (
+              <Link href={`/trips/${trip.id}`} key={trip.id}>
+                <InlineTrip trip={trip} />
+              </Link>
+            ));
           })()}
         </div>
       </div>
