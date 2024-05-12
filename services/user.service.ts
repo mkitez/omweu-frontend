@@ -11,6 +11,18 @@ class UserService extends BaseService {
     const response = await this.api.put('/users/self/', data);
     return response.data;
   }
+
+  uploadPhoto(data: FormData) {
+    return this.api.put('/users/photo/', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  }
+
+  deletePhoto() {
+    return this.api.delete('/users/photo/');
+  }
 }
 
 export default UserService;
