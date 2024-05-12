@@ -23,6 +23,10 @@ class UserService extends BaseService {
   deletePhoto() {
     return this.api.delete('/users/photo/');
   }
+
+  getUser(userId: string) {
+    return this.api.get(`/users/${userId}/`);
+  }
 }
 
 export default UserService;
