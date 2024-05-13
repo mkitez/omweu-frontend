@@ -123,6 +123,7 @@ const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
           >
             <Input.TextArea
               maxLength={300}
+              autoSize={{ minRows: 3, maxRows: 6 }}
               placeholder={t('profile.aboutPlaceholder') as string}
               showCount
               className={styles.aboutInput}
