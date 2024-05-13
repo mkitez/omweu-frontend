@@ -60,8 +60,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     const response = await api.getUser(params?.userId as string);
     user = response.data;
   } catch (e) {
-    if (axios.isAxiosError(e) && e.response?.status === 404) {
-      notFound = true;
+    if (axios.isAxiosError(e)) {
+      if (e.response?.status && [403, 404].includes(e.response?.status))
+        notFound = true;
     }
   }
 
