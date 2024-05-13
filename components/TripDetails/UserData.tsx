@@ -1,7 +1,9 @@
-import { User } from '../Trips';
-import UserAvatar from './UserAvatar';
-import styles from './TripDetails.module.css';
 import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
+
+import { User } from '../Trips';
+import styles from './TripDetails.module.css';
+import UserAvatar from './UserAvatar';
 
 type Props = {
   user: User;
@@ -16,7 +18,9 @@ const UserData: React.FC<Props> = ({ user }) => {
     <div className={styles.userData}>
       <div className={styles.driver}>
         <UserAvatar user={user} />
-        <div className={styles.driverName}>{user.first_name}</div>
+        <div className={styles.driverName}>
+          <Link href={`/users/${user.id}`}>{user.first_name}</Link>
+        </div>
       </div>
       {hasContacts && (
         <div className={styles.contacts}>
