@@ -36,7 +36,11 @@ const PublicUserProfile: React.FC<Props> = ({ user }) => {
       <h1>{t('title')}</h1>
       <Row gutter={[20, 20]} className={styles.row}>
         <Col xs={24} md={6} className={styles.avatarCol}>
-          <Avatar icon={<UserOutlined />} size={imageSize} src={image} />
+          <Avatar
+            icon={<UserOutlined />}
+            size={imageSize}
+            src={user.photo && image}
+          />
         </Col>
         <Col>
           <div className={styles.name}>{fullName}</div>
