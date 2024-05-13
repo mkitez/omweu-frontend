@@ -9,14 +9,14 @@ import Head from 'next/head';
 
 import { getUserApi } from '../../services/serverSide/userApi';
 
+import PublicUserProfile from '../../components/PublicUserProfile';
 import type { User } from '../../components/Trips';
-import styles from '../../styles/Trip.module.css';
 import { authOptions } from '../api/auth/[...nextauth]';
 
 const PublicUserProfilePage = ({
   user,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation('profile');
 
   if (user === null) {
     return <Error statusCode={500} />;
@@ -25,13 +25,10 @@ const PublicUserProfilePage = ({
   return (
     <>
       <Head>
-        <title>User profile</title>
+        <title>{`${t('title')} ${user.first_name} | EUbyCar.com`}</title>
       </Head>
       <div className="container">
-        <div className={styles.root}>
-          <h1>User profile</h1>
-          <div>Name: {user.first_name}</div>
-        </div>
+        <PublicUserProfile user={user} />
       </div>
     </>
   );
@@ -50,6 +47,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 }) => {
   const translations = await serverSideTranslations(locale as string, [
     'common',
+    'profile',
+    'dashboard',
   ]);
   const session = await unstable_getServerSession(req, res, authOptions);
   const api = getUserApi(session, locale);
