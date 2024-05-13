@@ -18,6 +18,8 @@
     "phoneNumber": "Телефон",
     "telegram": "Telegram",
     "telegramPlaceholder": "Имя пользователя без @",
+    "about": "О себе",
+    "aboutPlaceholder": "Расскажите немного о себе другим пользователям",
     "upload_image": "Загрузить фото",
     "delete_image": "Удалить фото",
     "changes_saved": "Изменения сохранены"

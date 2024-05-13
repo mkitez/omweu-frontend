@@ -18,6 +18,7 @@ export interface UserFormData {
   phone_number: string;
   telegram_username: string;
   driver_preferences: DriverPreferences | null;
+  about: string;
 }
 
 interface Props {
@@ -109,6 +110,23 @@ const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
             wrapperCol={{ span: 18 }}
           >
             <Input />
+          </Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={24}>
+          <Item
+            name="about"
+            label={t('profile.about')}
+            labelCol={{ span: 3 }}
+            wrapperCol={{ span: 21 }}
+          >
+            <Input.TextArea
+              maxLength={300}
+              placeholder={t('profile.aboutPlaceholder') as string}
+              showCount
+              className={styles.aboutInput}
+            />
           </Item>
         </Col>
       </Row>
