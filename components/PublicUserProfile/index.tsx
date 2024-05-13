@@ -47,13 +47,15 @@ const PublicUserProfile: React.FC<Props> = ({ user }) => {
           )}
         </Col>
       </Row>
-      <Row>
-        <Col xs={24}>
-          <h2>{t('about')}</h2>
-          <div className={styles.about}>Всем привет!</div>
-          <Amenities amenities={user.driver_preferences} />
-        </Col>
-      </Row>
+      {(user.about || user.driver_preferences) && (
+        <Row>
+          <Col xs={24}>
+            <h2>{t('about')}</h2>
+            {user?.about && <div className={styles.about}>{user.about}</div>}
+            <Amenities amenities={user.driver_preferences} />
+          </Col>
+        </Row>
+      )}
     </div>
   );
 };
