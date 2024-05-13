@@ -19,9 +19,7 @@ import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
 
-import api from '../services/api';
-
-import { useDefaultHeaders } from '../hooks/useDefaultHeaders';
+import { useUserApi } from '../hooks/api/useUserApi';
 import styles from '../styles/UserProfileForm.module.css';
 
 type Props = {
@@ -30,7 +28,7 @@ type Props = {
 };
 
 const AvatarUpload: React.FC<Props> = ({ initialImageUrl, onUpload }) => {
-  const headers = useDefaultHeaders();
+  const api = useUserApi();
 
   const { t, i18n } = useTranslation(['dashboard', 'common']);
   const [loading, setLoading] = useState(false);
@@ -77,7 +75,7 @@ const AvatarUpload: React.FC<Props> = ({ initialImageUrl, onUpload }) => {
     setLoading(true);
     setConfirmModalOpen(false);
     try {
-      await api.delete('/users/photo/', { headers });
+      await api.deletePhoto();
       message.success(t('notifications.image_update'));
       setImageUrl(null);
       setLoading(false);
@@ -113,12 +111,7 @@ const AvatarUpload: React.FC<Props> = ({ initialImageUrl, onUpload }) => {
               formData.append('file', file);
               let response;
               try {
-                response = await api.put('/users/photo/', formData, {
-                  headers: {
-                    ...headers,
-                    'Content-Type': 'multipart/form-data',
-                  },
-                });
+                response = await api.uploadPhoto(formData);
                 if (onSuccess) {
                   onSuccess(response.data);
                 }

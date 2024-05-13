@@ -1,11 +1,9 @@
 import { Button, Col, Form, Input, message, Row } from 'antd';
-import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-import api from '../../services/api';
-
+import { useUserApi } from '../../hooks/api/useUserApi';
 import AvatarUpload from '../AvatarUpload';
 import DriverPreferencesFormFields from '../DriverPreferencesFormFields';
 import { DriverPreferences, User } from '../Trips';
@@ -13,13 +11,14 @@ import styles from './UserProfileForm.module.css';
 
 const { Item } = Form;
 
-interface FormData {
+export interface UserFormData {
   email: string;
   first_name: string;
   last_name: string;
   phone_number: string;
   telegram_username: string;
   driver_preferences: DriverPreferences | null;
+  about: string;
 }
 
 interface Props {
@@ -28,22 +27,16 @@ interface Props {
 }
 
 const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
-  const { data: session } = useSession();
-  const [loading, setLoading] = useState(false);
-  const { t, i18n } = useTranslation(['dashboard', 'common']);
   const router = useRouter();
+  const api = useUserApi();
+  const { t } = useTranslation(['dashboard', 'common']);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (formData: UserFormData) => {
     const { email: _, ...dataToSubmit } = formData;
     setLoading(true);
-    const url = `/users/${session?.user.id}/`;
     try {
-      await api.put(url, dataToSubmit, {
-        headers: {
-          Authorization: `Bearer ${session?.accessToken}`,
-          'Accept-Language': i18n.language,
-        },
-      });
+      await api.updateSelf(dataToSubmit);
       message.success(t('profile.changes_saved'));
     } catch (e) {
       message.error(t('errors.common', { ns: 'common' }));
@@ -117,6 +110,24 @@ const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
             wrapperCol={{ span: 18 }}
           >
             <Input />
+          </Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={24}>
+          <Item
+            name="about"
+            label={t('profile.about')}
+            labelCol={{ span: 3 }}
+            wrapperCol={{ span: 21 }}
+          >
+            <Input.TextArea
+              maxLength={300}
+              autoSize={{ minRows: 3, maxRows: 6 }}
+              placeholder={t('profile.aboutPlaceholder') as string}
+              showCount
+              className={styles.aboutInput}
+            />
           </Item>
         </Col>
       </Row>

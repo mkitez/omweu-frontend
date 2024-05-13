@@ -1,13 +1,14 @@
-import useSWR from 'swr';
-import Link from 'next/link';
+import { LoadingOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { LoadingOutlined } from '@ant-design/icons';
+import Link from 'next/link';
+import useSWR from 'swr';
+
 import { useAuthorizedFetcher } from '../hooks/useAuthorizedFetcher';
 import { Booking } from '../pages/bookings/[bookingId]';
-import InlineTrip from './InlineTrip';
-import DashboardBooking from './DashboardBooking';
 import styles from '../styles/Trips.module.css';
+import DashboardBooking from './DashboardBooking';
+import InlineTrip from './InlineTrip';
 
 export interface DriverPreferences {
   smoking_allowed: boolean;
@@ -29,6 +30,8 @@ export interface User {
   telegram_username?: string;
   is_email_confirmed: boolean;
   driver_preferences: DriverPreferences | null;
+  about?: string;
+  date_joined?: string;
 }
 
 export interface Destination {

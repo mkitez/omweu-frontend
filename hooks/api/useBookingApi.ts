@@ -1,14 +1,6 @@
-import { useDefaultHeaders } from '../useDefaultHeaders';
 import BookingService from '../../services/booking.service';
-import { getClientInstance } from '../../services/api';
-import { useMemo } from 'react';
 
-export const useBookingApi = () => {
-  const headers = useDefaultHeaders();
+import { createApiHook } from './hookFactory';
 
-  const bookingService = useMemo(() => {
-    const api = getClientInstance(headers);
-    return new BookingService(api);
-  }, [headers]);
-  return bookingService;
-};
+const useBookingApi = createApiHook<BookingService>(BookingService);
+export { useBookingApi };

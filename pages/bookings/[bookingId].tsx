@@ -1,17 +1,19 @@
 import axios from 'axios';
-import Head from 'next/head';
 import { InferGetServerSidePropsType } from 'next';
-import { SSRConfig, useTranslation } from 'next-i18next';
 import { GetServerSideProps } from 'next';
 import { Session, unstable_getServerSession } from 'next-auth';
+import { SSRConfig, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { authOptions } from '../api/auth/[...nextauth]';
 import Error from 'next/error';
-import type { Trip, User } from '../../components/Trips';
-import { formatDate } from '../../utils/formatDate';
-import BookingDetails from '../../components/BookingDetails';
+import Head from 'next/head';
+
 import { getBookingApi } from '../../services/serverSide/bookingApi';
+
+import BookingDetails from '../../components/BookingDetails';
+import type { Trip, User } from '../../components/Trips';
 import styles from '../../styles/Trip.module.css';
+import { formatDate } from '../../utils/formatDate';
+import { authOptions } from '../api/auth/[...nextauth]';
 
 export type InBookingTrip = Omit<Trip, 'driver'>;
 
