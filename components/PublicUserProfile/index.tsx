@@ -1,5 +1,6 @@
 import { CheckCircleFilled, UserOutlined } from '@ant-design/icons';
 import { Avatar, Col, Row, theme } from 'antd';
+import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 
@@ -14,7 +15,7 @@ type Props = {
 const imageSize = 180;
 
 const PublicUserProfile: React.FC<Props> = ({ user }) => {
-  const { t } = useTranslation(['profile', 'common']);
+  const { t, i18n } = useTranslation(['profile', 'common']);
   const { token } = theme.useToken();
 
   const image = (
@@ -39,6 +40,10 @@ const PublicUserProfile: React.FC<Props> = ({ user }) => {
         </Col>
         <Col>
           <div className={styles.name}>{fullName}</div>
+          <div className={styles.joinDate}>
+            {t('joined_since')}{' '}
+            {dayjs(user.date_joined).locale(i18n.language).format('MMM YYYY')}
+          </div>
           {user.is_email_confirmed && (
             <div className={styles.emailConfirmed}>
               <CheckCircleFilled style={{ color: token.colorSuccess }} />{' '}

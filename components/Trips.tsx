@@ -31,6 +31,7 @@ export interface User {
   is_email_confirmed: boolean;
   driver_preferences: DriverPreferences | null;
   about?: string;
+  date_joined?: string;
 }
 
 export interface Destination {
