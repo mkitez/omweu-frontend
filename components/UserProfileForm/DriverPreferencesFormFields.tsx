@@ -1,8 +1,9 @@
-import { Button, Form, Row, Switch, Radio, Col } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Radio, Row, Switch } from 'antd';
 import { useTranslation } from 'next-i18next';
-import { DriverPreferences } from './Trips';
-import styles from '../styles/UserProfileForm.module.css';
+
+import { DriverPreferences } from '../Trips';
+import styles from './UserProfileForm.module.css';
 
 const { Item } = Form;
 

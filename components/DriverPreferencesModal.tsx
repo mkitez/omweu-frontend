@@ -1,13 +1,15 @@
-import { message, Form, Modal } from 'antd';
-import { useState, useEffect } from 'react';
-import api from '../services/api';
-import DriverPreferencesFormFields, {
-  defaultValues,
-} from './DriverPreferencesFormFields';
-import { useTranslation } from 'next-i18next';
+import { Form, message, Modal } from 'antd';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
+import { useEffect, useState } from 'react';
+
+import api from '../services/api';
+
 import { useDefaultHeaders } from '../hooks/useDefaultHeaders';
 import styles from '../styles/UserProfileForm.module.css';
+import DriverPreferencesFormFields, {
+  defaultValues,
+} from './UserProfileForm/DriverPreferencesFormFields';
 
 type Props = {
   shouldShowModal: boolean;

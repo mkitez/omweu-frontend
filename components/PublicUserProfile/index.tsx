@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 
+import InlineCar from '../InlineCar';
 import Amenities from '../TripDetails/Amenities';
 import { User } from '../Trips';
 import styles from './PublicUserProfile.module.css';
@@ -63,6 +64,16 @@ const PublicUserProfile: React.FC<Props> = ({ user }) => {
             {user?.about && <div className={styles.about}>{user.about}</div>}
             <Amenities amenities={user.driver_preferences} />
           </Col>
+        </Row>
+      )}
+      {user.cars.length > 0 && (
+        <Row>
+          <h2>{t('cars')}</h2>
+          {user.cars.map((car) => (
+            <Col key={car.id} xs={24}>
+              <InlineCar car={car} />
+            </Col>
+          ))}
         </Row>
       )}
     </div>

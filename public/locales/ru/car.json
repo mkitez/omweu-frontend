@@ -1,0 +1,30 @@
+{
+  "create_title": "Добавление машины",
+  "brand": "Марка",
+  "model": "Модель",
+  "body_type": "Тип кузова",
+  "color": "Цвет",
+  "year": "Год",
+  "passenger_seats": "Пассажирских мест",
+  "is_primary": "Сделать основной",
+  "body_types": {
+    "sedan": "Седан",
+    "hatchback": "Хэтчбэк",
+    "estate": "Универсал",
+    "suv": "Внедорожник/кроссовер",
+    "minivan": "Микроавтобус",
+    "other": "Другой"
+  },
+  "create": "Создать",
+  "cancel": "Отмена",
+  "colors": {
+    "black": "Чёрный",
+    "white": "Белый",
+    "red": "Красный",
+    "blue": "Синий"
+  },
+  "notifications": {
+    "car_created": "Машина добавлена",
+    "car_updated": "Машина сохранена"
+  }
+}

@@ -5,8 +5,9 @@ import { useState } from 'react';
 
 import { useUserApi } from '../../hooks/api/useUserApi';
 import AvatarUpload from '../AvatarUpload';
-import DriverPreferencesFormFields from '../DriverPreferencesFormFields';
 import { DriverPreferences, User } from '../Trips';
+import CarsSection from './CarsSection';
+import DriverPreferencesFormFields from './DriverPreferencesFormFields';
 import styles from './UserProfileForm.module.css';
 
 const { Item } = Form;
@@ -134,6 +135,7 @@ const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
       <AvatarUpload initialImageUrl={data.photo} onUpload={onSubmit} />
       <h3>{t('driver_preferences.title')}</h3>
       <DriverPreferencesFormFields />
+      <CarsSection cars={data.cars} />
       <Row gutter={[10, 10]}>
         <Col>
           <Button htmlType="submit" type="primary">
