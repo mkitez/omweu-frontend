@@ -6,12 +6,14 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 
 import CarEditForm from '../components/CarEditForm';
+import { useCarApi } from '../hooks/api/useCarsApi';
 import styles from '../styles/NewCar.module.css';
 import { authOptions } from './api/auth/[...nextauth]';
 
 const NewCar = () => {
   const { t } = useTranslation('car');
   const { message } = App.useApp();
+  const carApi = useCarApi();
 
   return (
     <div className="container">
@@ -22,7 +24,10 @@ const NewCar = () => {
         <h1>{t('create_title')}</h1>
         <CarEditForm
           submitValue={t('create')}
-          onSubmit={() => message.success(t('notifications.car_created'))}
+          submit={async (data) => {
+            await carApi.createCar(data);
+            message.success(t('notifications.car_created'));
+          }}
         />
       </div>
     </div>

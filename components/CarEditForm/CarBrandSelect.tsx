@@ -1,5 +1,6 @@
 import { Select } from 'antd';
 import { Spin } from 'antd';
+import { DefaultOptionType, SelectProps } from 'antd/es/select';
 import { useEffect, useState } from 'react';
 
 import { useCarApi } from '../../hooks/api/useCarsApi';
@@ -9,14 +10,9 @@ interface Brand {
   name: string;
 }
 
-interface Option {
-  label: string;
-  value: string;
-}
-
-const CarBrandSelect = ({ ...props }) => {
+const CarBrandSelect: React.FC<SelectProps> = ({ ...props }) => {
   const carApi = useCarApi();
-  const [options, setOptions] = useState<Option[]>([]);
+  const [options, setOptions] = useState<DefaultOptionType[]>([]);
   const [fetching, setFetching] = useState(false);
   useEffect(() => {
     setFetching(true);
@@ -31,8 +27,11 @@ const CarBrandSelect = ({ ...props }) => {
     });
   }, [carApi]);
 
-  const filterOption = (input: string, option?: Option) =>
-    (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+  const filterOption = (input: string, option?: DefaultOptionType) =>
+    (option?.label ?? '')
+      .toString()
+      .toLowerCase()
+      .includes(input.toLowerCase());
 
   return (
     <Select

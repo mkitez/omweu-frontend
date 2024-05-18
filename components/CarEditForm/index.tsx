@@ -3,7 +3,6 @@ import {
   Checkbox,
   Col,
   Form,
-  Input,
   InputNumber,
   message,
   Row,
@@ -13,10 +12,15 @@ import { DefaultOptionType } from 'antd/es/select';
 import axios from 'axios';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
-import { BodyType, Car, CarColor } from '../../services/car.service';
+import {
+  BodyType,
+  Car,
+  CarColor,
+  CarInputData,
+} from '../../services/car.service';
 
-import { useCarApi } from '../../hooks/api/useCarsApi';
 import CarBrandSelect from './CarBrandSelect';
 import CarModelSelect from './CarModelSelect';
 
@@ -33,23 +37,33 @@ interface CarFormData {
 type Props = {
   data?: Car;
   submitValue: string;
-  onSubmit?: () => void;
+  submit: (data: CarInputData) => Promise<void>;
 };
 
-const CarEditForm: React.FC<Props> = ({ submitValue, onSubmit }) => {
+const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
   const { t } = useTranslation(['car', 'common']);
-  const carApi = useCarApi();
   const router = useRouter();
   const [form] = Form.useForm<CarFormData>();
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    const brand: DefaultOptionType = {
+      label: data.brand.name,
+      value: data.brand.id,
+    };
+    const model: DefaultOptionType = {
+      label: data.model.name,
+      value: data.model.id,
+    };
+    form.setFieldsValue({ ...data, brand, model });
+  }, [data, data?.id, form]);
 
   const handleSubmit = async (data: CarFormData) => {
     const { brand, model, ...rest } = data;
     const dataToSubmit = { model_id: model.value as number, ...rest };
     try {
-      await carApi.createCar(dataToSubmit);
-      if (onSubmit) {
-        onSubmit();
-      }
+      await submit(dataToSubmit);
       router.push('/dashboard/profile');
     } catch (e) {
       if (axios.isAxiosError(e)) {
@@ -67,7 +81,7 @@ const CarEditForm: React.FC<Props> = ({ submitValue, onSubmit }) => {
       wrapperCol={{ span: 18 }}
     >
       <Form.Item name="brand" label={t('brand')} rules={[{ required: true }]}>
-        <CarBrandSelect />
+        <CarBrandSelect onChange={() => form.setFieldValue('model', null)} />
       </Form.Item>
       <Form.Item
         noStyle
@@ -154,7 +168,7 @@ const CarEditForm: React.FC<Props> = ({ submitValue, onSubmit }) => {
         label={t('is_primary')}
         valuePropName="checked"
       >
-        <Checkbox />
+        <Checkbox disabled={data?.is_primary === true} />
       </Form.Item>
       <Row gutter={[10, 10]}>
         <Col lg={{ offset: 6 }}>
@@ -165,10 +179,7 @@ const CarEditForm: React.FC<Props> = ({ submitValue, onSubmit }) => {
           </Form.Item>
         </Col>
         <Col>
-          <Button
-            disabled={false}
-            onClick={() => router.push('/dashboard/profile')}
-          >
+          <Button onClick={() => router.push('/dashboard/profile')}>
             {t('cancel')}
           </Button>
         </Col>

@@ -16,10 +16,15 @@ export enum CarColor {
   'blue'
 }
 
+interface CarBrandOrModel {
+  id: number
+  name: string
+}
+
 export interface Car {
   id: number;
-  brand: string;
-  model: string;
+  brand: CarBrandOrModel;
+  model: CarBrandOrModel;
   body_type: BodyType;
   color: CarColor;
   year: number;
@@ -38,12 +43,16 @@ export interface CarInputData {
 }
 
 class CarService extends BaseService {
+  getCar(carId: string) {
+    return this.api.get(`/cars/${carId}/`)
+  }
+
   createCar(data: CarInputData) {
     return this.api.post('/cars/', data)
   }
 
-  updateCar(data: CarInputData & { id: number }) {
-    return this.api.put(`/cars/${data.id}/`, data);
+  updateCar(carId: number, data: CarInputData) {
+    return this.api.put(`/cars/${carId}/`, data);
   }
 
   deleteCar(carId: number) {
