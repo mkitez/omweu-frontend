@@ -1,15 +1,16 @@
-import type { ReactElement } from 'react';
-import type { GetServerSideProps } from 'next';
-import Link from 'next/link';
-import { Button } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
-import { authOptions } from '../api/auth/[...nextauth]';
+import { Button } from 'antd';
+import type { GetServerSideProps } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
-import Trips from '../../components/Trips';
-import DashboardLayout from '../../components/DashboardLayout';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
+import Link from 'next/link';
+import type { ReactElement } from 'react';
+
+import DashboardLayout from '../../components/DashboardLayout';
+import Trips from '../../components/Trips';
+import { authOptions } from '../api/auth/[...nextauth]';
 
 const TripsPage = () => {
   const { t } = useTranslation('dashboard');
@@ -45,6 +46,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     'dashboard',
     'trip',
     'booking',
+    'car',
   ]);
 
   return {

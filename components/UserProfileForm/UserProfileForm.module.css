@@ -30,3 +30,11 @@
   flex-wrap: wrap;
   align-items: center;
 }
+
+.carsSection {
+  margin-bottom: 2rem;
+}
+
+.carsRow {
+  margin-bottom: 1rem;
+}

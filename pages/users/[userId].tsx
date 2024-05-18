@@ -49,6 +49,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     'common',
     'profile',
     'dashboard',
+    'car',
   ]);
   const session = await unstable_getServerSession(req, res, authOptions);
   const api = getUserApi(session, locale);

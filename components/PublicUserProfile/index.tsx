@@ -58,23 +58,27 @@ const PublicUserProfile: React.FC<Props> = ({ user }) => {
         </Col>
       </Row>
       {(user.about || user.driver_preferences) && (
-        <Row>
+        <div className={styles.profileSection}>
           <Col xs={24}>
             <h2>{t('about')}</h2>
             {user?.about && <div className={styles.about}>{user.about}</div>}
             <Amenities amenities={user.driver_preferences} />
           </Col>
-        </Row>
+        </div>
       )}
       {user.cars.length > 0 && (
-        <Row>
+        <div className={styles.profileSection}>
           <h2>{t('cars')}</h2>
-          {user.cars.map((car) => (
-            <Col key={car.id} xs={24}>
-              <InlineCar car={car} />
-            </Col>
-          ))}
-        </Row>
+          <Row gutter={[10, 10]}>
+            {user.cars
+              .sort((a) => (a.is_primary ? -1 : 0))
+              .map((car) => (
+                <Col key={car.id} xs={24} md={6}>
+                  <InlineCar car={car} />
+                </Col>
+              ))}
+          </Row>
+        </div>
       )}
     </div>
   );
