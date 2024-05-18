@@ -1,12 +1,10 @@
 import { Form, message, Modal } from 'antd';
-import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
-import api from '../services/api';
-
-import { useDefaultHeaders } from '../hooks/useDefaultHeaders';
+import { useUserApi } from '../hooks/api/useUserApi';
 import styles from '../styles/UserProfileForm.module.css';
+import { UserFormData } from './UserProfileForm';
 import DriverPreferencesFormFields, {
   defaultValues,
 } from './UserProfileForm/DriverPreferencesFormFields';
@@ -16,9 +14,8 @@ type Props = {
 };
 
 const DriverPreferencesModal: React.FC<Props> = ({ shouldShowModal }) => {
-  const { data: session } = useSession();
+  const userApi = useUserApi();
   const { t } = useTranslation(['dashboard', 'common']);
-  const headers = useDefaultHeaders();
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
@@ -27,11 +24,10 @@ const DriverPreferencesModal: React.FC<Props> = ({ shouldShowModal }) => {
     setShowModal(shouldShowModal);
   }, [shouldShowModal]);
 
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (formData: UserFormData) => {
     setLoading(true);
-    const url = `/users/${session?.user.id}/`;
     try {
-      await api.put(url, formData, { headers });
+      await userApi.updateSelf(formData);
       message.success(t('profile.changes_saved'));
     } catch (e) {
       message.error(t('errors.common', { ns: 'common' }) as string);
