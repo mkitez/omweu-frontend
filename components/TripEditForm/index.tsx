@@ -8,12 +8,14 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 
+import { TripInputData } from '../../services/trip.service';
+
 import DateTimeInput from '../DateTimeInput';
 import { PlaceInputEdit } from '../PlaceInput';
 import { Destination } from '../Trips';
 import styles from './TripEditForm.module.css';
 
-export interface FormData {
+export interface TripFormData {
   from: DefaultOptionType;
   to: DefaultOptionType;
   routeStops: DefaultOptionType[];
@@ -21,15 +23,6 @@ export interface FormData {
   price: string;
   description: string;
 }
-
-type SubmitData = {
-  origin_id: string;
-  dest_id: string;
-  date: string;
-  price: string;
-  description: string;
-  route_stop_ids: string[];
-};
 
 type Props = {
   initialOrigin?: Destination;
@@ -39,7 +32,7 @@ type Props = {
   initialPrice?: string;
   initialDescription?: string;
   submitValue: string;
-  submit: (data: SubmitData) => Promise<void>;
+  submit: (data: TripInputData) => Promise<void>;
 };
 
 const getInitialPlaceValue = (
@@ -54,7 +47,7 @@ const getInitialPlaceValue = (
   };
 };
 
-const TripEditForm = ({
+const TripEditForm: React.FC<Props> = ({
   initialOrigin,
   initialDest,
   initialRouteStops,
@@ -63,7 +56,7 @@ const TripEditForm = ({
   initialDescription,
   submitValue,
   submit,
-}: Props) => {
+}) => {
   const { t } = useTranslation('common');
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -94,10 +87,10 @@ const TripEditForm = ({
     form.setFieldsValue(initialValues);
   }, [form, initialValues]);
 
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (formData: TripFormData) => {
     const date = formData.date.format('YYYY-MM-DDTHH:mm:00');
 
-    const data: SubmitData = {
+    const data: TripInputData = {
       origin_id: formData.from.value as string,
       dest_id: formData.to.value as string,
       date,

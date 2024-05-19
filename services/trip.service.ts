@@ -1,47 +1,34 @@
-import api from './api';
-import AuthService from './auth.service';
+import BaseService from './baseService';
 
-const getCurrentUserTrips = async (accessToken: string) => {
-  const response = await api.get('/trips/', {
-    headers: AuthService.getAuthHeaders(accessToken),
-  });
-  return response.data;
-};
+export interface TripInputData {
+  origin_id: string;
+  dest_id: string;
+  date: string;
+  price: string;
+  description: string;
+  route_stop_ids: string[];
+}
 
-const getTripDetails = async (tripId: any, accessToken: string) => {
-  const response = await api.get(`/trips/${tripId}/`, {
-    headers: AuthService.getAuthHeaders(accessToken),
-  });
-  return response.data;
-};
+class TripService extends BaseService {
+  getCurrentUserTrips() {
+    return this.api.get('/trips/')
+  }
 
-const createTrip = async (tripData: any, accessToken: string) => {
-  const response = await api.post('/trips/', tripData, {
-    headers: AuthService.getAuthHeaders(accessToken),
-  });
-  return response.data;
-};
+  getTrip(tripId: number) {
+    return this.api.get(`/trips/${tripId}/`)
+  }
 
-const updateTrip = async (tripId: any, tripData: any, accessToken: string) => {
-  const response = await api.put(`/trips/${tripId}/`, tripData, {
-    headers: AuthService.getAuthHeaders(accessToken),
-  });
-  return response.data;
-};
+  createTrip(data: TripInputData) {
+    return this.api.post('/trips/', data)
+  }
 
-const deleteTrip = async (tripId: any, accessToken: string) => {
-  const response = await api.delete(`/trips/${tripId}/`, {
-    headers: AuthService.getAuthHeaders(accessToken),
-  });
-  return response.data;
-};
+  updateTrip(tripId: number, data: TripInputData) {
+    return this.api.put(`/trips/${tripId}`, data)
+  }
 
-const TripService = {
-  getCurrentUserTrips,
-  getTripDetails,
-  createTrip,
-  updateTrip,
-  deleteTrip,
-};
+  deleteTrip(tripId: number) {
+    return this.api.delete(`/trips/${tripId}/`)
+  }
+}
 
 export default TripService;

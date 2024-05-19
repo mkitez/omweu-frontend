@@ -1,18 +1,17 @@
 import { App } from 'antd';
 import { GetServerSideProps, type InferGetServerSidePropsType } from 'next';
 import { unstable_getServerSession } from 'next-auth';
-import { useSession } from 'next-auth/react';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import { getUserApi } from '../services/serverSide/userApi';
-import TripService from '../services/trip.service';
 
 import DriverPreferencesModal from '../components/DriverPreferencesModal';
 import TripEditForm from '../components/TripEditForm';
 import { Trip, User } from '../components/Trips';
+import { useTripApi } from '../hooks/api/useTripApi';
 import styles from '../styles/NewTrip.module.css';
 import { authOptions } from './api/auth/[...nextauth]';
 
@@ -20,15 +19,13 @@ const NewTrip = ({
   shouldShowPreferencesModal,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const api = useTripApi();
   const { t } = useTranslation(['dashboard', 'common']);
   const { message } = App.useApp();
 
   const handleSubmit = async (data: any) => {
-    const newTrip: Trip = await TripService.createTrip(
-      data,
-      session?.accessToken as string
-    );
+    const newTripResponse = await api.createTrip(data);
+    const newTrip: Trip = newTripResponse.data;
     message.success(t('notifications.new_trip'));
     router.push(`/trips/${newTrip.id}`);
   };
