@@ -16,6 +16,9 @@
     "minivan": "Микроавтобус",
     "other": "Другой"
   },
+  "unknown_model": "Неизвестная модель",
+  "other_brand": "Другая",
+  "other_model": "Другая",
   "create": "Создать",
   "update": "Сохранить",
   "cancel": "Отмена",
@@ -25,7 +28,7 @@
     "red": "Красный",
     "blue": "Синий"
   },
-  "year_abbr": "г.в.",
+  "year_abbr": "г. в.",
   "notifications": {
     "car_created": "Машина добавлена",
     "car_updated": "Машина сохранена"

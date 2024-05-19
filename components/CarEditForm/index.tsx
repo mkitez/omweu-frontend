@@ -49,15 +49,15 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
       return;
     }
     const brand: DefaultOptionType = {
-      label: data.brand.name,
+      label: data.brand.name === 'other' ? t('other_brand') : data.brand.name,
       value: data.brand.id,
     };
     const model: DefaultOptionType = {
-      label: data.model.name,
+      label: data.model.name === 'other' ? t('other_model') : data.model.name,
       value: data.model.id,
     };
     form.setFieldsValue({ ...data, brand, model });
-  }, [data, data?.id, form]);
+  }, [data, form, t]);
 
   const handleSubmit = async (data: CarFormData) => {
     const { brand, model, ...rest } = data;
