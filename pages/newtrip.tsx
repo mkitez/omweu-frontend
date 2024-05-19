@@ -1,6 +1,5 @@
 import { App } from 'antd';
-import { GetServerSideProps } from 'next';
-import type { InferGetServerSidePropsType } from 'next';
+import { GetServerSideProps, type InferGetServerSidePropsType } from 'next';
 import { unstable_getServerSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import { SSRConfig, useTranslation } from 'next-i18next';
@@ -8,7 +7,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import api from '../services/api';
+import { getUserApi } from '../services/serverSide/userApi';
 import TripService from '../services/trip.service';
 
 import DriverPreferencesModal from '../components/DriverPreferencesModal';
@@ -68,13 +67,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     'common',
     'dashboard',
   ]);
+  const userApi = getUserApi(session, locale);
   if (session) {
-    const userResponse = await api.get(`/users/${session.user.id}/`, {
-      headers: {
-        Authorization: `Bearer ${session.accessToken}`,
-        'Accept-Language': locale,
-      },
-    });
+    const userResponse = await userApi.getSelf();
     const userData = userResponse.data as User;
     shouldShowPreferencesModal = userData.driver_preferences === null;
     if (
