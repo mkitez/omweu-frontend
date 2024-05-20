@@ -1,0 +1,30 @@
+.root {
+  border-radius: 0.3rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  color: #888;
+  transition: 0.3s;
+  font-size: 0.9rem;
+}
+
+.primary {
+  color: #666;
+  background-color: #fff;
+}
+
+.primary:hover {
+  color: #444;
+  background-color: #fff !important;
+}
+
+.root:hover {
+  background-color: #eeeeee;
+}
+
+.topRow {
+  margin-bottom: 0.3rem;
+}
+
+.bottomRow {
+  font-size: 0.9em;
+}

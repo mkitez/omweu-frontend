@@ -1,15 +1,19 @@
 import { Tooltip } from 'antd';
 import { useTranslation } from 'next-i18next';
-import { DriverPreferences } from '../Trips';
-import { booleanFields, defaultValues } from '../DriverPreferencesFormFields';
+
 import PackageIcon from '../../assets/amenities/box-svgrepo-com.svg';
+import FoodIcon from '../../assets/amenities/burger-fast-fastfood-svgrepo-com.svg';
 import TwoPassengersIcon from '../../assets/amenities/couple-svgrepo-com.svg';
 import PetIcon from '../../assets/amenities/dog-svgrepo-com.svg';
-import FoodIcon from '../../assets/amenities/burger-fast-fastfood-svgrepo-com.svg';
+import ManIcon from '../../assets/amenities/man-hair-head-svgrepo-com.svg';
 import MusicIcon from '../../assets/amenities/music-svgrepo-com.svg';
 import SmokingIcon from '../../assets/amenities/smoking-cigar-svgrepo-com.svg';
-import ManIcon from '../../assets/amenities/man-hair-head-svgrepo-com.svg';
 import WomanIcon from '../../assets/amenities/woman-hair-head-svgrepo-com.svg';
+import { DriverPreferences } from '../Trips';
+import {
+  booleanFields,
+  defaultValues,
+} from '../UserProfileForm/DriverPreferencesFormFields';
 import styles from './TripDetails.module.css';
 
 const fieldIconMappings: Partial<

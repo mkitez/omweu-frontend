@@ -1,3 +1,4 @@
+import { App } from 'antd';
 import axios from 'axios';
 import { InferGetServerSidePropsType } from 'next';
 import { GetServerSideProps } from 'next';
@@ -6,36 +7,52 @@ import { SSRConfig, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Error from 'next/error';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
-import { getUserApi } from '../../services/serverSide/userApi';
+import { Car } from '../../services/car.service';
+import { getCarApi } from '../../services/serverSide/carApi';
 
-import PublicUserProfile from '../../components/PublicUserProfile';
-import type { User } from '../../components/Trips';
+import CarEditForm from '../../components/CarEditForm';
+import { useCarApi } from '../../hooks/api/useCarsApi';
+import styles from '../../styles/CarEdit.module.css';
 import { authOptions } from '../api/auth/[...nextauth]';
 
-const PublicUserProfilePage = ({
-  user,
+const CarEditPage = ({
+  car,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t } = useTranslation('profile');
+  const { t } = useTranslation('car');
+  const carApi = useCarApi();
+  const { message } = App.useApp();
+  const router = useRouter();
 
-  if (user === null) {
+  if (car === null) {
     return <Error statusCode={500} />;
   }
 
   return (
     <>
       <Head>
-        <title>{`${t('title')} ${user.first_name} | EUbyCar.com`}</title>
+        <title>{`${t('edit_title')} | EUbyCar.com`}</title>
       </Head>
       <div className="container">
-        <PublicUserProfile user={user} />
+        <div className={styles.root}>
+          <h1>{t('edit_title')}</h1>
+          <CarEditForm
+            data={car}
+            submitValue={t('update')}
+            submit={async (data) => {
+              await carApi.updateCar(Number(router.query.carId), data);
+              message.success(t('notifications.car_updated'));
+            }}
+          />
+        </div>
       </div>
     </>
   );
 };
 
 type Props = {
-  user: User | null;
+  car: Car | null;
   session: Session | null;
 } & SSRConfig;
 
@@ -47,18 +64,16 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 }) => {
   const translations = await serverSideTranslations(locale as string, [
     'common',
-    'profile',
-    'dashboard',
     'car',
   ]);
   const session = await unstable_getServerSession(req, res, authOptions);
-  const api = getUserApi(session, locale);
+  const api = getCarApi(session, locale);
 
   let notFound = false;
-  let user: User | null = null;
+  let car: Car | null = null;
   try {
-    const response = await api.getUser(params?.userId as string);
-    user = response.data;
+    const response = await api.getCar(params?.carId as string);
+    car = response.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
       if (e.response?.status && [403, 404].includes(e.response?.status))
@@ -71,9 +86,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     props: {
       ...translations,
       session,
-      user,
+      car,
     },
   };
 };
 
-export default PublicUserProfilePage;
+export default CarEditPage;

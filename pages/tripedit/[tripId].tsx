@@ -1,5 +1,5 @@
 import { LoadingOutlined } from '@ant-design/icons';
-import { App, theme } from 'antd';
+import { App } from 'antd';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
@@ -20,8 +20,6 @@ const TripEdit = () => {
   const router = useRouter();
   const { t, i18n } = useTranslation(['dashboard', 'common']);
   const { message } = App.useApp();
-  const { token } = theme.useToken();
-  console.log(token.colorSuccess);
   const { data, error, isLoading } = useSWR<Trip>(
     router.isReady ? `/trips/${router.query.tripId}/` : null,
     async (url) => {
