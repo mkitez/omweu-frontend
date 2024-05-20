@@ -5,6 +5,7 @@ import {
   Form,
   InputNumber,
   message,
+  Modal,
   Row,
   Select,
 } from 'antd';
@@ -12,7 +13,7 @@ import { DefaultOptionType } from 'antd/es/select';
 import axios from 'axios';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   BodyType,
@@ -21,6 +22,7 @@ import {
   CarInputData,
 } from '../../services/car.service';
 
+import { useCarApi } from '../../hooks/api/useCarsApi';
 import CarBrandSelect from './CarBrandSelect';
 import styles from './CarEditForm.module.css';
 import CarModelSelect from './CarModelSelect';
@@ -46,6 +48,9 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
   const { t } = useTranslation(['car', 'common']);
   const router = useRouter();
   const [form] = Form.useForm<CarFormData>();
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const api = useCarApi();
   useEffect(() => {
     if (!data) {
       return;
@@ -68,6 +73,21 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
       await submit(dataToSubmit);
       router.push('/dashboard/profile');
     } catch (e) {
+      if (axios.isAxiosError(e)) {
+        message.error(t('errors.common', { ns: 'common' }));
+      }
+    }
+  };
+
+  const handleDelete = async () => {
+    setLoading(true);
+    setDeleteModalOpen(false);
+    try {
+      await api.deleteCar(data?.id as number);
+      message.success(t('notifications.car_deleted'));
+      router.push('/dashboard/profile');
+    } catch (e) {
+      setLoading(false);
       if (axios.isAxiosError(e)) {
         message.error(t('errors.common', { ns: 'common' }));
       }
@@ -208,6 +228,24 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
             {t('cancel')}
           </Button>
         </Col>
+        {data && (
+          <Col>
+            <Button danger onClick={() => setDeleteModalOpen(true)}>
+              {t('delete')}
+            </Button>
+            <Modal
+              open={deleteModalOpen}
+              title={t('delete_modal.title')}
+              okText={t('delete')}
+              cancelText={t('cancel')}
+              onOk={handleDelete}
+              confirmLoading={loading}
+              onCancel={() => setDeleteModalOpen(false)}
+            >
+              {t('delete_modal.body')}
+            </Modal>
+          </Col>
+        )}
       </Row>
     </Form>
   );

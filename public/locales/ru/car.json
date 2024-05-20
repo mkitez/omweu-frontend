@@ -30,6 +30,7 @@
   "create": "Создать",
   "update": "Сохранить",
   "cancel": "Отмена",
+  "delete": "Удалить",
   "colors": {
     "black": "Чёрный",
     "gray": "Серый",
@@ -47,6 +48,11 @@
   "year_abbr": "г. в.",
   "notifications": {
     "car_created": "Машина добавлена",
-    "car_updated": "Машина сохранена"
+    "car_updated": "Машина сохранена",
+    "car_deleted": "Машина удалена"
+  },
+  "delete_modal": {
+    "title": "Удаление машины",
+    "body": "Удалить машину?"
   }
 }
