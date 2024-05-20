@@ -83,7 +83,10 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
       wrapperCol={{ span: 18 }}
     >
       <Form.Item name="brand" label={t('brand')} rules={[{ required: true }]}>
-        <CarBrandSelect onChange={() => form.setFieldValue('model', null)} />
+        <CarBrandSelect
+          onChange={() => form.setFieldValue('model', null)}
+          placeholder={t('placeholders.brand')}
+        />
       </Form.Item>
       <Form.Item
         noStyle
@@ -97,7 +100,10 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
             label={t('model')}
             rules={[{ required: true }]}
           >
-            <CarModelSelect brandId={form.getFieldValue('brand')?.value} />
+            <CarModelSelect
+              brandId={form.getFieldValue('brand')?.value}
+              placeholder={t('placeholders.model')}
+            />
           </Form.Item>
         )}
       </Form.Item>
@@ -112,6 +118,7 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
           >
             <Select
               showArrow={false}
+              placeholder={t('placeholders.body_type')}
               options={Object.values(BodyType)
                 .filter((v) => isNaN(Number(v)))
                 .map((type) => ({
@@ -131,6 +138,7 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
           >
             <Select
               showArrow={false}
+              placeholder={t('placeholders.color')}
               options={Object.values(CarColor).map((color) => ({
                 label: (
                   <div className={styles.colorInputContainer}>
@@ -156,7 +164,12 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
             label={t('year')}
             rules={[{ required: true }]}
           >
-            <InputNumber step={1} min={1990} max={new Date().getFullYear()} />
+            <InputNumber
+              step={1}
+              min={1990}
+              max={new Date().getFullYear()}
+              placeholder={t('placeholders.year') as string}
+            />
           </Form.Item>
         </Col>
         <Col xs={24} lg={12}>
@@ -167,7 +180,11 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
             label={t('passenger_seats')}
             rules={[{ required: true }]}
           >
-            <InputNumber min={1} max={20} />
+            <InputNumber
+              min={1}
+              max={20}
+              placeholder={t('placeholders.passenger_seats') as string}
+            />
           </Form.Item>
         </Col>
       </Row>
