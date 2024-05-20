@@ -22,7 +22,9 @@ import {
 } from '../../services/car.service';
 
 import CarBrandSelect from './CarBrandSelect';
+import styles from './CarEditForm.module.css';
 import CarModelSelect from './CarModelSelect';
+import { colorMappings } from './colorMappings';
 
 interface CarFormData {
   brand: DefaultOptionType;
@@ -129,12 +131,18 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
           >
             <Select
               showArrow={false}
-              options={Object.values(CarColor)
-                .filter((v) => isNaN(Number(v)))
-                .map((type) => ({
-                  label: t(`colors.${type.toString().toLowerCase()}`),
-                  value: type,
-                }))}
+              options={Object.values(CarColor).map((color) => ({
+                label: (
+                  <div className={styles.colorInputContainer}>
+                    <span
+                      className={styles.colorPreview}
+                      style={colorMappings[color]}
+                    />
+                    {t(`colors.${color.toString().toLowerCase()}`)}
+                  </div>
+                ),
+                value: color,
+              }))}
             />
           </Form.Item>
         </Col>
