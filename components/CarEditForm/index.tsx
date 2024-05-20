@@ -5,6 +5,7 @@ import {
   Form,
   InputNumber,
   message,
+  Modal,
   Row,
   Select,
 } from 'antd';
@@ -12,7 +13,7 @@ import { DefaultOptionType } from 'antd/es/select';
 import axios from 'axios';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   BodyType,
@@ -21,8 +22,11 @@ import {
   CarInputData,
 } from '../../services/car.service';
 
+import { useCarApi } from '../../hooks/api/useCarsApi';
 import CarBrandSelect from './CarBrandSelect';
+import styles from './CarEditForm.module.css';
 import CarModelSelect from './CarModelSelect';
+import { colorMappings } from './colorMappings';
 
 interface CarFormData {
   brand: DefaultOptionType;
@@ -44,20 +48,23 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
   const { t } = useTranslation(['car', 'common']);
   const router = useRouter();
   const [form] = Form.useForm<CarFormData>();
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const api = useCarApi();
   useEffect(() => {
     if (!data) {
       return;
     }
     const brand: DefaultOptionType = {
-      label: data.brand.name,
+      label: data.brand.name === 'other' ? t('other_brand') : data.brand.name,
       value: data.brand.id,
     };
     const model: DefaultOptionType = {
-      label: data.model.name,
+      label: data.model.name === 'other' ? t('other_model') : data.model.name,
       value: data.model.id,
     };
     form.setFieldsValue({ ...data, brand, model });
-  }, [data, data?.id, form]);
+  }, [data, form, t]);
 
   const handleSubmit = async (data: CarFormData) => {
     const { brand, model, ...rest } = data;
@@ -66,6 +73,21 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
       await submit(dataToSubmit);
       router.push('/dashboard/profile');
     } catch (e) {
+      if (axios.isAxiosError(e)) {
+        message.error(t('errors.common', { ns: 'common' }));
+      }
+    }
+  };
+
+  const handleDelete = async () => {
+    setLoading(true);
+    setDeleteModalOpen(false);
+    try {
+      await api.deleteCar(data?.id as number);
+      message.success(t('notifications.car_deleted'));
+      router.push('/dashboard/profile');
+    } catch (e) {
+      setLoading(false);
       if (axios.isAxiosError(e)) {
         message.error(t('errors.common', { ns: 'common' }));
       }
@@ -81,7 +103,10 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
       wrapperCol={{ span: 18 }}
     >
       <Form.Item name="brand" label={t('brand')} rules={[{ required: true }]}>
-        <CarBrandSelect onChange={() => form.setFieldValue('model', null)} />
+        <CarBrandSelect
+          onChange={() => form.setFieldValue('model', null)}
+          placeholder={t('placeholders.brand')}
+        />
       </Form.Item>
       <Form.Item
         noStyle
@@ -95,7 +120,10 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
             label={t('model')}
             rules={[{ required: true }]}
           >
-            <CarModelSelect brandId={form.getFieldValue('brand')?.value} />
+            <CarModelSelect
+              brandId={form.getFieldValue('brand')?.value}
+              placeholder={t('placeholders.model')}
+            />
           </Form.Item>
         )}
       </Form.Item>
@@ -110,6 +138,7 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
           >
             <Select
               showArrow={false}
+              placeholder={t('placeholders.body_type')}
               options={Object.values(BodyType)
                 .filter((v) => isNaN(Number(v)))
                 .map((type) => ({
@@ -129,12 +158,19 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
           >
             <Select
               showArrow={false}
-              options={Object.values(CarColor)
-                .filter((v) => isNaN(Number(v)))
-                .map((type) => ({
-                  label: t(`colors.${type.toString().toLowerCase()}`),
-                  value: type,
-                }))}
+              placeholder={t('placeholders.color')}
+              options={Object.values(CarColor).map((color) => ({
+                label: (
+                  <div className={styles.colorInputContainer}>
+                    <span
+                      className={styles.colorPreview}
+                      style={colorMappings[color]}
+                    />
+                    {t(`colors.${color.toString().toLowerCase()}`)}
+                  </div>
+                ),
+                value: color,
+              }))}
             />
           </Form.Item>
         </Col>
@@ -148,7 +184,12 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
             label={t('year')}
             rules={[{ required: true }]}
           >
-            <InputNumber step={1} min={1990} max={new Date().getFullYear()} />
+            <InputNumber
+              step={1}
+              min={1990}
+              max={new Date().getFullYear()}
+              placeholder={t('placeholders.year') as string}
+            />
           </Form.Item>
         </Col>
         <Col xs={24} lg={12}>
@@ -159,7 +200,11 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
             label={t('passenger_seats')}
             rules={[{ required: true }]}
           >
-            <InputNumber min={1} max={20} />
+            <InputNumber
+              min={1}
+              max={20}
+              placeholder={t('placeholders.passenger_seats') as string}
+            />
           </Form.Item>
         </Col>
       </Row>
@@ -183,6 +228,24 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
             {t('cancel')}
           </Button>
         </Col>
+        {data && (
+          <Col>
+            <Button danger onClick={() => setDeleteModalOpen(true)}>
+              {t('delete')}
+            </Button>
+            <Modal
+              open={deleteModalOpen}
+              title={t('delete_modal.title')}
+              okText={t('delete')}
+              cancelText={t('cancel')}
+              onOk={handleDelete}
+              confirmLoading={loading}
+              onCancel={() => setDeleteModalOpen(false)}
+            >
+              {t('delete_modal.body')}
+            </Modal>
+          </Col>
+        )}
       </Row>
     </Form>
   );

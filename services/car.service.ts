@@ -10,15 +10,23 @@ export enum BodyType {
 }
 
 export enum CarColor {
-  'black',
-  'white',
-  'red',
-  'blue'
+  black = 'black',
+  gray = 'gray',
+  silver = 'silver',
+  white = 'white',
+  red = 'red',
+  blue = 'blue',
+  gold = 'gold',
+  brown = 'brown',
+  purple = 'purple',
+  beige = 'beige',
+  green = 'green',
+  orange = 'orange',
 }
 
 interface CarBrandOrModel {
-  id: number
-  name: string
+  id: number;
+  name: string;
 }
 
 export interface Car {
@@ -44,11 +52,11 @@ export interface CarInputData {
 
 class CarService extends BaseService {
   getCar(carId: string) {
-    return this.api.get(`/cars/${carId}/`)
+    return this.api.get(`/cars/${carId}/`);
   }
 
   createCar(data: CarInputData) {
-    return this.api.post('/cars/', data)
+    return this.api.post('/cars/', data);
   }
 
   updateCar(carId: number, data: CarInputData) {
@@ -60,11 +68,11 @@ class CarService extends BaseService {
   }
 
   getCarBrands() {
-    return this.api.get('/cars/brands/')
+    return this.api.get('/cars/brands/');
   }
 
   getBrandModels(brandId: number) {
-    return this.api.get(`/cars/brandmodels/${brandId}/`)
+    return this.api.get(`/cars/brandmodels/${brandId}/`);
   }
 }
 

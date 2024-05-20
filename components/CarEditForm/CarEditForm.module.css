@@ -1,0 +1,12 @@
+.colorInputContainer {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.colorPreview {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+}
