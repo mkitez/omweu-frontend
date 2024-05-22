@@ -11,23 +11,23 @@ export interface TripInputData {
 
 class TripService extends BaseService {
   getCurrentUserTrips() {
-    return this.api.get('/trips/')
+    return this.api.get('/trips/');
   }
 
   getTrip(tripId: number) {
-    return this.api.get(`/trips/${tripId}/`)
+    return this.api.get(`/trips/${tripId}/`);
   }
 
   createTrip(data: TripInputData) {
-    return this.api.post('/trips/', data)
+    return this.api.post('/trips/', data);
   }
 
   updateTrip(tripId: number, data: TripInputData) {
-    return this.api.put(`/trips/${tripId}`, data)
+    return this.api.put(`/trips/${tripId}/`, data);
   }
 
   deleteTrip(tripId: number) {
-    return this.api.delete(`/trips/${tripId}/`)
+    return this.api.delete(`/trips/${tripId}/`);
   }
 }
 

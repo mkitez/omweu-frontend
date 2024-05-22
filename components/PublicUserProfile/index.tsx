@@ -74,7 +74,7 @@ const PublicUserProfile: React.FC<Props> = ({ user }) => {
               .sort((a) => (a.is_primary ? -1 : 0))
               .map((car) => (
                 <Col key={car.id} xs={24} md={6}>
-                  <InlineCar car={car} />
+                  <InlineCar car={car} showYear />
                 </Col>
               ))}
           </Row>

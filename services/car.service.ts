@@ -24,7 +24,7 @@ export enum CarColor {
   orange = 'orange',
 }
 
-interface CarBrandOrModel {
+export interface CarBrandOrModel {
   id: number;
   name: string;
 }

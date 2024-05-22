@@ -4,7 +4,12 @@ import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import useSWR from 'swr';
 
-import { Car } from '../services/car.service';
+import {
+  BodyType,
+  Car,
+  CarBrandOrModel,
+  CarColor,
+} from '../services/car.service';
 
 import { useAuthorizedFetcher } from '../hooks/useAuthorizedFetcher';
 import { Booking } from '../pages/bookings/[bookingId]';
@@ -44,6 +49,15 @@ export interface Destination {
   time_zone: string;
 }
 
+export interface InlineCar {
+  brand: CarBrandOrModel;
+  model: CarBrandOrModel;
+  body_type: BodyType;
+  color: CarColor;
+  year: number;
+  passenger_seats: number;
+}
+
 export interface Trip {
   id: number;
   origin: Destination;
@@ -55,6 +69,7 @@ export interface Trip {
   description: string;
   route_stops: Destination[];
   amenities: DriverPreferences | null;
+  car: InlineCar | null;
 }
 
 export interface InlineBooking extends Booking {

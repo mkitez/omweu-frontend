@@ -1,14 +1,17 @@
-import type { Trip } from '../Trips';
-import { Trans, useTranslation } from 'next-i18next';
-import { signIn, useSession } from 'next-auth/react';
 import { Alert } from 'antd';
+import { signIn, useSession } from 'next-auth/react';
+import { Trans, useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import TripData from './TripData';
-import UserData from './UserData';
-import TripDescription from './TripDescription';
+
+import InlineCar from '../InlineCar';
+import type { Trip } from '../Trips';
 import Amenities from './Amenities';
+import CarDetails from './CarDetails';
+import TripData from './TripData';
+import TripDescription from './TripDescription';
 import styles from './TripDetails.module.css';
+import UserData from './UserData';
 
 type Props = {
   trip: Trip;
@@ -27,6 +30,7 @@ const TripDetails: React.FC<Props> = ({ trip }) => {
         <Amenities amenities={trip.amenities} />
       </div>
       <TripDescription content={trip.description} />
+      <CarDetails car={trip.car} />
       {session.status === 'unauthenticated' && (
         <Alert
           type="info"

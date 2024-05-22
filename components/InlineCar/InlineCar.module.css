@@ -1,6 +1,6 @@
 .root {
   border-radius: 0.3rem;
-  padding: 1rem;
+  padding: 1rem 2rem 1rem 1rem;
   background-color: #f9f9f9;
   color: #888;
   transition: 0.3s;
@@ -12,12 +12,12 @@
   background-color: #fff;
 }
 
-.primary:hover {
+.link .primary:hover {
   color: #444;
   background-color: #fff !important;
 }
 
-.root:hover {
+.link .root:hover {
   background-color: #eeeeee;
 }
 

@@ -118,6 +118,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     'dashboard',
     'trip',
     'booking',
+    'car',
   ]);
   const session = await unstable_getServerSession(req, res, authOptions);
   const tripApi = getTripApi(session, locale);

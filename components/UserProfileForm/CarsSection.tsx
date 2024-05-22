@@ -24,7 +24,7 @@ const CarsSection: React.FC<Props> = ({ cars }) => {
             .sort((a) => (a.is_primary ? -1 : 0))
             .map((car) => (
               <Col key={car.id} xs={24} md={6}>
-                <InlineCar car={car} isClickable />
+                <InlineCar car={car} showYear isClickable />
               </Col>
             ))}
         </Row>
