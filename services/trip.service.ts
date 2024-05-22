@@ -5,6 +5,7 @@ export interface TripInputData {
   dest_id: string;
   date: string;
   price: string;
+  car_id: number;
   description: string;
   route_stop_ids: string[];
 }

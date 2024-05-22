@@ -55,6 +55,10 @@ const TripEdit = () => {
               initialRouteStops={data.route_stops}
               initialDate={data.date}
               initialPrice={data.price}
+              initialCar={{
+                label: `${data.car?.brand.name} ${data.car?.model.name}`,
+                value: data.car?.id,
+              }}
               initialDescription={data.description}
               submitValue={t('save', { ns: 'common' })}
               submit={async (data) => {

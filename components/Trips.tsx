@@ -50,6 +50,7 @@ export interface Destination {
 }
 
 export interface InlineCar {
+  id: number;
   brand: CarBrandOrModel;
   model: CarBrandOrModel;
   body_type: BodyType;

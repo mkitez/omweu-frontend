@@ -1,5 +1,14 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, InputNumber, message, Row } from 'antd';
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  InputNumber,
+  message,
+  Row,
+  Select,
+} from 'antd';
 import { Rule } from 'antd/es/form';
 import type { DefaultOptionType } from 'antd/es/select';
 import axios from 'axios';
@@ -8,8 +17,10 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 
+import { Car } from '../../services/car.service';
 import { TripInputData } from '../../services/trip.service';
 
+import { useCarApi } from '../../hooks/api/useCarsApi';
 import DateTimeInput from '../DateTimeInput';
 import { PlaceInputEdit } from '../PlaceInput';
 import { Destination } from '../Trips';
@@ -21,6 +32,7 @@ export interface TripFormData {
   routeStops: DefaultOptionType[];
   date: dayjs.Dayjs;
   price: string;
+  car: DefaultOptionType;
   description: string;
 }
 
@@ -30,6 +42,7 @@ type Props = {
   initialRouteStops?: Destination[];
   initialDate?: dayjs.Dayjs | string;
   initialPrice?: string;
+  initialCar?: DefaultOptionType;
   initialDescription?: string;
   submitValue: string;
   submit: (data: TripInputData) => Promise<void>;
@@ -53,6 +66,7 @@ const TripEditForm: React.FC<Props> = ({
   initialRouteStops,
   initialDate,
   initialPrice,
+  initialCar,
   initialDescription,
   submitValue,
   submit,
@@ -60,6 +74,8 @@ const TripEditForm: React.FC<Props> = ({
   const { t } = useTranslation('common');
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const carApi = useCarApi();
+  const [cars, setCars] = useState<DefaultOptionType[]>([]);
   const [form] = Form.useForm();
   const initialValues = useMemo(
     () => ({
@@ -72,6 +88,7 @@ const TripEditForm: React.FC<Props> = ({
         ? dayjs(initialDate).tz(initialOrigin?.time_zone)
         : null,
       price: initialPrice ?? null,
+      car: initialCar || null,
       description: initialDescription || '',
     }),
     [
@@ -80,12 +97,23 @@ const TripEditForm: React.FC<Props> = ({
       initialRouteStops,
       initialOrigin,
       initialPrice,
+      initialCar,
       initialDescription,
     ]
   );
   useEffect(() => {
     form.setFieldsValue(initialValues);
   }, [form, initialValues]);
+  useEffect(() => {
+    carApi.getCars().then((response) =>
+      setCars(
+        response.data.map((car: Car) => ({
+          label: `${car.brand.name} ${car.model.name}`,
+          value: car.id,
+        }))
+      )
+    );
+  }, [carApi]);
 
   const handleSubmit = async (formData: TripFormData) => {
     const date = formData.date.format('YYYY-MM-DDTHH:mm:00');
@@ -95,6 +123,7 @@ const TripEditForm: React.FC<Props> = ({
       dest_id: formData.to.value as string,
       date,
       price: formData.price,
+      car_id: Number(formData.car?.value),
       description: formData.description || '',
       route_stop_ids: formData.routeStops.map((stop) => stop.value as string),
     };
@@ -234,6 +263,15 @@ const TripEditForm: React.FC<Props> = ({
           maxLength={5}
           step={1}
           addonAfter="€"
+        />
+      </Form.Item>
+      <Form.Item name="car" label={t('car.label')} rules={[{ required: true }]}>
+        <Select
+          labelInValue
+          showArrow={false}
+          notFoundContent={null}
+          placeholder={t('car.placeholder')}
+          options={cars}
         />
       </Form.Item>
       <Form.Item name="description" label={t('description.label')}>

@@ -43,6 +43,10 @@
     "label": "Цена",
     "placeholder": "Цена"
   },
+  "car": {
+    "label": "Машина",
+    "placeholder": "Выберите машину"
+  },
   "description": {
     "label": "Описание",
     "placeholder": "Укажите, откуда именно едете, марку машины и т.д."
