@@ -70,6 +70,7 @@ export interface Trip {
   route_stops: Destination[];
   amenities: DriverPreferences | null;
   car: InlineCar | null;
+  free_seats: number | null;
 }
 
 export interface InlineBooking extends Booking {

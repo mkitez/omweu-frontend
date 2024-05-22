@@ -58,9 +58,8 @@ const TripDetailsPage = ({
     i18n.language,
     trip.origin.time_zone
   );
-  const isTripInPast = dayjs(trip.date) < dayjs();
-  const isTripBookable =
-    !isDriver && status === 'authenticated' && !isTripInPast;
+  const isTripInFuture = dayjs(trip.date) > dayjs();
+  const showBookingButton = !isDriver && status === 'authenticated';
   return (
     <>
       <Head>
@@ -79,7 +78,7 @@ const TripDetailsPage = ({
             <>
               <InlineBookings tripId={trip.id} />
               <div className={styles.tripActionsContainer}>
-                {!isTripInPast && (
+                {isTripInFuture && (
                   <div className={styles.tripAction}>
                     <Link href={`/tripedit/${trip.id}`}>
                       <FormOutlined /> {t('edit')}
@@ -94,7 +93,12 @@ const TripDetailsPage = ({
               </div>
             </>
           ) : (
-            isTripBookable && <InlineBooking tripId={trip.id} />
+            showBookingButton && (
+              <InlineBooking
+                tripId={trip.id}
+                disabled={isTripInFuture && Number(trip.free_seats) > 0}
+              />
+            )
           )}
         </div>
       </div>

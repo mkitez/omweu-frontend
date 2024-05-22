@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import useSWR from 'swr';
+import { CalendarOutlined } from '@ant-design/icons';
 import { Button, Input, Modal } from 'antd';
 import { useTranslation } from 'next-i18next';
-import { Booking } from '../../pages/bookings/[bookingId]';
-import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
+import { useState } from 'react';
+import useSWR from 'swr';
+
 import { useBookingApi } from '../../hooks/api/useBookingApi';
-import { CalendarOutlined } from '@ant-design/icons';
+import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
+import { Booking } from '../../pages/bookings/[bookingId]';
 import {
   StatusConfirmed,
   StatusPending,
@@ -16,9 +17,10 @@ import styles from './InlineBooking.module.css';
 
 type Props = {
   tripId: number;
+  disabled?: boolean;
 };
 
-const InlineBooking: React.FC<Props> = ({ tripId }) => {
+const InlineBooking: React.FC<Props> = ({ tripId, disabled }) => {
   const api = useBookingApi();
   const { t } = useTranslation('booking');
   const fetcher = useAuthorizedFetcher();
@@ -60,7 +62,7 @@ const InlineBooking: React.FC<Props> = ({ tripId }) => {
         <Button
           icon={<CalendarOutlined />}
           type="primary"
-          disabled={bookingSubmitLoading}
+          disabled={bookingSubmitLoading || disabled}
           onClick={() => setModalOpen(true)}
         >
           {t('book_trip')}
