@@ -60,6 +60,11 @@ const getInitialPlaceValue = (
   };
 };
 
+const getCarValue = (car: Car): DefaultOptionType => ({
+  label: `${car.brand.name} ${car.model.name}`,
+  value: car.id,
+});
+
 const TripEditForm: React.FC<Props> = ({
   initialOrigin,
   initialDest,
@@ -105,15 +110,18 @@ const TripEditForm: React.FC<Props> = ({
     form.setFieldsValue(initialValues);
   }, [form, initialValues]);
   useEffect(() => {
-    carApi.getCars().then((response) =>
+    carApi.getCars().then((response) => {
       setCars(
-        response.data.map((car: Car) => ({
-          label: `${car.brand.name} ${car.model.name}`,
-          value: car.id,
-        }))
-      )
-    );
-  }, [carApi]);
+        response.data
+          .sort((car: Car) => (car.is_primary ? -1 : 0))
+          .map((car: Car) => getCarValue(car))
+      );
+      if (!initialCar) {
+        const car = response.data.find((car: Car) => car.is_primary);
+        form.setFieldValue('car', getCarValue(car));
+      }
+    });
+  }, [carApi, form, initialCar]);
 
   const handleSubmit = async (formData: TripFormData) => {
     const date = formData.date.format('YYYY-MM-DDTHH:mm:00');
