@@ -45,7 +45,8 @@ const InlineCar: React.FC<Props> = ({
 
   let bottomRowContent = t(`colors.${car.color}`);
   if (showType) {
-    bottomRowContent += ` ${t(`body_types.${car.body_type.toString().toLowerCase()}`).toLowerCase()}`;
+    const translationKey = `body_types.${car.body_type.toString().toLowerCase()}`;
+    bottomRowContent += ` ${t(translationKey).toLowerCase()}`;
   }
   if (showYear) {
     bottomRowContent += ` ${car.year} ${t('year_abbr')}`;
