@@ -80,7 +80,7 @@ const TripEditForm: React.FC<Props> = ({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const carApi = useCarApi();
-  const [cars, setCars] = useState<DefaultOptionType[]>([]);
+  const [cars, setCars] = useState<Car[]>([]);
   const [form] = Form.useForm();
   const initialValues = useMemo(
     () => ({
@@ -107,21 +107,20 @@ const TripEditForm: React.FC<Props> = ({
     ]
   );
   useEffect(() => {
-    form.setFieldsValue(initialValues);
-  }, [form, initialValues]);
-  useEffect(() => {
     carApi.getCars().then((response) => {
-      setCars(
-        response.data
-          .sort((car: Car) => (car.is_primary ? -1 : 0))
-          .map((car: Car) => getCarValue(car))
-      );
-      if (!initialCar) {
-        const car = response.data.find((car: Car) => car.is_primary);
-        form.setFieldValue('car', getCarValue(car));
-      }
+      setCars(response.data.sort((car: Car) => (car.is_primary ? -1 : 0)));
     });
-  }, [carApi, form, initialCar]);
+  }, [carApi, form]);
+  useEffect(() => {
+    if (initialCar) {
+      return;
+    }
+    const car = cars.find((car) => car.is_primary);
+    if (!car) {
+      return;
+    }
+    form.setFieldValue('car', getCarValue(car));
+  }, [cars, form, initialCar]);
 
   const handleSubmit = async (formData: TripFormData) => {
     const date = formData.date.format('YYYY-MM-DDTHH:mm:00');
@@ -279,7 +278,7 @@ const TripEditForm: React.FC<Props> = ({
           showArrow={false}
           notFoundContent={null}
           placeholder={t('car.placeholder')}
-          options={cars}
+          options={cars.map((car) => getCarValue(car))}
         />
       </Form.Item>
       <Form.Item name="description" label={t('description.label')}>
