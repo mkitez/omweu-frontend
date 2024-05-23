@@ -1,32 +1,31 @@
-import useSWRImmutable from 'swr/immutable';
+import { Col, Grid, Row } from 'antd';
 import { Trans, useTranslation } from 'next-i18next';
-import { API_URL } from '../../utils/constants';
+import Link from 'next/link';
+import { FC } from 'react';
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import useSWRImmutable from 'swr/immutable';
+
+import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
 import InlineTrip from '../InlineTrip';
 import { Trip } from '../Trips';
 import styles from './UpcomingTripsSection.module.css';
-import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import Link from 'next/link';
-import { Col, Grid, Row } from 'antd';
-import { FC } from 'react';
 
-const LinkedTrip: FC<{ trip: Trip }> = ({ trip }) => (
+type Props = { trip: Trip };
+
+const LinkedTrip: FC<Props> = ({ trip }) => (
   <Link href={`/trips/${trip.id}`}>
-    <InlineTrip trip={trip} hidePrice showDate />
+    <InlineTrip trip={trip} showDate showDriver />
   </Link>
 );
 
 const UpcomingTripsSection = () => {
-  const { t, i18n } = useTranslation('home');
+  const { t } = useTranslation('home');
   const { lg } = Grid.useBreakpoint();
+  const fetcher = useAuthorizedFetcher();
   const { data, error, isLoading } = useSWRImmutable(
-    `${API_URL}/trips/upcoming/`,
-    async (url) => {
-      const response = await fetch(url, {
-        headers: { 'Accept-Language': i18n.language },
-      });
-      return await response.json();
-    }
+    '/trips/upcoming/',
+    fetcher
   );
   if (isLoading || error) {
     return null;

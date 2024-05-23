@@ -8,3 +8,8 @@
   font-size: 0.9rem;
   color: rgba(0, 0, 0, 0.55)
 }
+
+.tooltip {
+  font-size: 0.8rem;
+  line-height: 1.15rem;
+}

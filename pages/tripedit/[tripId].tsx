@@ -1,36 +1,26 @@
 import { LoadingOutlined } from '@ant-design/icons';
 import { App } from 'antd';
-import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
-import api from '../../services/api';
-import AuthService from '../../services/auth.service';
-import TripService from '../../services/trip.service';
-
-import TripEditForm from '../../components/TripEditForm';
+import TripEditForm, { getCarValue } from '../../components/TripEditForm';
 import { Trip } from '../../components/Trips';
+import { useTripApi } from '../../hooks/api/useTripApi';
+import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
 import styles from '../../styles/TripEdit.module.css';
 import { getServerSideProps } from '../dashboard/trips';
 
 const TripEdit = () => {
-  const { data: session } = useSession();
+  const api = useTripApi();
+  const fetcher = useAuthorizedFetcher();
   const router = useRouter();
-  const { t, i18n } = useTranslation(['dashboard', 'common']);
+  const { t } = useTranslation(['dashboard', 'common']);
   const { message } = App.useApp();
   const { data, error, isLoading } = useSWR<Trip>(
     router.isReady ? `/trips/${router.query.tripId}/` : null,
-    async (url) => {
-      const response = await api.get(url, {
-        headers: {
-          ...AuthService.getAuthHeaders(session?.accessToken as string),
-          'Accept-Language': i18n.language,
-        },
-      });
-      return response.data;
-    }
+    fetcher
   );
 
   return (
@@ -65,14 +55,15 @@ const TripEdit = () => {
               initialRouteStops={data.route_stops}
               initialDate={data.date}
               initialPrice={data.price}
+              initialCar={data.car ? getCarValue(data.car) : undefined}
               initialDescription={data.description}
               submitValue={t('save', { ns: 'common' })}
-              submit={async (data: any) => {
-                const tripData: Trip = await TripService.updateTrip(
-                  router.query.tripId,
-                  data,
-                  session?.accessToken as string
+              submit={async (data) => {
+                const tripResponse = await api.updateTrip(
+                  Number(router.query.tripId),
+                  data
                 );
+                const tripData = tripResponse.data;
                 message.success(t('notifications.trip_update'));
                 router.push(`/trips/${tripData.id}`);
               }}

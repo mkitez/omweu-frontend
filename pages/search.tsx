@@ -64,7 +64,7 @@ const Search = () => {
             }
             return data.results.map((trip: Trip) => (
               <Link href={`/trips/${trip.id}`} key={trip.id}>
-                <InlineTrip trip={trip} />
+                <InlineTrip trip={trip} showPrice showDriver />
               </Link>
             ));
           })()}
@@ -77,6 +77,7 @@ const Search = () => {
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   const translations = await serverSideTranslations(locale as string, [
     'common',
+    'trip',
   ]);
   return {
     props: {

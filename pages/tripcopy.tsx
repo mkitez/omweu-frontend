@@ -2,19 +2,18 @@ import { App } from 'antd';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { Session, unstable_getServerSession } from 'next-auth';
-import { useSession } from 'next-auth/react';
+import { unstable_getServerSession } from 'next-auth';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Error from 'next/error';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import api from '../services/api';
-import TripService from '../services/trip.service';
+import { getTripApi } from '../services/serverSide/tripApi';
 
-import TripEditForm from '../components/TripEditForm';
+import TripEditForm, { getCarValue } from '../components/TripEditForm';
 import { Trip } from '../components/Trips';
+import { useTripApi } from '../hooks/api/useTripApi';
 import styles from '../styles/TripEdit.module.css';
 import { authOptions } from './api/auth/[...nextauth]';
 
@@ -22,7 +21,7 @@ const TripCopy = ({
   trip: data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const api = useTripApi();
   const { t } = useTranslation(['dashboard', 'common']);
   const { message } = App.useApp();
 
@@ -48,13 +47,12 @@ const TripCopy = ({
           initialRouteStops={data.route_stops}
           initialDate={newTripDate}
           initialPrice={data.price}
+          initialCar={data.car ? getCarValue(data.car) : undefined}
           initialDescription={data.description}
           submitValue={t('create', { ns: 'common' })}
-          submit={async (data: any) => {
-            const newTrip: Trip = await TripService.createTrip(
-              data,
-              session?.accessToken as string
-            );
+          submit={async (data) => {
+            const newTripResponse = await api.createTrip(data);
+            const newTrip = newTripResponse.data;
             message.success(t('notifications.new_trip'));
             router.push(`/trips/${newTrip.id}`);
           }}
@@ -70,7 +68,6 @@ export default TripCopy;
 
 type Props = {
   trip: Trip | null;
-  session: Session | null;
 } & SSRConfig;
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({
@@ -80,23 +77,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   query,
 }) => {
   const session = await unstable_getServerSession(req, res, authOptions);
-
   const translations = await serverSideTranslations(locale as string, [
     'common',
     'dashboard',
     'trip',
   ]);
+  const tripApi = getTripApi(session, locale);
 
   let notFound = false;
   let trip: Trip | null = null;
   if (session) {
     try {
-      const tripResponse = await api.get(`/trips/${query?.tripId}/`, {
-        headers: {
-          Authorization: `Bearer ${session.accessToken}`,
-          'Accept-Language': locale,
-        },
-      });
+      const tripResponse = await tripApi.getTrip(Number(query.tripId));
       trip = tripResponse.data;
     } catch (e) {
       if (axios.isAxiosError(e) && e.response?.status === 404) {

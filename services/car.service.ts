@@ -24,7 +24,7 @@ export enum CarColor {
   orange = 'orange',
 }
 
-interface CarBrandOrModel {
+export interface CarBrandOrModel {
   id: number;
   name: string;
 }
@@ -51,8 +51,12 @@ export interface CarInputData {
 }
 
 class CarService extends BaseService {
-  getCar(carId: string) {
+  getCar(carId: number) {
     return this.api.get(`/cars/${carId}/`);
+  }
+
+  getCars() {
+    return this.api.get('/cars/');
   }
 
   createCar(data: CarInputData) {

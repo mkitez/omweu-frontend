@@ -1,11 +1,13 @@
+import { CalendarOutlined } from '@ant-design/icons';
+import { Button, Input, message, Modal, Tooltip } from 'antd';
+import axios from 'axios';
+import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import useSWR from 'swr';
-import { Button, Input, Modal } from 'antd';
-import { useTranslation } from 'next-i18next';
-import { Booking } from '../../pages/bookings/[bookingId]';
-import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
+
 import { useBookingApi } from '../../hooks/api/useBookingApi';
-import { CalendarOutlined } from '@ant-design/icons';
+import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
+import { Booking } from '../../pages/bookings/[bookingId]';
 import {
   StatusConfirmed,
   StatusPending,
@@ -16,11 +18,13 @@ import styles from './InlineBooking.module.css';
 
 type Props = {
   tripId: number;
+  disabled?: boolean;
+  disabledText?: string;
 };
 
-const InlineBooking: React.FC<Props> = ({ tripId }) => {
+const InlineBooking: React.FC<Props> = ({ tripId, disabled, disabledText }) => {
   const api = useBookingApi();
-  const { t } = useTranslation('booking');
+  const { t } = useTranslation(['booking', 'common']);
   const fetcher = useAuthorizedFetcher();
   const {
     data: booking,
@@ -39,11 +43,18 @@ const InlineBooking: React.FC<Props> = ({ tripId }) => {
 
   const bookingSubmitHandler = async () => {
     setBookingSubmitLoading(true);
-    const bookingData = await api.submitBookingForTrip(tripId, {
-      bookingMessage,
-    });
-    setModalOpen(false);
-    await mutate(bookingData);
+    try {
+      const bookingData = await api.submitBookingForTrip(tripId, {
+        bookingMessage,
+      });
+      setModalOpen(false);
+      message.success(t('trip_booked'));
+      await mutate(bookingData);
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        message.error(t('errors.common', { ns: 'common' }));
+      }
+    }
     setBookingSubmitLoading(false);
   };
 
@@ -57,14 +68,20 @@ const InlineBooking: React.FC<Props> = ({ tripId }) => {
           <BookingLink bookingId={booking.booking_id} />
         </>
       ) : (
-        <Button
-          icon={<CalendarOutlined />}
-          type="primary"
-          disabled={bookingSubmitLoading}
-          onClick={() => setModalOpen(true)}
+        <Tooltip
+          title={disabledText}
+          placement="bottom"
+          overlayClassName={styles.tooltip}
         >
-          {t('book_trip')}
-        </Button>
+          <Button
+            icon={<CalendarOutlined />}
+            type="primary"
+            disabled={bookingSubmitLoading || disabled}
+            onClick={() => setModalOpen(true)}
+          >
+            {t('book_trip')}
+          </Button>
+        </Tooltip>
       )}
       <Modal
         open={modalOpen}

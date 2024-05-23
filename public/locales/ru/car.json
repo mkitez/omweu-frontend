@@ -45,7 +45,7 @@
     "green": "Зеленый",
     "orange": "Оранжевый"
   },
-  "year_abbr": "г. в.",
+  "year_abbr": "г.",
   "notifications": {
     "car_created": "Машина добавлена",
     "car_updated": "Машина сохранена",

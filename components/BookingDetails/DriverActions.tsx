@@ -1,17 +1,18 @@
-import { useState } from 'react';
-import { useTranslation } from 'next-i18next';
-import { Booking } from '../../pages/bookings/[bookingId]';
-import { Button, Input, Modal } from 'antd';
-import { useRouter } from 'next/router';
-import { useBookingApi } from '../../hooks/api/useBookingApi';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import CancelRejectReason from './CancelRejectReason';
+import { Button, Input, message, Modal } from 'antd';
+import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+
+import { useBookingApi } from '../../hooks/api/useBookingApi';
+import { Booking } from '../../pages/bookings/[bookingId]';
 import {
   StatusCancelled,
   StatusConfirmed,
   StatusRejected,
 } from '../BookingStatus';
 import styles from './BookingDetails.module.css';
+import CancelRejectReason from './CancelRejectReason';
 
 type Props = {
   booking: Booking;
@@ -39,12 +40,14 @@ const DriverActions: React.FC<Props> = ({ booking }) => {
       setLoading(false);
     };
   };
-  const confirmHandler = getActionHandler(() =>
-    api.confirmBooking(booking.booking_id)
-  );
-  const rejectHandler = getActionHandler(() =>
-    api.rejectBooking(booking.booking_id, { rejectionReason })
-  );
+  const confirmHandler = getActionHandler(async () => {
+    await api.confirmBooking(booking.booking_id);
+    message.success(t('status_driver.confirmed'));
+  });
+  const rejectHandler = getActionHandler(async () => {
+    api.rejectBooking(booking.booking_id, { rejectionReason });
+    message.success(t('status_driver.rejected'));
+  });
 
   return (
     <div className={styles.driverActions}>

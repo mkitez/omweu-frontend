@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { Button, Input, Modal } from 'antd';
 import { CloseCircleOutlined } from '@ant-design/icons';
-import { Booking } from '../../pages/bookings/[bookingId]';
-import { useRouter } from 'next/router';
+import { Button, Input, message, Modal } from 'antd';
 import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+
 import { useBookingApi } from '../../hooks/api/useBookingApi';
+import { Booking } from '../../pages/bookings/[bookingId]';
 import styles from './BookingDetails.module.css';
 
 type Props = {
@@ -33,6 +34,7 @@ const PassengerActions: React.FC<Props> = ({ booking }) => {
     await api.cancelBooking(booking.booking_id, {
       cancellationReason,
     });
+    message.success(t('status.cancelled'));
     await refreshData();
     setCancelLoading(false);
   };

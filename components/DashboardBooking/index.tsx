@@ -1,5 +1,5 @@
-import { InlineBooking } from '../Trips';
 import InlineTrip from '../InlineTrip';
+import { InlineBooking } from '../Trips';
 import { DashboardBookingStatus } from './DashboardBookingStatus';
 
 type Props = {
@@ -12,7 +12,7 @@ const DashboardBooking = ({ booking }: Props) => {
       trip={booking.trip}
       header={<DashboardBookingStatus booking={booking} />}
       showDate
-      hidePrice
+      showDriver
     />
   );
 };

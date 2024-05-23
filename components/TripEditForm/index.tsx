@@ -1,5 +1,14 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, InputNumber, message, Row } from 'antd';
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  InputNumber,
+  message,
+  Row,
+  Select,
+} from 'antd';
 import { Rule } from 'antd/es/form';
 import type { DefaultOptionType } from 'antd/es/select';
 import axios from 'axios';
@@ -8,28 +17,24 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 
+import { Car } from '../../services/car.service';
+import { TripInputData } from '../../services/trip.service';
+
+import { useCarApi } from '../../hooks/api/useCarsApi';
 import DateTimeInput from '../DateTimeInput';
 import { PlaceInputEdit } from '../PlaceInput';
-import { Destination } from '../Trips';
+import { Destination, InlineCar } from '../Trips';
 import styles from './TripEditForm.module.css';
 
-export interface FormData {
+export interface TripFormData {
   from: DefaultOptionType;
   to: DefaultOptionType;
   routeStops: DefaultOptionType[];
   date: dayjs.Dayjs;
   price: string;
+  car: DefaultOptionType;
   description: string;
 }
-
-type SubmitData = {
-  origin_id: string;
-  dest_id: string;
-  date: string;
-  price: string;
-  description: string;
-  route_stop_ids: string[];
-};
 
 type Props = {
   initialOrigin?: Destination;
@@ -37,9 +42,10 @@ type Props = {
   initialRouteStops?: Destination[];
   initialDate?: dayjs.Dayjs | string;
   initialPrice?: string;
+  initialCar?: DefaultOptionType;
   initialDescription?: string;
   submitValue: string;
-  submit: (data: SubmitData) => Promise<void>;
+  submit: (data: TripInputData) => Promise<void>;
 };
 
 const getInitialPlaceValue = (
@@ -54,19 +60,27 @@ const getInitialPlaceValue = (
   };
 };
 
-const TripEditForm = ({
+export const getCarValue = (car: Car | InlineCar): DefaultOptionType => ({
+  label: `${car.brand.name} ${car.model.name}`,
+  value: car.id,
+});
+
+const TripEditForm: React.FC<Props> = ({
   initialOrigin,
   initialDest,
   initialRouteStops,
   initialDate,
   initialPrice,
+  initialCar,
   initialDescription,
   submitValue,
   submit,
-}: Props) => {
+}) => {
   const { t } = useTranslation('common');
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const carApi = useCarApi();
+  const [cars, setCars] = useState<Car[]>([]);
   const [form] = Form.useForm();
   const initialValues = useMemo(
     () => ({
@@ -79,6 +93,7 @@ const TripEditForm = ({
         ? dayjs(initialDate).tz(initialOrigin?.time_zone)
         : null,
       price: initialPrice ?? null,
+      car: initialCar || null,
       description: initialDescription || '',
     }),
     [
@@ -87,21 +102,35 @@ const TripEditForm = ({
       initialRouteStops,
       initialOrigin,
       initialPrice,
+      initialCar,
       initialDescription,
     ]
   );
   useEffect(() => {
-    form.setFieldsValue(initialValues);
-  }, [form, initialValues]);
+    carApi.getCars().then((response) => {
+      setCars(response.data.sort((car: Car) => (car.is_primary ? -1 : 0)));
+    });
+  }, [carApi, form]);
+  useEffect(() => {
+    if (initialCar) {
+      return;
+    }
+    const car = cars.find((car) => car.is_primary);
+    if (!car) {
+      return;
+    }
+    form.setFieldValue('car', getCarValue(car));
+  }, [cars, form, initialCar]);
 
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (formData: TripFormData) => {
     const date = formData.date.format('YYYY-MM-DDTHH:mm:00');
 
-    const data: SubmitData = {
+    const data: TripInputData = {
       origin_id: formData.from.value as string,
       dest_id: formData.to.value as string,
       date,
       price: formData.price,
+      car_id: Number(formData.car?.value),
       description: formData.description || '',
       route_stop_ids: formData.routeStops.map((stop) => stop.value as string),
     };
@@ -241,6 +270,15 @@ const TripEditForm = ({
           maxLength={5}
           step={1}
           addonAfter="€"
+        />
+      </Form.Item>
+      <Form.Item name="car" label={t('car.label')} rules={[{ required: true }]}>
+        <Select
+          labelInValue
+          showArrow={false}
+          notFoundContent={null}
+          placeholder={t('car.placeholder')}
+          options={cars.map((car) => getCarValue(car))}
         />
       </Form.Item>
       <Form.Item name="description" label={t('description.label')}>

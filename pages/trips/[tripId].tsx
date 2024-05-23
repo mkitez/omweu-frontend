@@ -1,24 +1,26 @@
+import { CopyOutlined, FormOutlined, LeftOutlined } from '@ant-design/icons';
+import axios from 'axios';
+import dayjs from 'dayjs';
 import { InferGetServerSidePropsType } from 'next';
-import Head from 'next/head';
-import { SSRConfig, useTranslation } from 'next-i18next';
-import api from '../../services/api';
-import TripDetails from '../../components/TripDetails';
 import { GetServerSideProps } from 'next';
 import { Session, unstable_getServerSession } from 'next-auth';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { authOptions } from '../api/auth/[...nextauth]';
-import axios from 'axios';
-import type { Trip } from '../../components/Trips';
-import Error from 'next/error';
-import Link from 'next/link';
-import dayjs from 'dayjs';
-import { formatDate } from '../../utils/formatDate';
-import { LeftOutlined, FormOutlined, CopyOutlined } from '@ant-design/icons';
-import InlineBooking from '../../components/InlineBooking';
-import { useIsAuthenticatedUser } from '../../hooks/useIsAuthenticatedUser';
-import InlineBookings from '../../components/InlineBookings';
 import { useSession } from 'next-auth/react';
+import { SSRConfig, useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Error from 'next/error';
+import Head from 'next/head';
+import Link from 'next/link';
+
+import { getTripApi } from '../../services/serverSide/tripApi';
+
+import InlineBooking from '../../components/InlineBooking';
+import InlineBookings from '../../components/InlineBookings';
+import TripDetails from '../../components/TripDetails';
+import type { Trip } from '../../components/Trips';
+import { useIsAuthenticatedUser } from '../../hooks/useIsAuthenticatedUser';
 import styles from '../../styles/Trip.module.css';
+import { formatDate } from '../../utils/formatDate';
+import { authOptions } from '../api/auth/[...nextauth]';
 
 const BackButton = ({ trip }: { trip: Trip }) => {
   const { t } = useTranslation('trip');
@@ -57,8 +59,16 @@ const TripDetailsPage = ({
     trip.origin.time_zone
   );
   const isTripInPast = dayjs(trip.date) < dayjs();
-  const isTripBookable =
-    !isDriver && status === 'authenticated' && !isTripInPast;
+  const showBookingButton = !isDriver && status === 'authenticated';
+  const getDisabledText = () => {
+    if (isTripInPast) {
+      return t('disabled_text.past');
+    }
+    if (trip.free_seats === 0) {
+      return t('disabled_text.no_seats');
+    }
+    return;
+  };
   return (
     <>
       <Head>
@@ -92,7 +102,13 @@ const TripDetailsPage = ({
               </div>
             </>
           ) : (
-            isTripBookable && <InlineBooking tripId={trip.id} />
+            showBookingButton && (
+              <InlineBooking
+                tripId={trip.id}
+                disabled={isTripInPast || !trip.free_seats}
+                disabledText={getDisabledText()}
+              />
+            )
           )}
         </div>
       </div>
@@ -116,19 +132,15 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     'dashboard',
     'trip',
     'booking',
+    'car',
   ]);
-
   const session = await unstable_getServerSession(req, res, authOptions);
+  const tripApi = getTripApi(session, locale);
 
   let notFound = false;
   let trip: Trip | null = null;
   try {
-    const tripResponse = await api.get(`/trips/${params?.tripId}/`, {
-      headers: {
-        Authorization: session ? `Bearer ${session.accessToken}` : undefined,
-        'Accept-Language': locale,
-      },
-    });
+    const tripResponse = await tripApi.getTrip(Number(params?.tripId));
     trip = tripResponse.data;
   } catch (e) {
     if (axios.isAxiosError(e) && e.response?.status === 404) {
