@@ -1,12 +1,13 @@
-import useSWR from 'swr';
-import Link from 'next/link';
-import { useTranslation } from 'next-i18next';
 import { List } from 'antd';
+import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
+import useSWR from 'swr';
+
 import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
 import { Booking } from '../../pages/bookings/[bookingId]';
 import UserAvatar from '../TripDetails/UserAvatar';
-import { InlineBookingStatus } from './InlineBookingStatus';
 import styles from './InlineBookings.module.css';
+import { InlineBookingStatus } from './InlineBookingStatus';
 
 type Props = {
   tripId: number;
@@ -41,6 +42,7 @@ const InlineBookings: React.FC<Props> = ({ tripId }) => {
                     {booking.passenger.first_name}
                   </Link>
                 }
+                className={styles.userData}
               />
               <InlineBookingStatus booking={booking} />
             </List.Item>
