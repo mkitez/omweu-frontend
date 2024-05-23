@@ -230,7 +230,7 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
         </Col>
         {data && (
           <Col>
-            <Button danger onClick={() => setDeleteModalOpen(true)}>
+            <Button danger type="text" onClick={() => setDeleteModalOpen(true)}>
               {t('delete')}
             </Button>
             <Modal

@@ -15,6 +15,10 @@ class TripService extends BaseService {
     return this.api.get('/trips/');
   }
 
+  getUpcomingTrips() {
+    return this.api.get('/trips/upcoming/');
+  }
+
   getTrip(tripId: number) {
     return this.api.get(`/trips/${tripId}/`);
   }

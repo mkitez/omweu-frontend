@@ -134,7 +134,7 @@ const Trips = () => {
                   {isBooking ? (
                     <DashboardBooking booking={entity} />
                   ) : (
-                    <InlineTrip trip={entity} showDate hidePrice hideDriver />
+                    <InlineTrip trip={entity} showDate />
                   )}
                 </Link>
               );
