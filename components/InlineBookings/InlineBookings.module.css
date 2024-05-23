@@ -15,8 +15,8 @@
   color: rgba(0, 0, 0, 0.55);
 }
 
-.userData {
-  align-content: center;
+.root .booking .userData {
+  align-items: center;
 }
 
 .status {

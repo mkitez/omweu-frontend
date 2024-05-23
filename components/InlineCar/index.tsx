@@ -15,7 +15,7 @@ type Props = {
   isClickable?: boolean;
 };
 
-const InlineCar: React.FC<Props> = ({
+const InlineCarComponent: React.FC<Props> = ({
   car,
   showYear,
   showType,
@@ -59,7 +59,7 @@ const InlineCar: React.FC<Props> = ({
     </div>
   );
 
-  return isClickable && 'id' in car ? (
+  return isClickable ? (
     <Link href={`/caredit/${car.id}`} className={styles.link}>
       {rootElement}
     </Link>
@@ -68,4 +68,4 @@ const InlineCar: React.FC<Props> = ({
   );
 };
 
-export default InlineCar;
+export default InlineCarComponent;

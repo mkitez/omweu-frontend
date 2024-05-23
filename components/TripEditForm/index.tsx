@@ -23,7 +23,7 @@ import { TripInputData } from '../../services/trip.service';
 import { useCarApi } from '../../hooks/api/useCarsApi';
 import DateTimeInput from '../DateTimeInput';
 import { PlaceInputEdit } from '../PlaceInput';
-import { Destination } from '../Trips';
+import { Destination, InlineCar } from '../Trips';
 import styles from './TripEditForm.module.css';
 
 export interface TripFormData {
@@ -60,7 +60,7 @@ const getInitialPlaceValue = (
   };
 };
 
-const getCarValue = (car: Car): DefaultOptionType => ({
+export const getCarValue = (car: Car | InlineCar): DefaultOptionType => ({
   label: `${car.brand.name} ${car.model.name}`,
   value: car.id,
 });

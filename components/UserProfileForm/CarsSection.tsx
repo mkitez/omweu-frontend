@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 import { Car } from '../../services/car.service';
 
-import InlineCar from '../InlineCar';
+import InlineCarComponent from '../InlineCar';
 import styles from './UserProfileForm.module.css';
 
 type Props = {
@@ -24,7 +24,7 @@ const CarsSection: React.FC<Props> = ({ cars }) => {
             .sort((a) => (a.is_primary ? -1 : 0))
             .map((car) => (
               <Col key={car.id} xs={24} md={6}>
-                <InlineCar car={car} showYear isClickable />
+                <InlineCarComponent car={car} showYear isClickable />
               </Col>
             ))}
         </Row>

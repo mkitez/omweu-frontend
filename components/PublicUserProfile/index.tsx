@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 
-import InlineCar from '../InlineCar';
+import InlineCarComponent from '../InlineCar';
 import Amenities from '../TripDetails/Amenities';
 import { User } from '../Trips';
 import styles from './PublicUserProfile.module.css';
@@ -73,8 +73,8 @@ const PublicUserProfile: React.FC<Props> = ({ user }) => {
             {user.cars
               .sort((a) => (a.is_primary ? -1 : 0))
               .map((car) => (
-                <Col key={car.id} xs={24} md={6}>
-                  <InlineCar car={car} showYear />
+                <Col key={car.id} xs={12} md={6}>
+                  <InlineCarComponent car={car} showYear />
                 </Col>
               ))}
           </Row>

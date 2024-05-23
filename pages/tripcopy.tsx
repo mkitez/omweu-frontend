@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 
 import { getTripApi } from '../services/serverSide/tripApi';
 
-import TripEditForm from '../components/TripEditForm';
+import TripEditForm, { getCarValue } from '../components/TripEditForm';
 import { Trip } from '../components/Trips';
 import { useTripApi } from '../hooks/api/useTripApi';
 import styles from '../styles/TripEdit.module.css';
@@ -47,6 +47,7 @@ const TripCopy = ({
           initialRouteStops={data.route_stops}
           initialDate={newTripDate}
           initialPrice={data.price}
+          initialCar={data.car ? getCarValue(data.car) : undefined}
           initialDescription={data.description}
           submitValue={t('create', { ns: 'common' })}
           submit={async (data) => {

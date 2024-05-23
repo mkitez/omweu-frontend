@@ -5,7 +5,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
-import TripEditForm from '../../components/TripEditForm';
+import TripEditForm, { getCarValue } from '../../components/TripEditForm';
 import { Trip } from '../../components/Trips';
 import { useTripApi } from '../../hooks/api/useTripApi';
 import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
@@ -55,10 +55,7 @@ const TripEdit = () => {
               initialRouteStops={data.route_stops}
               initialDate={data.date}
               initialPrice={data.price}
-              initialCar={{
-                label: `${data.car?.brand.name} ${data.car?.model.name}`,
-                value: data.car?.id,
-              }}
+              initialCar={data.car ? getCarValue(data.car) : undefined}
               initialDescription={data.description}
               submitValue={t('save', { ns: 'common' })}
               submit={async (data) => {

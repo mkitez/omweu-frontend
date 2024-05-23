@@ -4,7 +4,7 @@ import { Trans, useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import InlineCar from '../InlineCar';
+import InlineCarComponent from '../InlineCar';
 import type { Trip } from '../Trips';
 import Amenities from './Amenities';
 import CarDetails from './CarDetails';
