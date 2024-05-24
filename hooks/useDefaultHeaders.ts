@@ -1,7 +1,8 @@
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
-import { getDefaultHeaders } from '../services/getDefaultHeaders';
 import { useMemo } from 'react';
+
+import { getDefaultHeaders } from '../services/getDefaultHeaders';
 
 export const useDefaultHeaders = () => {
   const { data: session } = useSession();

@@ -13,11 +13,14 @@ import TripEditForm from '../components/TripEditForm';
 import { Trip, User } from '../components/Trips';
 import { useTripApi } from '../hooks/api/useTripApi';
 import styles from '../styles/NewTrip.module.css';
+import { NextPageWithLayout } from './_app';
 import { authOptions } from './api/auth/[...nextauth]';
 
-const NewTrip = ({
+type PageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+const NewTrip: NextPageWithLayout<PageProps> = ({
   shouldShowPreferencesModal,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+}) => {
   const router = useRouter();
   const api = useTripApi();
   const { t } = useTranslation(['dashboard', 'common']);
@@ -49,6 +52,14 @@ const NewTrip = ({
 
 NewTrip.auth = true;
 
+export const shouldShowDriverDataPage = (user: User) => {
+  const hasContacts = Boolean(user.phone_number || user.telegram_username);
+  if (!hasContacts || !user.is_email_confirmed || user.cars.length === 0) {
+    return true;
+  }
+  return false;
+};
+
 type Props = {
   shouldShowPreferencesModal: boolean;
 } & SSRConfig;
@@ -67,12 +78,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   const userApi = getUserApi(session, locale);
   if (session) {
     const userResponse = await userApi.getSelf();
-    const userData = userResponse.data as User;
-    shouldShowPreferencesModal = userData.driver_preferences === null;
-    if (
-      (!userData.phone_number && !userData.telegram_username) ||
-      !userData.is_email_confirmed
-    ) {
+    const user: User = userResponse.data;
+    shouldShowPreferencesModal = user.driver_preferences === null;
+    if (shouldShowDriverDataPage(user)) {
       return {
         redirect: { destination: '/add-contacts' },
         props: {

@@ -1,16 +1,14 @@
 import { Alert, Button, Form, Input, message } from 'antd';
-import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-import api from '../services/api';
-
+import { useUserApi } from '../hooks/api/useUserApi';
 import styles from '../styles/ContactDetailsForm.module.css';
 
 const { Item } = Form;
 
-interface FormData {
+interface UpdateUserFormData {
   email?: string;
   phone_number: string;
   telegram_username: string;
@@ -22,25 +20,19 @@ type Props = {
 
 const ContactDetailsForm: React.FC<Props> = ({ updateEmail }) => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const userApi = useUserApi();
   const [form] = Form.useForm();
+  const { t } = useTranslation(['dashboard', 'common']);
 
   const [loading, setLoading] = useState(false);
   const [showEmailSentAlert, setShowEmailSentAlert] = useState(false);
 
-  const { t, i18n } = useTranslation(['dashboard', 'common']);
-
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (formData: UpdateUserFormData) => {
     setLoading(true);
     const entries = Object.entries(formData).filter(([_, value]) => !!value);
-    const url = `/users/${session?.user.id}/`;
+    const data = Object.fromEntries(entries);
     try {
-      await api.put(url, Object.fromEntries(entries), {
-        headers: {
-          Authorization: `Bearer ${session?.accessToken}`,
-          'Accept-Language': i18n.language,
-        },
-      });
+      await userApi.updateSelf(data);
       if (updateEmail) {
         setShowEmailSentAlert(true);
       } else {

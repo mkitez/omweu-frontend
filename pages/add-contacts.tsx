@@ -1,59 +1,112 @@
-import Head from 'next/head';
+import { message, Steps } from 'antd';
+import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import type { InferGetServerSidePropsType } from 'next';
-import { unstable_getServerSession } from 'next-auth';
+import { Session, unstable_getServerSession } from 'next-auth';
+import { SSRConfig, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { authOptions } from './api/auth/[...nextauth]';
-import { SSRConfig, Trans, useTranslation } from 'next-i18next';
-import styles from '../styles/AddContacts.module.css';
-import api from '../services/api';
+import Head from 'next/head';
+import { useState } from 'react';
+
+import { getUserApi } from '../services/serverSide/userApi';
+
+import AddContactsForm from '../components/AddContactsForm';
+import CarEditForm from '../components/CarEditForm';
+import DriverPreferencesForm from '../components/DriverPreferencesForm';
 import { User } from '../components/Trips';
-import ContactDetailsForm from '../components/ContactDetailsForm';
-import Link from 'next/link';
-import { Alert } from 'antd';
+import { useCarApi } from '../hooks/api/useCarsApi';
+import styles from '../styles/AddContacts.module.css';
+import { NextPageWithLayout } from './_app';
+import { authOptions } from './api/auth/[...nextauth]';
+import { shouldShowDriverDataPage } from './newtrip';
 
-const AddContacts = ({
-  user,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t } = useTranslation(['dashboard', 'common']);
+const getInitialStep = (user: User | undefined) => {
+  if (!user) {
+    return 0;
+  }
+  const hasContactData = user.phone_number || user.telegram_username;
+  if (!hasContactData || !user.is_email_confirmed) {
+    return 0;
+  }
+  if (user.cars.length === 0) {
+    return 1;
+  }
+  if (!user.driver_preferences) {
+    return 2;
+  }
+  return 3;
+};
 
-  const shouldUpdateEmail = user?.email === '';
-  const awaitingEmailConfirmation = user?.email && !user.is_email_confirmed;
+type PageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+const AddContacts: NextPageWithLayout<PageProps> = ({ user }) => {
+  const { t } = useTranslation(['dashboard', 'common', 'car']);
+  const [currentStep, setCurrentStep] = useState(getInitialStep(user));
+  const carApi = useCarApi();
+
+  const nextStep = () => {
+    setCurrentStep((prev) => prev + 1);
+  };
+
+  const items = [
+    {
+      title: t('driver_data_steps.contacts'),
+      content: <AddContactsForm user={user} />,
+    },
+    {
+      title: t('driver_data_steps.cars'),
+      content: (
+        <>
+          <h1>{t('create_title', { ns: 'car' })}</h1>
+          <div className={styles.info}>
+            {t('driver_data_steps.cars_info_text')}
+          </div>
+          <CarEditForm
+            submitValue={t('cars.create_and_continue')}
+            hideCancelButton
+            hideIsPrimary
+            submit={async (data) => {
+              try {
+                await carApi.createCar(data);
+                message.success(t('notifications.car_created', { ns: 'car' }));
+                nextStep();
+              } catch (e) {
+                if (axios.isAxiosError(e)) {
+                  message.error(t('errors.common', { ns: 'common' }));
+                }
+              }
+            }}
+          />
+        </>
+      ),
+    },
+    {
+      title: t('driver_data_steps.preferences'),
+      content: (
+        <>
+          <h1>{t('driver_preferences.title')}</h1>
+          <DriverPreferencesForm showSubmitButton onSubmit={nextStep} />
+        </>
+      ),
+    },
+    {
+      title: t('driver_data_steps.done'),
+      content: 'Test',
+    },
+  ];
+
   return (
-    <div className="container">
+    <>
       <Head>
         <title>{`${t('addContacts.title')} | EUbyCar.com`}</title>
       </Head>
-      <div className={styles.root}>
-        <h1>{t('addContacts.title')}</h1>
-        {awaitingEmailConfirmation ? (
-          <Alert
-            type="info"
-            message={t('addContacts.emailNotConfirmedTitle')}
-            description={t('addContacts.emailNotConfirmedBody')}
-            showIcon
-          />
-        ) : (
-          <>
-            <div className={styles.info}>
-              <p>
-                <Trans
-                  components={[
-                    <Link key={0} href="/dashboard/profile">
-                      x
-                    </Link>,
-                  ]}
-                >
-                  {t('addContacts.infoTextOne')}
-                </Trans>
-              </p>
-              {shouldUpdateEmail && <p>{t('addContacts.infoTextTwo')}</p>}
-            </div>
-            <ContactDetailsForm updateEmail={shouldUpdateEmail} />
-          </>
-        )}
+      <div className="container-wd">
+        <Steps current={currentStep} items={items} className={styles.steps} />
       </div>
-    </div>
+      <div className="container">
+        <div className={styles.root}>{items[currentStep].content}</div>
+      </div>
+    </>
   );
 };
 
@@ -61,6 +114,7 @@ export default AddContacts;
 
 type Props = {
   user?: User;
+  session: Session | null;
 } & SSRConfig;
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({
@@ -70,35 +124,30 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 }) => {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
-    return { redirect: { destination: '/' }, props: {} };
+    return { redirect: { destination: '/' }, props: { session: null } };
   }
 
-  const userResponse = await api.get(`/users/${session.user.id}/`, {
-    headers: {
-      Authorization: `Bearer ${session.accessToken}`,
-      'Accept-Language': locale,
-    },
-  });
-  const userData = userResponse.data as User;
-  if (
-    (userData.phone_number || userData.telegram_username) &&
-    userData.is_email_confirmed
-  ) {
+  const userApi = getUserApi(session, locale);
+  const userResponse = await userApi.getSelf();
+  const user: User = userResponse.data;
+  if (!shouldShowDriverDataPage(user)) {
     return {
       redirect: { destination: '/newtrip' },
-      props: {},
+      props: { session },
     };
   }
 
   const translations = await serverSideTranslations(locale as string, [
     'dashboard',
     'common',
+    'car',
   ]);
 
   return {
     props: {
       ...translations,
-      user: userData,
+      session,
+      user,
     },
   };
 };

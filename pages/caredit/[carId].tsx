@@ -43,6 +43,7 @@ const CarEditPage = ({
             submit={async (data) => {
               await carApi.updateCar(Number(router.query.carId), data);
               message.success(t('notifications.car_updated'));
+              router.push('/dashboard/profile');
             }}
           />
         </div>
@@ -72,7 +73,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   let notFound = false;
   let car: Car | null = null;
   try {
-    const response = await api.getCar(params?.carId as string);
+    const response = await api.getCar(Number(params?.carId));
     car = response.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
