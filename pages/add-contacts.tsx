@@ -1,4 +1,4 @@
-import { message, Steps } from 'antd';
+import { Button, message, Result, Steps } from 'antd';
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import type { InferGetServerSidePropsType } from 'next';
@@ -6,6 +6,7 @@ import { Session, unstable_getServerSession } from 'next-auth';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useState } from 'react';
 
 import { getUserApi } from '../services/serverSide/userApi';
@@ -91,7 +92,18 @@ const AddContacts: NextPageWithLayout<PageProps> = ({ user }) => {
     },
     {
       title: t('driver_data_steps.done'),
-      content: 'Test',
+      content: (
+        <Result
+          status="success"
+          title={t('driver_data_steps.done_title')}
+          subTitle={t('driver_data_steps.done_subtitle')}
+          extra={[
+            <Link href="/newtrip" passHref legacyBehavior key="createTrip">
+              <Button type="primary">{t('trips.createTrip')}</Button>
+            </Link>,
+          ]}
+        />
+      ),
     },
   ];
 
