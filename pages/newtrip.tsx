@@ -82,7 +82,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     shouldShowPreferencesModal = user.driver_preferences === null;
     if (shouldShowDriverDataPage(user)) {
       return {
-        redirect: { destination: '/add-contacts' },
+        redirect: { destination: '/driver-info' },
         props: {
           ...translations,
           session,

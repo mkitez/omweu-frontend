@@ -7,7 +7,7 @@ import { SSRConfig, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { getUserApi } from '../services/serverSide/userApi';
 
@@ -40,10 +40,21 @@ const getInitialStep = (user: User | undefined) => {
 
 type PageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const AddContacts: NextPageWithLayout<PageProps> = ({ user }) => {
+const DriverInfoPage: NextPageWithLayout<PageProps> = ({ user }) => {
   const { t } = useTranslation(['dashboard', 'common', 'car']);
   const [currentStep, setCurrentStep] = useState(getInitialStep(user));
   const carApi = useCarApi();
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    if (currentStep === 1 && user.cars.length > 0) {
+      setCurrentStep(2);
+    }
+    if (currentStep === 2 && user.driver_preferences) {
+      setCurrentStep(3);
+    }
+  }, [currentStep, user]);
 
   const nextStep = () => {
     setCurrentStep((prev) => prev + 1);
@@ -122,7 +133,7 @@ const AddContacts: NextPageWithLayout<PageProps> = ({ user }) => {
   );
 };
 
-export default AddContacts;
+export default DriverInfoPage;
 
 type Props = {
   user?: User;
