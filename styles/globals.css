@@ -28,6 +28,12 @@ a {
   margin: auto;
 }
 
+.container-wd {
+  max-width: 1000px;
+  padding: 0 1rem;
+  margin: auto;
+}
+
 .highlight {
   color: #fff;
   position: relative;

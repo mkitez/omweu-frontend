@@ -40,11 +40,19 @@ interface CarFormData {
 
 type Props = {
   data?: Car;
+  hideCancelButton?: boolean;
+  hideIsPrimary?: boolean;
   submitValue: string;
   submit: (data: CarInputData) => Promise<void>;
 };
 
-const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
+const CarEditForm: React.FC<Props> = ({
+  data,
+  hideCancelButton,
+  hideIsPrimary,
+  submitValue,
+  submit,
+}) => {
   const { t } = useTranslation(['car', 'common']);
   const router = useRouter();
   const [form] = Form.useForm<CarFormData>();
@@ -71,7 +79,6 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
     const dataToSubmit = { model_id: model.value as number, ...rest };
     try {
       await submit(dataToSubmit);
-      router.push('/dashboard/profile');
     } catch (e) {
       if (axios.isAxiosError(e)) {
         message.error(t('errors.common', { ns: 'common' }));
@@ -208,13 +215,15 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item
-        name="is_primary"
-        label={t('is_primary')}
-        valuePropName="checked"
-      >
-        <Checkbox disabled={data?.is_primary === true} />
-      </Form.Item>
+      {!hideIsPrimary && (
+        <Form.Item
+          name="is_primary"
+          label={t('is_primary')}
+          valuePropName="checked"
+        >
+          <Checkbox disabled={data?.is_primary === true} />
+        </Form.Item>
+      )}
       <Row gutter={[10, 10]}>
         <Col lg={{ offset: 6 }}>
           <Form.Item>
@@ -223,11 +232,13 @@ const CarEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
             </Button>
           </Form.Item>
         </Col>
-        <Col>
-          <Button onClick={() => router.push('/dashboard/profile')}>
-            {t('cancel')}
-          </Button>
-        </Col>
+        {!hideCancelButton && (
+          <Col>
+            <Button onClick={() => router.push('/dashboard/profile')}>
+              {t('cancel')}
+            </Button>
+          </Col>
+        )}
         {data && (
           <Col>
             <Button danger type="text" onClick={() => setDeleteModalOpen(true)}>

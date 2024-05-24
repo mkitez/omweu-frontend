@@ -4,6 +4,7 @@ import { unstable_getServerSession } from 'next-auth';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 import CarEditForm from '../components/CarEditForm';
 import { useCarApi } from '../hooks/api/useCarsApi';
@@ -12,6 +13,7 @@ import { authOptions } from './api/auth/[...nextauth]';
 
 const NewCar = () => {
   const { t } = useTranslation('car');
+  const router = useRouter();
   const { message } = App.useApp();
   const carApi = useCarApi();
 
@@ -27,6 +29,7 @@ const NewCar = () => {
           submit={async (data) => {
             await carApi.createCar(data);
             message.success(t('notifications.car_created'));
+            router.push('/dashboard/profile');
           }}
         />
       </div>
