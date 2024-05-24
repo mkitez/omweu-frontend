@@ -40,7 +40,7 @@ const DriverPreferencesForm: React.FC<Props> = ({
       <DriverPreferencesFormFields />
       {showSubmitButton && (
         <Form.Item>
-          <Button key={0} htmlType="submit" type="primary">
+          <Button htmlType="submit" type="primary">
             {t('driver_preferences.save_and_continue')}
           </Button>
         </Form.Item>
