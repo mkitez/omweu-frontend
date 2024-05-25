@@ -8,9 +8,10 @@ import { User } from '../Trips';
 
 type Props = {
   user?: User;
+  onSubmit?: () => void;
 };
 
-const AddContactsForm: React.FC<Props> = ({ user }) => {
+const AddContactsForm: React.FC<Props> = ({ user, onSubmit }) => {
   const { t } = useTranslation(['dashboard', 'common']);
 
   const shouldUpdateEmail = user?.email === '';
@@ -46,7 +47,10 @@ const AddContactsForm: React.FC<Props> = ({ user }) => {
                 </p>
                 {shouldUpdateEmail && <p>{t('addContacts.infoTextTwo')}</p>}
               </div>
-              <ContactDetailsForm updateEmail={shouldUpdateEmail} />
+              <ContactDetailsForm
+                updateEmail={shouldUpdateEmail}
+                onSubmit={onSubmit}
+              />
             </>
           );
         })()}

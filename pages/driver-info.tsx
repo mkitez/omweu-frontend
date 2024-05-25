@@ -63,7 +63,7 @@ const DriverInfoPage: NextPageWithLayout<PageProps> = ({ user }) => {
   const items = [
     {
       title: t('driver_data_steps.contacts'),
-      content: <AddContactsForm user={user} />,
+      content: <AddContactsForm user={user} onSubmit={nextStep} />,
     },
     {
       title: t('driver_data_steps.cars'),

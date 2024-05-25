@@ -1,6 +1,5 @@
 import { Alert, Button, Form, Input, message } from 'antd';
 import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import { useUserApi } from '../hooks/api/useUserApi';
@@ -16,10 +15,10 @@ interface UpdateUserFormData {
 
 type Props = {
   updateEmail?: boolean;
+  onSubmit?: () => void;
 };
 
-const ContactDetailsForm: React.FC<Props> = ({ updateEmail }) => {
-  const router = useRouter();
+const ContactDetailsForm: React.FC<Props> = ({ updateEmail, onSubmit }) => {
   const userApi = useUserApi();
   const [form] = Form.useForm();
   const { t } = useTranslation(['dashboard', 'common']);
@@ -36,7 +35,7 @@ const ContactDetailsForm: React.FC<Props> = ({ updateEmail }) => {
       if (updateEmail) {
         setShowEmailSentAlert(true);
       } else {
-        await router.push('/newtrip');
+        onSubmit && onSubmit();
       }
     } catch (e) {
       message.error(t('errors.common', { ns: 'common' }));
