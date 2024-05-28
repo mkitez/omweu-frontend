@@ -1,64 +1,53 @@
+import { Alert, Button, DatePicker, Divider, Form, Input } from 'antd';
 import axios from 'axios';
-import ReCAPTCHA from 'react-google-recaptcha';
-import { ReactNode, useState } from 'react';
-import { Button, Form, Input, Alert, Divider } from 'antd';
-import AuthService from '../services/auth.service';
-import styles from '../styles/SignupForm.module.css';
+import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { RECAPTCHA_SITE_KEY } from '../utils/constants';
+import { ReactNode, useState } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
 
-const ErrorBox = ({
-  text,
-  fieldsData,
-}: {
-  text: string;
-  fieldsData: Record<string, string[]>;
-}) => {
-  return (
-    <>
-      <div>{text}</div>
-      <ul>
-        {Object.values(fieldsData).map((value, index) => (
-          <li key={index}>{[value]}</li>
-        ))}
-      </ul>
-    </>
-  );
+import { useUserApi } from '../../hooks/api/useUserApi';
+import { RECAPTCHA_SITE_KEY } from '../../utils/constants';
+import ErrorContainer from './ErrorContainer';
+import styles from './SignupForm.module.css';
+
+const dateFormats: Record<string, string> = {
+  ru: 'DD.MM.YYYY',
 };
 
-interface FormData {
+interface UserFormData {
   email: string;
   password: string;
-  passwordConfirmation: string;
-  firstName: string;
-  phone: string;
+  password_confirmation: string;
+  first_name: string;
+  last_name?: string;
+  birth_date: string;
+  phone_number: string;
   captcha: string;
 }
 
-const SignupForm = () => {
+const SignupForm: React.FC = () => {
   const { t, i18n } = useTranslation(['auth', 'common']);
+  const userApi = useUserApi();
 
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<UserFormData>();
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<ReactNode>(null);
 
-  const onFinish = async (formData: FormData) => {
+  const onFinish = async (formData: UserFormData) => {
+    const { birth_date, password_confirmation, ...data } = formData;
+    const birthDateFormatted = dayjs(
+      birth_date,
+      dateFormats[i18n.language]
+    ).format('YYYY-MM-DD');
     setError(null);
     setLoading(true);
-    const { email, password, firstName, phone, captcha } = formData;
     try {
-      await AuthService.signUp(
-        {
-          email,
-          password,
-          first_name: firstName,
-          phone_number: phone,
-          captcha,
-        },
-        i18n.language
-      );
+      await userApi.createUser({
+        ...data,
+        birth_date: birthDateFormatted,
+      });
       setSuccess(true);
       form.resetFields();
     } catch (e) {
@@ -66,7 +55,7 @@ const SignupForm = () => {
       if (axios.isAxiosError(e)) {
         if (e.response?.status === 400) {
           setError(
-            <ErrorBox
+            <ErrorContainer
               text={t('errors.problemsWithFields')}
               fieldsData={e.response?.data}
             />
@@ -111,7 +100,7 @@ const SignupForm = () => {
           <Input.Password placeholder={t('registration.password') || ''} />
         </Form.Item>
         <Form.Item
-          name="passwordConfirmation"
+          name="password_confirmation"
           label={t('registration.confirmPassword')}
           rules={[
             { required: true, message: t('errors.enterPassword') as string },
@@ -132,7 +121,7 @@ const SignupForm = () => {
         </Form.Item>
         <Divider />
         <Form.Item
-          name="firstName"
+          name="first_name"
           label={t('registration.firstName')}
           rules={[
             { required: true, message: t('errors.enterName') as string },
@@ -142,18 +131,59 @@ const SignupForm = () => {
           <Input placeholder={t('registration.firstName') || ''} />
         </Form.Item>
         <Form.Item
-          name="phone"
+          name="last_name"
+          label={t('registration.lastName')}
+          rules={[{ max: 30, message: t('errors.longLastName') as string }]}
+        >
+          <Input placeholder={t('registration.lastName') || ''} />
+        </Form.Item>
+        <Form.Item
+          name="phone_number"
           label={t('registration.phone')}
           rules={[
             { pattern: /\+\d+/, message: t('errors.numberFormat') as string },
             { max: 20, message: t('errors.longNumber') as string },
+            { required: true, message: t('errors.enterNumber') as string },
           ]}
         >
-          <Input
-            placeholder={`${t('registration.phone')} (${t(
-              'registration.optionalField'
-            )})`}
-          />
+          <Input placeholder={t('registration.phone') || ''} />
+        </Form.Item>
+        <Form.Item
+          name="birth_date"
+          label={t('registration.birthDate')}
+          rules={[
+            () => ({
+              validator(_, value) {
+                if (!value) {
+                  return Promise.resolve();
+                }
+                const date = dayjs(value, dateFormats[i18n.language], true);
+                if (!date.isValid()) {
+                  return Promise.reject(
+                    new Error(
+                      `${t('errors.dateFormat')}: ${t('registration.birthDateFormat')}`
+                    )
+                  );
+                }
+                const diff = dayjs().diff(date, 'year');
+                if (diff < 18) {
+                  return Promise.reject(
+                    new Error(t('errors.dateValueLow') as string)
+                  );
+                }
+                if (diff > 100) {
+                  return Promise.reject(
+                    new Error(t('errors.dateValueHigh') as string)
+                  );
+                }
+                return Promise.resolve();
+              },
+            }),
+            { required: true, message: t('errors.enterBirthDate') as string },
+          ]}
+          validateTrigger={['onBlur']}
+        >
+          <Input placeholder={t('registration.birthDateFormat') as string} />
         </Form.Item>
         <Form.Item
           name="captcha"

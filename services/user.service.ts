@@ -1,7 +1,21 @@
 import { UserFormData } from '../components/UserProfileForm';
 import BaseService from './baseService';
 
+export interface SignupData {
+  email: string;
+  password: string;
+  first_name: string;
+  last_name?: string;
+  phone_number: string;
+  birth_date: string;
+  captcha: string;
+}
+
 class UserService extends BaseService {
+  createUser(data: SignupData) {
+    return this.api.post('/users/', data);
+  }
+
   getSelf() {
     return this.api.get('/users/self/');
   }
