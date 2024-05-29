@@ -53,11 +53,13 @@ const SignupForm: React.FC = () => {
 
   const getValidationProps = useCallback(
     (fieldName: keyof UserFormData): FormItemProps => {
+      const errors = validationErrors?.[fieldName];
+      if (!errors) {
+        return {};
+      }
       return {
-        validateStatus: validationErrors?.[fieldName] && 'error',
-        help: validationErrors?.[fieldName] && (
-          <ValidationHelpMessage errors={validationErrors?.[fieldName]} />
-        ),
+        validateStatus: 'error',
+        help: <ValidationHelpMessage errors={errors} />,
       };
     },
     [validationErrors]
@@ -269,7 +271,7 @@ const SignupForm: React.FC = () => {
               {...getValidationProps('telegram_username')}
             >
               <Input
-                placeholder={t('registration.telegram') || ''}
+                placeholder={t('registration.telegram_placeholder') || ''}
                 onFocus={() =>
                   setValidationErrors((errors) => ({
                     ...errors,
@@ -301,12 +303,12 @@ const SignupForm: React.FC = () => {
           wrapperCol={{ xs: 24, sm: { offset: 8 } }}
           {...getValidationProps('captcha')}
         >
-          <ReCAPTCHA
+          {/* <ReCAPTCHA
             sitekey={RECAPTCHA_SITE_KEY as string}
             onChange={(value) => form.setFieldValue('captcha', value)}
             className={styles.captchaContainer}
             hl={i18n.language}
-          />
+          /> */}
         </Form.Item>
         <Form.Item
           className={styles.submitButtonContainer}

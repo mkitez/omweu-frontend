@@ -100,6 +100,7 @@ const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
             wrapperCol={{ span: 18 }}
             label={t('profile.phoneNumber')}
             name="phone_number"
+            rules={[{ required: true }]}
           >
             <Input />
           </Item>

@@ -11,6 +11,7 @@ interface UpdateUserFormData {
   email?: string;
   phone_number: string;
   telegram_username: string;
+  whatsapp: string;
 }
 
 type Props = {
@@ -78,23 +79,17 @@ const ContactDetailsForm: React.FC<Props> = ({ updateEmail, onSubmit }) => {
           name="phone_number"
           dependencies={['telegram_username']}
           rules={[
+            { required: true },
             { pattern: /\+\d+/, message: t('errors.numberFormat') as string },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (value || getFieldValue('telegram_username')) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(
-                  new Error(t('errors.enterContacts') as string)
-                );
-              },
-            }),
           ]}
         >
           <Input placeholder={t('profile.phoneNumber') as string} />
         </Item>
         <Item label={t('profile.telegram')} name="telegram_username">
           <Input placeholder={t('profile.telegramPlaceholder') as string} />
+        </Item>
+        <Item label={t('profile.whatsapp')} name="whatsapp">
+          <Input placeholder={t('profile.whatsapp') as string} />
         </Item>
         <Item wrapperCol={{ span: 24 }} className={styles.btnContainer}>
           <Button htmlType="submit" type="primary" loading={loading}>
