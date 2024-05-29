@@ -20,3 +20,7 @@ export const isJwtExpired = (token: string) => {
   }
   return false;
 };
+
+export const capitalizeFirstLetter = (input: string) => {
+  return input.charAt(0).toUpperCase() + input.slice(1);
+};

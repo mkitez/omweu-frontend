@@ -1,14 +1,22 @@
-import { Alert, Button, DatePicker, Divider, Form, Input } from 'antd';
+import {
+  Alert,
+  Button,
+  Divider,
+  Form,
+  FormItemProps,
+  Input,
+  message,
+} from 'antd';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { ReactNode, useState } from 'react';
+import { useCallback, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 
 import { useUserApi } from '../../hooks/api/useUserApi';
 import { RECAPTCHA_SITE_KEY } from '../../utils/constants';
-import ErrorContainer from './ErrorContainer';
 import styles from './SignupForm.module.css';
+import ValidationHelpMessage from './ValidationHelpMessage';
 
 const dateFormats: Record<string, string> = {
   ru: 'DD.MM.YYYY',
@@ -25,6 +33,8 @@ interface UserFormData {
   captcha: string;
 }
 
+type ValidationErrors = Partial<Record<keyof UserFormData, string[]>>;
+
 const SignupForm: React.FC = () => {
   const { t, i18n } = useTranslation(['auth', 'common']);
   const userApi = useUserApi();
@@ -33,7 +43,19 @@ const SignupForm: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<ReactNode>(null);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>();
+
+  const getValidationProps = useCallback(
+    (fieldName: keyof UserFormData): FormItemProps => {
+      return {
+        validateStatus: validationErrors?.[fieldName] && 'error',
+        help: validationErrors?.[fieldName] && (
+          <ValidationHelpMessage errors={validationErrors?.[fieldName]} />
+        ),
+      };
+    },
+    [validationErrors]
+  );
 
   const onFinish = async (formData: UserFormData) => {
     const { birth_date, password_confirmation, ...data } = formData;
@@ -41,7 +63,6 @@ const SignupForm: React.FC = () => {
       birth_date,
       dateFormats[i18n.language]
     ).format('YYYY-MM-DD');
-    setError(null);
     setLoading(true);
     try {
       await userApi.createUser({
@@ -54,14 +75,9 @@ const SignupForm: React.FC = () => {
       setSuccess(false);
       if (axios.isAxiosError(e)) {
         if (e.response?.status === 400) {
-          setError(
-            <ErrorContainer
-              text={t('errors.problemsWithFields')}
-              fieldsData={e.response?.data}
-            />
-          );
+          setValidationErrors(e.response.data);
         } else {
-          setError(t('errors.common', { ns: 'common' }) as string);
+          message.error(t('errors.common', { ns: 'common' }));
         }
       }
     }
@@ -69,6 +85,13 @@ const SignupForm: React.FC = () => {
   };
   return (
     <>
+      {success && (
+        <Alert
+          className={styles.alert}
+          type="success"
+          message={t('registration.success')}
+        />
+      )}
       <Form
         form={form}
         onFinish={onFinish}
@@ -83,8 +106,14 @@ const SignupForm: React.FC = () => {
             { required: true, message: t('errors.enterEmail') as string },
             { type: 'email' },
           ]}
+          {...getValidationProps('email')}
         >
-          <Input placeholder={t('registration.email') || ''} />
+          <Input
+            placeholder={t('registration.email') || ''}
+            onFocus={() =>
+              setValidationErrors((errors) => ({ ...errors, email: undefined }))
+            }
+          />
         </Form.Item>
         <Form.Item
           name="password"
@@ -96,8 +125,17 @@ const SignupForm: React.FC = () => {
               message: t('errors.shortPassword', { len: 8 }) as string,
             },
           ]}
+          {...getValidationProps('password')}
         >
-          <Input.Password placeholder={t('registration.password') || ''} />
+          <Input.Password
+            placeholder={t('registration.password') || ''}
+            onFocus={() =>
+              setValidationErrors((errors) => ({
+                ...errors,
+                password: undefined,
+              }))
+            }
+          />
         </Form.Item>
         <Form.Item
           name="password_confirmation"
@@ -145,8 +183,17 @@ const SignupForm: React.FC = () => {
             { max: 20, message: t('errors.longNumber') as string },
             { required: true, message: t('errors.enterNumber') as string },
           ]}
+          {...getValidationProps('phone_number')}
         >
-          <Input placeholder={t('registration.phone') || ''} />
+          <Input
+            placeholder={t('registration.phone') || ''}
+            onFocus={() =>
+              setValidationErrors((errors) => ({
+                ...errors,
+                phone_number: undefined,
+              }))
+            }
+          />
         </Form.Item>
         <Form.Item
           name="birth_date"
@@ -192,6 +239,7 @@ const SignupForm: React.FC = () => {
             { required: true, message: t('errors.solveCaptcha') as string },
           ]}
           wrapperCol={{ xs: 24, sm: { offset: 8 } }}
+          {...getValidationProps('captcha')}
         >
           <ReCAPTCHA
             sitekey={RECAPTCHA_SITE_KEY as string}
@@ -209,14 +257,6 @@ const SignupForm: React.FC = () => {
           </Button>
         </Form.Item>
       </Form>
-      {success && (
-        <Alert
-          className={styles.alert}
-          type="success"
-          message={t('registration.success')}
-        />
-      )}
-      {error && <Alert className={styles.alert} type="error" message={error} />}
     </>
   );
 };
