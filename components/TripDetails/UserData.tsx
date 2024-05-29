@@ -1,6 +1,8 @@
-import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 
+import PhoneIcon from '../../assets/phone-svgrepo-com.svg';
+import TelegramIcon from '../../assets/telegram-svgrepo-com.svg';
+import WhatsappIcon from '../../assets/whatsapp-color-svgrepo-com.svg';
 import { User } from '../Trips';
 import styles from './TripDetails.module.css';
 import UserAvatar from './UserAvatar';
@@ -10,9 +12,8 @@ type Props = {
 };
 
 const UserData: React.FC<Props> = ({ user }) => {
-  const { t } = useTranslation('booking');
-  const { phone_number, telegram_username } = user;
-  const hasContacts = phone_number || telegram_username;
+  const { phone_number, telegram_username, whatsapp_number } = user;
+  const hasContacts = phone_number || telegram_username || whatsapp_number;
 
   return (
     <div className={styles.userData}>
@@ -27,22 +28,45 @@ const UserData: React.FC<Props> = ({ user }) => {
           <ul>
             {phone_number && (
               <li>
-                {t('phone')}:{' '}
-                <a className={styles.contactValue} href={`tel:${phone_number}`}>
-                  {phone_number}
+                <a href={`tel:${phone_number}`}>
+                  <div className={styles.contact}>
+                    <div className={styles.contactIcon}>
+                      <PhoneIcon height="100%" width="100%" />
+                    </div>
+                    {phone_number}
+                  </div>
+                </a>
+              </li>
+            )}
+            {whatsapp_number && (
+              <li>
+                <a
+                  href={`https://wa.me/${whatsapp_number.replace(/\D/g, '')}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <div className={styles.contact}>
+                    <div className={styles.contactIcon}>
+                      <WhatsappIcon height="100%" width="100%" />
+                    </div>
+                    {whatsapp_number}
+                  </div>
                 </a>
               </li>
             )}
             {telegram_username && (
               <li>
-                Telegram:{' '}
                 <a
                   href={`https://t.me/${telegram_username}`}
                   target="_blank"
                   rel="noreferrer"
-                  className={styles.contactValue}
                 >
-                  @{telegram_username}
+                  <div className={styles.contact}>
+                    <div className={styles.contactIcon}>
+                      <TelegramIcon height="100%" width="100%" />
+                    </div>
+                    @{telegram_username}
+                  </div>
                 </a>
               </li>
             )}
