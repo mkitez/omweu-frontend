@@ -53,8 +53,11 @@ const NewTrip: NextPageWithLayout<PageProps> = ({
 NewTrip.auth = true;
 
 export const shouldShowDriverDataPage = (user: User) => {
-  const hasContacts = Boolean(user.phone_number || user.telegram_username);
-  if (!hasContacts || !user.is_email_confirmed || user.cars.length === 0) {
+  if (
+    !user.phone_number ||
+    !user.is_email_confirmed ||
+    user.cars.length === 0
+  ) {
     return true;
   }
   return false;
