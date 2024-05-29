@@ -39,6 +39,7 @@ export interface User {
   driver_preferences: DriverPreferences | null;
   about?: string;
   date_joined?: string;
+  birth_date?: string;
   cars: Car[];
 }
 

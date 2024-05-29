@@ -18,7 +18,11 @@
   margin-bottom: 0.2rem;
 }
 
-.emailConfirmed, .joinDate {
+.age {
+  margin-bottom: 0.5rem;
+}
+
+.emailConfirmed, .joinDate, .age {
   color: rgba(0, 0, 0, 0.75);
   font-size: 0.9rem;
 }

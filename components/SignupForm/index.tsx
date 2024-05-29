@@ -17,6 +17,7 @@ import { useCallback, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 
 import { useUserApi } from '../../hooks/api/useUserApi';
+import { calculateAge } from '../../utils/commonUtils';
 import { RECAPTCHA_SITE_KEY } from '../../utils/constants';
 import styles from './SignupForm.module.css';
 import ValidationHelpMessage from './ValidationHelpMessage';
@@ -200,13 +201,13 @@ const SignupForm: React.FC = () => {
                     )
                   );
                 }
-                const diff = dayjs().diff(date, 'year');
-                if (diff < 18) {
+                const age = calculateAge(value);
+                if (age < 18) {
                   return Promise.reject(
                     new Error(t('errors.dateValueLow') as string)
                   );
                 }
-                if (diff > 100) {
+                if (age > 100) {
                   return Promise.reject(
                     new Error(t('errors.dateValueHigh') as string)
                   );

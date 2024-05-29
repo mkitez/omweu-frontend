@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 
 export const debounce = (func: Function, timeout: number): Function => {
@@ -23,4 +24,8 @@ export const isJwtExpired = (token: string) => {
 
 export const capitalizeFirstLetter = (input: string) => {
   return input.charAt(0).toUpperCase() + input.slice(1);
+};
+
+export const calculateAge = (birthDate: dayjs.Dayjs) => {
+  return dayjs().diff(birthDate, 'year');
 };
