@@ -16,6 +16,7 @@
     "firstName": "Имя",
     "lastName": "Фамилия",
     "phoneNumber": "Телефон",
+    "whatsapp": "WhatsApp",
     "telegram": "Telegram",
     "telegramPlaceholder": "Имя пользователя без @",
     "about": "О себе",
