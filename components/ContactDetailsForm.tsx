@@ -10,8 +10,8 @@ const { Item } = Form;
 interface UpdateUserFormData {
   email?: string;
   phone_number: string;
+  whatsapp_number: string;
   telegram_username: string;
-  whatsapp: string;
 }
 
 type Props = {
@@ -21,7 +21,7 @@ type Props = {
 
 const ContactDetailsForm: React.FC<Props> = ({ updateEmail, onSubmit }) => {
   const userApi = useUserApi();
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<UpdateUserFormData>();
   const { t } = useTranslation(['dashboard', 'common']);
 
   const [loading, setLoading] = useState(false);
@@ -88,7 +88,7 @@ const ContactDetailsForm: React.FC<Props> = ({ updateEmail, onSubmit }) => {
         <Item label={t('profile.telegram')} name="telegram_username">
           <Input placeholder={t('profile.telegramPlaceholder') as string} />
         </Item>
-        <Item label={t('profile.whatsapp')} name="whatsapp">
+        <Item label={t('profile.whatsapp')} name="whatsapp_number">
           <Input placeholder={t('profile.whatsapp') as string} />
         </Item>
         <Item wrapperCol={{ span: 24 }} className={styles.btnContainer}>

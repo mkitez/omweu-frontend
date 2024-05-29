@@ -304,12 +304,12 @@ const SignupForm: React.FC = () => {
           wrapperCol={{ xs: 24, sm: { offset: 8 } }}
           {...getValidationProps('captcha')}
         >
-          {/* <ReCAPTCHA
+          <ReCAPTCHA
             sitekey={RECAPTCHA_SITE_KEY as string}
             onChange={(value) => form.setFieldValue('captcha', value)}
             className={styles.captchaContainer}
             hl={i18n.language}
-          /> */}
+          />
         </Form.Item>
         <Form.Item
           className={styles.submitButtonContainer}
