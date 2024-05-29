@@ -1,11 +1,14 @@
+import { PlusOutlined } from '@ant-design/icons';
 import {
   Alert,
   Button,
+  Col,
   Divider,
   Form,
   FormItemProps,
   Input,
   message,
+  Row,
 } from 'antd';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -30,6 +33,8 @@ interface UserFormData {
   last_name?: string;
   birth_date: string;
   phone_number: string;
+  whatsapp_number: string;
+  telegram_username: string;
   captcha: string;
 }
 
@@ -43,6 +48,7 @@ const SignupForm: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showExtraFields, setShowExtraFields] = useState(false);
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>();
 
   const getValidationProps = useCallback(
@@ -176,26 +182,6 @@ const SignupForm: React.FC = () => {
           <Input placeholder={t('registration.lastName') || ''} />
         </Form.Item>
         <Form.Item
-          name="phone_number"
-          label={t('registration.phone')}
-          rules={[
-            { pattern: /\+\d+/, message: t('errors.numberFormat') as string },
-            { max: 20, message: t('errors.longNumber') as string },
-            { required: true, message: t('errors.enterNumber') as string },
-          ]}
-          {...getValidationProps('phone_number')}
-        >
-          <Input
-            placeholder={t('registration.phone') || ''}
-            onFocus={() =>
-              setValidationErrors((errors) => ({
-                ...errors,
-                phone_number: undefined,
-              }))
-            }
-          />
-        </Form.Item>
-        <Form.Item
           name="birth_date"
           label={t('registration.birthDate')}
           rules={[
@@ -232,6 +218,80 @@ const SignupForm: React.FC = () => {
         >
           <Input placeholder={t('registration.birthDateFormat') as string} />
         </Form.Item>
+        <Divider />
+        <Form.Item
+          name="phone_number"
+          label={t('registration.phone')}
+          rules={[
+            { pattern: /\+\d+/, message: t('errors.numberFormat') as string },
+            { max: 20, message: t('errors.longNumber') as string },
+            { required: true, message: t('errors.enterNumber') as string },
+          ]}
+          {...getValidationProps('phone_number')}
+        >
+          <Input
+            placeholder={t('registration.phone') || ''}
+            onFocus={() =>
+              setValidationErrors((errors) => ({
+                ...errors,
+                phone_number: undefined,
+              }))
+            }
+          />
+        </Form.Item>
+        {showExtraFields ? (
+          <>
+            <Form.Item
+              name="whatsapp_number"
+              label={t('registration.whatsapp')}
+              rules={[
+                {
+                  pattern: /\+\d+/,
+                  message: t('errors.numberFormat') as string,
+                },
+                { max: 20, message: t('errors.longNumber') as string },
+              ]}
+              {...getValidationProps('whatsapp_number')}
+            >
+              <Input
+                placeholder={t('registration.whatsapp') || ''}
+                onFocus={() =>
+                  setValidationErrors((errors) => ({
+                    ...errors,
+                    whatsapp_number: undefined,
+                  }))
+                }
+              />
+            </Form.Item>
+            <Form.Item
+              name="telegram_username"
+              label={t('registration.telegram')}
+              {...getValidationProps('telegram_username')}
+            >
+              <Input
+                placeholder={t('registration.telegram') || ''}
+                onFocus={() =>
+                  setValidationErrors((errors) => ({
+                    ...errors,
+                    telegram_username: undefined,
+                  }))
+                }
+              />
+            </Form.Item>
+          </>
+        ) : (
+          <Row>
+            <Col sm={{ offset: 8 }}>
+              <Button
+                type="dashed"
+                icon={<PlusOutlined />}
+                onClick={() => setShowExtraFields(true)}
+              >
+                {t('registration.show_extra_contacts')}
+              </Button>
+            </Col>
+          </Row>
+        )}
         <Form.Item
           name="captcha"
           initialValue={null}
