@@ -1,9 +1,10 @@
 import { Col, Row } from 'antd';
 
 import InlineCarComponent from '../InlineCar';
+import type { InlineCar } from '../Trips';
 
 type Props = {
-  car: InlineCarComponent | null;
+  car: InlineCar | null;
 };
 
 const CarDetails: React.FC<Props> = ({ car }) => {
@@ -14,7 +15,7 @@ const CarDetails: React.FC<Props> = ({ car }) => {
   return (
     <Row>
       <Col>
-        <InlineCarComponent car={car} showType />
+        <InlineCarComponent car={car} showType showYear />
       </Col>
     </Row>
   );

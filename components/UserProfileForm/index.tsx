@@ -17,6 +17,7 @@ export interface UserFormData {
   first_name: string;
   last_name: string;
   phone_number: string;
+  whatsapp_number: string;
   telegram_username: string;
   driver_preferences: DriverPreferences | null;
   about: string;
@@ -99,6 +100,7 @@ const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
             wrapperCol={{ span: 18 }}
             label={t('profile.phoneNumber')}
             name="phone_number"
+            rules={[{ required: true }]}
           >
             <Input />
           </Item>
@@ -109,6 +111,18 @@ const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
             name="telegram_username"
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 18 }}
+          >
+            <Input />
+          </Item>
+        </Col>
+      </Row>
+      <Row gutter={10}>
+        <Col xs={24} lg={12}>
+          <Item
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
+            label={t('profile.whatsapp')}
+            name="whatsapp_number"
           >
             <Input />
           </Item>

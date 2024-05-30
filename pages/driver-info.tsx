@@ -25,8 +25,7 @@ const getInitialStep = (user: User | undefined) => {
   if (!user) {
     return 0;
   }
-  const hasContactData = user.phone_number || user.telegram_username;
-  if (!hasContactData || !user.is_email_confirmed) {
+  if (!user.phone_number || !user.is_email_confirmed) {
     return 0;
   }
   if (user.cars.length === 0) {

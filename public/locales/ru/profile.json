@@ -4,5 +4,10 @@
   "email_confirmed": "Email подтверждён",
   "joined_since": "На сайте с",
   "about": "О себе",
-  "cars": "Машины"
+  "cars": "Машины",
+  "years": {
+    "singular": "год",
+    "plural_2_to_4": "года",
+    "plural": "лет"
+  }
 }

@@ -34,11 +34,13 @@ export interface User {
   last_name: string;
   photo: string;
   phone_number?: string;
+  whatsapp_number?: string;
   telegram_username?: string;
   is_email_confirmed: boolean;
   driver_preferences: DriverPreferences | null;
   about?: string;
   date_joined?: string;
+  birth_date?: string;
   cars: Car[];
 }
 
