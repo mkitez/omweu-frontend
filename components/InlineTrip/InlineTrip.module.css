@@ -46,6 +46,7 @@
 .tripDetails {
   display: flex;
   height: 5rem;
+  margin-bottom: 0.5rem;
 }
 
 .destContainer {

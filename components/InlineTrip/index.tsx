@@ -14,6 +14,7 @@ interface Props {
   showDriver?: boolean;
   showDate?: boolean;
   header?: ReactElement;
+  footer?: ReactElement;
 }
 
 const InlineTrip: React.FC<Props> = ({
@@ -22,6 +23,7 @@ const InlineTrip: React.FC<Props> = ({
   showDriver,
   showDate,
   header,
+  footer,
 }) => {
   const { t, i18n } = useTranslation('trip');
   const routeStops = trip.route_stops.length
@@ -65,6 +67,7 @@ const InlineTrip: React.FC<Props> = ({
           <div className={styles.driverName}>{trip.driver.first_name}</div>
         </div>
       )}
+      {footer && <div className={styles.footer}>{footer}</div>}
     </div>
   );
 };
