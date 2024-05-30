@@ -28,7 +28,7 @@ const PublicUserProfile: React.FC<Props> = ({ user }) => {
         return t('years.singular');
       }
       if (lastDigit >= 2 && lastDigit <= 4) {
-        return t('years.plural_2_to_4') || t('years.plural');
+        return t(['years.plural_2_to_4', 'years.plural']);
       }
       return t('years.plural');
     },
