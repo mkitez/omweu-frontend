@@ -6,6 +6,10 @@
   text-align: center;
 }
 
+.pendingBookings {
+  font-size: 0.8rem;
+}
+
 @media screen and (max-width: 767px) {
   .row {
     padding-left: 0 !important;

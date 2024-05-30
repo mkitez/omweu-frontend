@@ -1,4 +1,5 @@
-import { LoadingOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, LoadingOutlined } from '@ant-design/icons';
+import { Tag } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
@@ -74,6 +75,7 @@ export interface Trip {
   amenities: DriverPreferences | null;
   car: InlineCar | null;
   free_seats: number | null;
+  has_pending_bookings?: boolean;
 }
 
 export interface InlineBooking extends Booking {
@@ -136,7 +138,21 @@ const Trips = () => {
                   {isBooking ? (
                     <DashboardBooking booking={entity} />
                   ) : (
-                    <InlineTrip trip={entity} showDate />
+                    <InlineTrip
+                      trip={entity}
+                      showDate
+                      footer={
+                        entity.has_pending_bookings ? (
+                          <Tag
+                            className={styles.pendingBookings}
+                            color="warning"
+                            icon={<ExclamationCircleOutlined />}
+                          >
+                            {t('trips.pending_bookings')}
+                          </Tag>
+                        ) : undefined
+                      }
+                    />
                   )}
                 </Link>
               );
