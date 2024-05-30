@@ -1,6 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
 import {
-  Alert,
   Button,
   Col,
   Divider,
@@ -41,14 +40,17 @@ interface UserFormData {
 
 type ValidationErrors = Partial<Record<keyof UserFormData, string[]>>;
 
-const SignupForm: React.FC = () => {
+type Props = {
+  onSuccess: () => void;
+};
+
+const SignupForm: React.FC<Props> = ({ onSuccess }) => {
   const { t, i18n } = useTranslation(['auth', 'common']);
   const userApi = useUserApi();
 
   const [form] = Form.useForm<UserFormData>();
 
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [showExtraFields, setShowExtraFields] = useState(false);
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>();
 
@@ -78,10 +80,8 @@ const SignupForm: React.FC = () => {
         ...data,
         birth_date: birthDateFormatted,
       });
-      setSuccess(true);
-      form.resetFields();
+      onSuccess();
     } catch (e) {
-      setSuccess(false);
       if (axios.isAxiosError(e)) {
         if (e.response?.status === 400) {
           setValidationErrors(e.response.data);
@@ -92,15 +92,9 @@ const SignupForm: React.FC = () => {
     }
     setLoading(false);
   };
+
   return (
     <>
-      {success && (
-        <Alert
-          className={styles.alert}
-          type="success"
-          message={t('registration.success')}
-        />
-      )}
       <Form
         form={form}
         onFinish={onFinish}
@@ -285,13 +279,15 @@ const SignupForm: React.FC = () => {
         ) : (
           <Row>
             <Col sm={{ offset: 8 }}>
-              <Button
-                type="dashed"
-                icon={<PlusOutlined />}
-                onClick={() => setShowExtraFields(true)}
-              >
-                {t('registration.show_extra_contacts')}
-              </Button>
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  icon={<PlusOutlined />}
+                  onClick={() => setShowExtraFields(true)}
+                >
+                  {t('registration.show_extra_contacts')}
+                </Button>
+              </Form.Item>
             </Col>
           </Row>
         )}
