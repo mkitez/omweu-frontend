@@ -1,17 +1,19 @@
-import { ReactElement, useEffect, useState } from 'react';
-import Markdown from 'react-markdown';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Button, Collapse } from 'antd';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
+import { SSRConfig, useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { SSRConfig, useTranslation } from 'next-i18next';
-import { Button, Collapse } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ReactElement, useEffect, useState } from 'react';
+import Markdown from 'react-markdown';
+
+import cmsApi from '../../services/cmsApi';
+
 import FaqLayout from '../../components/FaqLayout';
+import styles from '../../styles/Faq.module.css';
 import { REVALIDATE_INTERVAL } from '../../utils/constants';
 import { NextPageWithLayout } from '../_app';
-import cmsApi from '../../services/cmsApi';
-import styles from '../../styles/Faq.module.css';
 
 export type PageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -46,9 +48,9 @@ const FaqCategory: NextPageWithLayout<PageProps> = ({
       <Collapse
         bordered={false}
         className={styles.collapse}
-        defaultActiveKey={faqItems[0]?.id || []}
+        defaultActiveKey={faqItems?.[0].id || []}
       >
-        {faqItems.map((faqItem) => (
+        {faqItems?.map((faqItem) => (
           <Collapse.Panel
             key={faqItem.id}
             header={<h3>{faqItem.attributes.title}</h3>}
@@ -77,16 +79,18 @@ export type Category = {
   imageUrl: string;
 };
 
+type FaqItem = {
+  id: number;
+  attributes: {
+    title: string;
+    content: string;
+  };
+};
+
 type Props = {
   categories: Category[];
   faqTitle: string;
-  faqItems: {
-    id: number;
-    attributes: {
-      title: string;
-      content: string;
-    };
-  }[];
+  faqItems: FaqItem[] | undefined;
 } & SSRConfig;
 
 export const getStaticProps: GetStaticProps<Props> = async ({
