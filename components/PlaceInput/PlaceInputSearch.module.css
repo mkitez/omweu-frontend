@@ -13,7 +13,7 @@
 }
 
 .input {
-  flex: 0 1 100%;
+  flex: 1 0 100%;
   max-width: calc(100% - 2rem);
 }
 
