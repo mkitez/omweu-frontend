@@ -1,7 +1,8 @@
-import { ReactNode } from 'react';
+import { DatePicker, Grid } from 'antd';
 import dayjs from 'dayjs';
-import { Grid, DatePicker } from 'antd';
 import { useTranslation } from 'next-i18next';
+import { ReactNode } from 'react';
+
 import styles from './DateInput.module.css';
 
 type Props = (typeof DatePicker)['defaultProps'] & {
@@ -30,6 +31,7 @@ const DateInput: React.FC<Props> = ({ icon, onChange, defaultValue }) => {
         className={styles.input}
         onChange={onChange}
         defaultValue={defaultValue}
+        inputReadOnly
       />
     </div>
   );
