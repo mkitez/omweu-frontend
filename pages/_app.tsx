@@ -1,5 +1,5 @@
 import { StyleProvider } from '@ant-design/cssinjs';
-import { App as AntApp, ConfigProvider, notification } from 'antd';
+import { App as AntApp, ConfigProvider } from 'antd';
 import 'antd/dist/reset.css';
 import type { Locale } from 'antd/lib/locale';
 import ru from 'antd/locale/ru_RU';
