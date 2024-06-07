@@ -69,17 +69,13 @@ const TripEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
       return;
     }
     const { origin, dest, route_stops, date, price, car, description } = data;
-    const tripIsInPast = dayjs(date) < dayjs();
-    const newTripDate = tripIsInPast
-      ? dayjs().add(2, 'hour').startOf('hour')
-      : dayjs(date).add(1, 'day');
     return {
       from: getInitialPlaceValue(origin),
       to: getInitialPlaceValue(dest),
       routeStops: route_stops
         .map((stop) => getInitialPlaceValue(stop))
         .filter((stop) => !!stop),
-      date: dayjs(newTripDate).tz(data.origin.time_zone),
+      date: dayjs(date).tz(data.origin.time_zone),
       price,
       car: car ? getCarValue(car) : null,
       description,

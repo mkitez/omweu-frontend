@@ -29,6 +29,12 @@ const TripCopy = ({
     return <Error statusCode={500} />;
   }
 
+  const tripDate = dayjs(data.date).tz(data.origin.time_zone);
+  const isTripInPast = tripDate < dayjs();
+  const newTripDate = isTripInPast
+    ? dayjs().add(2, 'hour').startOf('hour')
+    : tripDate.add(1, 'day');
+
   return (
     <div className="container">
       <Head>
@@ -37,7 +43,7 @@ const TripCopy = ({
       <div className={styles.root}>
         <h1>{t('trips.copyTitle')}</h1>
         <TripEditForm
-          data={data}
+          data={{ ...data, date: newTripDate.toISOString() }}
           submitValue={t('create', { ns: 'common' })}
           submit={async (data) => {
             const newTripResponse = await api.createTrip(data);
