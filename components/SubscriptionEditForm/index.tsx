@@ -74,6 +74,11 @@ const SubscriptionEditForm: React.FC<{}> = () => {
         >
           <PlaceInputEdit placeholder={t('subscriptions.labels.destination')} />
         </Form.Item>
+        <Row>
+          <Col sm={{ offset: 4 }}>
+            <div className={styles.dates}>{t('subscriptions.dates')}:</div>
+          </Col>
+        </Row>
         <Form.Item
           name="start_date"
           label={t('subscriptions.labels.start_date')}
@@ -103,9 +108,12 @@ const SubscriptionEditForm: React.FC<{}> = () => {
                 return false;
               }
               const startDate = form.getFieldValue('start_date');
+              if (!startDate) {
+                return true;
+              }
               return (
                 current < startDate ||
-                current > startDate.add(3, 'day').startOf('day')
+                current > startDate.add(5, 'day').startOf('day')
               );
             }}
             format="ll"
@@ -113,11 +121,14 @@ const SubscriptionEditForm: React.FC<{}> = () => {
         </Form.Item>
         <Row gutter={[10, 10]}>
           <Col lg={{ offset: 4 }}>
-            <Form.Item>
-              <Button type="primary" htmlType="submit" loading={loading}>
-                {t('subscriptions.create')}
-              </Button>
-            </Form.Item>
+            <Button type="primary" htmlType="submit" loading={loading}>
+              {t('subscriptions.create')}
+            </Button>
+          </Col>
+          <Col>
+            <Button onClick={() => router.back()}>
+              {t('subscriptions.cancel')}
+            </Button>
           </Col>
         </Row>
       </Form>
