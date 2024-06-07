@@ -29,8 +29,8 @@ class SubscriptionService extends BaseService {
     return this.api.post('/subscriptions/', data);
   }
 
-  deleteSubscription(tripId: number) {
-    return this.api.delete(`/subscriptions/${tripId}/`);
+  deleteSubscription(subscriptionId: number) {
+    return this.api.delete(`/subscriptions/${subscriptionId}/`);
   }
 }
 
