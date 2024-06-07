@@ -4,20 +4,24 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useSubscriptionApi } from '../../hooks/api/useSubscriptionsApi';
 import { PlaceInputEdit } from '../PlaceInput';
 import styles from './SubscriptionEditForm.module.css';
 
-interface SubscriptionFormData {
+export interface SubscriptionFormData {
   origin: DefaultOptionType;
   destination: DefaultOptionType;
   start_date: dayjs.Dayjs;
   end_date: dayjs.Dayjs;
 }
 
-const SubscriptionEditForm: React.FC<{}> = () => {
+type Props = {
+  data?: SubscriptionFormData;
+};
+
+const SubscriptionEditForm: React.FC<Props> = ({ data }) => {
   const { t } = useTranslation(['dashboard', 'common']);
   const router = useRouter();
   const [form] = Form.useForm<SubscriptionFormData>();
@@ -25,12 +29,15 @@ const SubscriptionEditForm: React.FC<{}> = () => {
   const { message } = App.useApp();
 
   const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    form.setFieldsValue(data);
+  }, [data, form]);
 
   const handleSubmit = async (data: SubscriptionFormData) => {
     const { origin, destination, start_date, end_date } = data;
-    if (!origin.value || !destination.value) {
-      return;
-    }
     setLoading(true);
     const dateFormat = 'YYYY-MM-DD';
     try {
