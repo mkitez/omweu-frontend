@@ -1,0 +1,26 @@
+.noContent {
+  text-align: center;
+  padding: 1rem;
+}
+
+.description {
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.55);
+  margin-bottom: 1rem;
+}
+
+.main {
+  margin-bottom: 1rem;
+}
+
+.main .listItem {
+  padding: 0.5rem;
+}
+
+.btnContainer {
+  margin-bottom: 1rem;
+}
+
+.deleteIcon {
+  font-size: 0.9rem;
+}

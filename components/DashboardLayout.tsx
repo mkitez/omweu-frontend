@@ -1,20 +1,22 @@
-import { PropsWithChildren, useState, useEffect } from 'react';
-import { Button, Layout, Menu, theme } from 'antd';
 import {
-  UserOutlined,
+  BellOutlined,
   CalendarOutlined,
   LogoutOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
-import Link from 'next/link';
+import { Button, Layout, Menu, theme } from 'antd';
 import { signOut } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import AppLayout from './AppLayout';
-import styles from '../styles/DashboardLayout.module.css';
 import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { PropsWithChildren, useEffect, useState } from 'react';
+
+import styles from '../styles/DashboardLayout.module.css';
+import AppLayout from './AppLayout';
 
 const { Content, Sider } = Layout;
 
-const DashboardLayout = ({ children }: PropsWithChildren) => {
+const DashboardLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const {
     token: { borderRadius },
   } = theme.useToken();
@@ -35,6 +37,13 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
       key: 'profile',
       icon: <UserOutlined />,
       label: <Link href="/dashboard/profile">{t('profile.label')}</Link>,
+    },
+    {
+      key: 'subscriptions',
+      icon: <BellOutlined />,
+      label: (
+        <Link href="/dashboard/subscriptions">{t('subscriptions.label')}</Link>
+      ),
     },
   ];
   return (
