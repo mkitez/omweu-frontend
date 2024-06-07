@@ -23,7 +23,7 @@ import { TripInputData } from '../../services/trip.service';
 import { useCarApi } from '../../hooks/api/useCarsApi';
 import DateTimeInput from '../DateTimeInput';
 import { PlaceInputEdit } from '../PlaceInput';
-import { Destination, InlineCar } from '../Trips';
+import { Destination, InlineCar, Trip } from '../Trips';
 import styles from './TripEditForm.module.css';
 
 export interface TripFormData {
@@ -37,20 +37,12 @@ export interface TripFormData {
 }
 
 type Props = {
-  initialOrigin?: Destination;
-  initialDest?: Destination;
-  initialRouteStops?: Destination[];
-  initialDate?: dayjs.Dayjs | string;
-  initialPrice?: string;
-  initialCar?: DefaultOptionType;
-  initialDescription?: string;
+  data?: Trip;
   submitValue: string;
   submit: (data: TripInputData) => Promise<void>;
 };
 
-const getInitialPlaceValue = (
-  place: Destination | undefined
-): DefaultOptionType | null => {
+const getInitialPlaceValue = (place: Destination): DefaultOptionType | null => {
   if (!place) {
     return null;
   }
@@ -65,54 +57,37 @@ export const getCarValue = (car: Car | InlineCar): DefaultOptionType => ({
   value: car.id,
 });
 
-const TripEditForm: React.FC<Props> = ({
-  initialOrigin,
-  initialDest,
-  initialRouteStops,
-  initialDate,
-  initialPrice,
-  initialCar,
-  initialDescription,
-  submitValue,
-  submit,
-}) => {
+const TripEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
   const { t } = useTranslation('common');
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const carApi = useCarApi();
   const [cars, setCars] = useState<Car[]>([]);
   const [form] = Form.useForm();
-  const initialValues = useMemo(
-    () => ({
-      from: getInitialPlaceValue(initialOrigin),
-      to: getInitialPlaceValue(initialDest),
-      routeStops: (initialRouteStops || [])
+  const initialValues = useMemo(() => {
+    if (!data) {
+      return;
+    }
+    const { origin, dest, route_stops, date, price, car, description } = data;
+    return {
+      from: getInitialPlaceValue(origin),
+      to: getInitialPlaceValue(dest),
+      routeStops: route_stops
         .map((stop) => getInitialPlaceValue(stop))
         .filter((stop) => !!stop),
-      date: initialDate
-        ? dayjs(initialDate).tz(initialOrigin?.time_zone)
-        : null,
-      price: initialPrice ?? null,
-      car: initialCar || null,
-      description: initialDescription || '',
-    }),
-    [
-      initialDate,
-      initialDest,
-      initialRouteStops,
-      initialOrigin,
-      initialPrice,
-      initialCar,
-      initialDescription,
-    ]
-  );
+      date: dayjs(date).tz(data.origin.time_zone),
+      price,
+      car,
+      description,
+    };
+  }, [data]);
   useEffect(() => {
     carApi.getCars().then((response) => {
       setCars(response.data.sort((car: Car) => (car.is_primary ? -1 : 0)));
     });
   }, [carApi, form]);
   useEffect(() => {
-    if (initialCar) {
+    if (data?.car) {
       return;
     }
     const car = cars.find((car) => car.is_primary);
@@ -120,12 +95,11 @@ const TripEditForm: React.FC<Props> = ({
       return;
     }
     form.setFieldValue('car', getCarValue(car));
-  }, [cars, form, initialCar]);
+  }, [cars, data?.car, form]);
 
   const handleSubmit = async (formData: TripFormData) => {
     const date = formData.date.format('YYYY-MM-DDTHH:mm:00');
-
-    const data: TripInputData = {
+    const inputData: TripInputData = {
       origin_id: formData.from.value as string,
       dest_id: formData.to.value as string,
       date,
@@ -136,7 +110,7 @@ const TripEditForm: React.FC<Props> = ({
     };
     setLoading(true);
     try {
-      await submit(data);
+      await submit(inputData);
     } catch (e) {
       if (axios.isAxiosError(e)) {
         message.error(t('errors.common'));
@@ -199,7 +173,7 @@ const TripEditForm: React.FC<Props> = ({
     }),
   ];
 
-  const isTripInPast = initialDate && dayjs(initialDate) < dayjs();
+  const isTripInPast = data?.date && dayjs(data.date) < dayjs();
   return (
     <Form
       form={form}
@@ -298,7 +272,10 @@ const TripEditForm: React.FC<Props> = ({
         </Button>
         <Button
           disabled={false}
-          onClick={() => router.push('/dashboard/trips')}
+          onClick={() => {
+            const url = data?.id ? `/trips/${data.id}` : '/dashboard/trips';
+            router.push(url);
+          }}
         >
           {t('cancel')}
         </Button>
