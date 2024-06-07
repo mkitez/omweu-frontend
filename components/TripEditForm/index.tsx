@@ -214,9 +214,6 @@ const TripEditForm: React.FC<Props> = ({
       <Form.Item name="from" label={t('from.label')} rules={placeInputRules}>
         <PlaceInputEdit placeholder={t('from.placeholder')} />
       </Form.Item>
-      <Form.Item name="to" label={t('to.label')} rules={placeInputRules}>
-        <PlaceInputEdit placeholder={t('to.placeholder')} />
-      </Form.Item>
       <Form.List name="routeStops">
         {(fields, { add, remove }, { errors }) => (
           <>
@@ -259,6 +256,9 @@ const TripEditForm: React.FC<Props> = ({
           </>
         )}
       </Form.List>
+      <Form.Item name="to" label={t('to.label')} rules={placeInputRules}>
+        <PlaceInputEdit placeholder={t('to.placeholder')} />
+      </Form.Item>
       <DateTimeInput
         name="date"
         label={t('dateTime.label') as string}
