@@ -29,7 +29,7 @@ import styles from './TripEditForm.module.css';
 export interface TripFormData {
   from: DefaultOptionType;
   to: DefaultOptionType;
-  routeStops: DefaultOptionType[];
+  routeStops?: DefaultOptionType[];
   date: dayjs.Dayjs;
   price: string;
   car: DefaultOptionType;
@@ -63,7 +63,7 @@ const TripEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
   const [loading, setLoading] = useState(false);
   const carApi = useCarApi();
   const [cars, setCars] = useState<Car[]>([]);
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<TripFormData>();
   const initialValues = useMemo(() => {
     if (!data) {
       return;
@@ -110,7 +110,9 @@ const TripEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
       price: formData.price,
       car_id: Number(formData.car?.value),
       description: formData.description || '',
-      route_stop_ids: formData.routeStops.map((stop) => stop.value as string),
+      route_stop_ids: (formData.routeStops || []).map(
+        (stop) => stop.value as string
+      ),
     };
     setLoading(true);
     try {

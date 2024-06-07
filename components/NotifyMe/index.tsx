@@ -10,8 +10,8 @@ const NotifyMe: React.FC = () => {
   const { t } = useTranslation('trip');
   const router = useRouter();
 
-  const { from, from_input, to_input, date } = router.query;
-  const url = `/new-subscription?from=${from}&from_input=${from_input}&to=${to_input}&to_input=${to_input}&start_date=${date}&end_date=${date}`;
+  const { from, from_input, to, to_input, date } = router.query;
+  const url = `/new-subscription?from=${from}&from_input=${from_input}&to=${to}&to_input=${to_input}&start_date=${date}&end_date=${date}`;
 
   return (
     <div className={styles.root}>
