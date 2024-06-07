@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 
 import { getTripApi } from '../services/serverSide/tripApi';
 
-import TripEditForm, { getCarValue } from '../components/TripEditForm';
+import TripEditForm from '../components/TripEditForm';
 import { Trip } from '../components/Trips';
 import { useTripApi } from '../hooks/api/useTripApi';
 import styles from '../styles/TripEdit.module.css';
@@ -29,11 +29,6 @@ const TripCopy = ({
     return <Error statusCode={500} />;
   }
 
-  const tripIsInPast = dayjs(data.date) < dayjs();
-  const newTripDate = tripIsInPast
-    ? dayjs().add(2, 'hour').startOf('hour')
-    : dayjs(data.date).add(1, 'day');
-
   return (
     <div className="container">
       <Head>
@@ -42,13 +37,7 @@ const TripCopy = ({
       <div className={styles.root}>
         <h1>{t('trips.copyTitle')}</h1>
         <TripEditForm
-          initialOrigin={data.origin}
-          initialDest={data.dest}
-          initialRouteStops={data.route_stops}
-          initialDate={newTripDate}
-          initialPrice={data.price}
-          initialCar={data.car ? getCarValue(data.car) : undefined}
-          initialDescription={data.description}
+          data={data}
           submitValue={t('create', { ns: 'common' })}
           submit={async (data) => {
             const newTripResponse = await api.createTrip(data);

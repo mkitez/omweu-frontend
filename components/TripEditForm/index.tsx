@@ -52,7 +52,7 @@ const getInitialPlaceValue = (place: Destination): DefaultOptionType | null => {
   };
 };
 
-export const getCarValue = (car: Car | InlineCar): DefaultOptionType => ({
+const getCarValue = (car: Car | InlineCar): DefaultOptionType => ({
   label: `${car.brand.name} ${car.model.name}`,
   value: car.id,
 });
@@ -69,15 +69,19 @@ const TripEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
       return;
     }
     const { origin, dest, route_stops, date, price, car, description } = data;
+    const tripIsInPast = dayjs(date) < dayjs();
+    const newTripDate = tripIsInPast
+      ? dayjs().add(2, 'hour').startOf('hour')
+      : dayjs(date).add(1, 'day');
     return {
       from: getInitialPlaceValue(origin),
       to: getInitialPlaceValue(dest),
       routeStops: route_stops
         .map((stop) => getInitialPlaceValue(stop))
         .filter((stop) => !!stop),
-      date: dayjs(date).tz(data.origin.time_zone),
+      date: dayjs(newTripDate).tz(data.origin.time_zone),
       price,
-      car,
+      car: car ? getCarValue(car) : null,
       description,
     };
   }, [data]);
@@ -173,7 +177,8 @@ const TripEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
     }),
   ];
 
-  const isTripInPast = data?.date && dayjs(data.date) < dayjs();
+  const date = form.getFieldValue('date');
+  const isTripInPast = date && dayjs(date) < dayjs();
   return (
     <Form
       form={form}

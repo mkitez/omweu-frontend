@@ -5,7 +5,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
-import TripEditForm, { getCarValue } from '../../components/TripEditForm';
+import TripEditForm from '../../components/TripEditForm';
 import { Trip } from '../../components/Trips';
 import { useTripApi } from '../../hooks/api/useTripApi';
 import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
@@ -50,13 +50,7 @@ const TripEdit = () => {
           }
           return (
             <TripEditForm
-              initialOrigin={data.origin}
-              initialDest={data.dest}
-              initialRouteStops={data.route_stops}
-              initialDate={data.date}
-              initialPrice={data.price}
-              initialCar={data.car ? getCarValue(data.car) : undefined}
-              initialDescription={data.description}
+              data={data}
               submitValue={t('save', { ns: 'common' })}
               submit={async (data) => {
                 const tripResponse = await api.updateTrip(
