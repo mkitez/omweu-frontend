@@ -25,16 +25,25 @@ const NewSubscriptionPage: NextPageWithLayout<PageProps> = () => {
     if (!router.isReady) {
       return;
     }
-    const { to, from, to_input, from_input, start_date, end_date } =
-      router.query;
-    if (!start_date || !end_date || !to || !from) {
+    const {
+      to,
+      from,
+      to_input,
+      from_input,
+      start_date: startDateString,
+      end_date: endDateString,
+    } = router.query;
+    if (!startDateString || !endDateString || !to || !from) {
       return;
     }
+    const startDate = dayjs(String(startDateString));
+    const endDate = dayjs(String(endDateString));
+    const now = dayjs();
     setInitialData({
       origin: { value: String(from), label: from_input || '' },
       destination: { value: String(to), label: to_input || '' },
-      start_date: dayjs(String(start_date)),
-      end_date: dayjs(String(end_date)),
+      start_date: startDate > now ? startDate : now,
+      end_date: endDate > now ? endDate : now,
     });
   }, [router.isReady, router.query]);
 

@@ -19,4 +19,5 @@
 .statusText {
   line-height: 1.25;
   white-space: pre-line;
+  margin-bottom: 1rem;
 }

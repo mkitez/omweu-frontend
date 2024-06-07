@@ -1,0 +1,17 @@
+.root {
+  margin: auto;
+  text-align: center;
+}
+
+.button {
+  color: rgba(0, 0, 0, 0.55);
+  font-size: 0.9rem;
+}
+
+.icon {
+  transition: transform 0.4s;
+}
+
+.button:hover .icon {
+  transform: rotate(-20deg);
+}

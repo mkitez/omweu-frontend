@@ -7,23 +7,21 @@ import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
 import InlineTrip from '../components/InlineTrip';
+import NotifyMe from '../components/NotifyMe';
 import type { Trip } from '../components/Trips';
 import TripSearch from '../components/TripSearch';
+import { usePublicFetcher } from '../hooks/usePublicFetcher';
 import styles from '../styles/Search.module.css';
-import { API_URL } from '../utils/constants';
 import { formatDate } from '../utils/formatDate';
+import { NextPageWithLayout } from './_app';
 
-const Search = () => {
+const SearchPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { t, i18n } = useTranslation('common');
+  const fetcher = usePublicFetcher();
   const { data, error, isLoading } = useSWR(
-    `${API_URL}/trips/search/?origin_id=${router.query.from}&dest_id=${router.query.to}&date=${router.query.date}`,
-    async (url) => {
-      const response = await fetch(url, {
-        headers: { 'Accept-Language': i18n.language },
-      });
-      return await response.json();
-    }
+    `/trips/search/?origin_id=${router.query.from}&dest_id=${router.query.to}&date=${router.query.date}`,
+    fetcher
   );
 
   const title = `${t('searchTitle')}${
@@ -68,6 +66,7 @@ const Search = () => {
               </Link>
             ));
           })()}
+          <NotifyMe />
         </div>
       </div>
     </>
@@ -86,4 +85,4 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   };
 };
 
-export default Search;
+export default SearchPage;
