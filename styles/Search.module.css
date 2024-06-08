@@ -1,7 +1,7 @@
 .root {
   max-width: 800px;
   margin: auto;
-  padding: 0 1rem;
+  padding: 0 0.5rem;
 }
 
 .root h2 {
@@ -10,8 +10,14 @@
   text-align: center;
 }
 
+.searchContainer {
+  margin: auto;
+  max-width: 900px;
+  padding: 0 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
 .result {
-  margin-top: 1.5rem;
   margin-bottom: 3rem;
   text-align: center;
 }

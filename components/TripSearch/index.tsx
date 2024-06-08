@@ -12,7 +12,7 @@ import PlaceInputSearch from '../PlaceInput/PlaceInputSearch';
 import SwapButton from './SwapButton';
 import styles from './TripSearch.module.css';
 
-const TripSearch = () => {
+const TripSearch: React.FC = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
 
