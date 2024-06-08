@@ -1,5 +1,6 @@
 import { Button } from 'antd';
-import SwapIcon from '../assets/swap-horizontal-svgrepo-com.svg';
+
+import SwapIcon from '../../assets/swap-horizontal-svgrepo-com.svg';
 
 interface Props {
   onClick: () => void;

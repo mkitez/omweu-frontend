@@ -5,12 +5,12 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { FormEventHandler, useRef, useState } from 'react';
 
-import Calendar from '../assets/calendar-svgrepo-com.svg';
-import Location from '../assets/circle-xxs-svgrepo-com.svg';
-import styles from '../styles/TripSearch.module.css';
-import DateInput from './DateInput';
-import PlaceInputSearch from './PlaceInput/PlaceInputSearch';
+import Calendar from '../../assets/calendar-svgrepo-com.svg';
+import Location from '../../assets/circle-xxs-svgrepo-com.svg';
+import DateInput from '../DateInput';
+import PlaceInputSearch from '../PlaceInput/PlaceInputSearch';
 import SwapButton from './SwapButton';
+import styles from './TripSearch.module.css';
 
 const TripSearch = () => {
   const router = useRouter();
