@@ -6,14 +6,12 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import useSWRImmutable from 'swr/immutable';
 
-import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
+import { usePublicFetcher } from '../../hooks/usePublicFetcher';
 import InlineTrip from '../InlineTrip';
 import { Trip } from '../Trips';
 import styles from './UpcomingTripsSection.module.css';
 
-type Props = { trip: Trip };
-
-const LinkedTrip: FC<Props> = ({ trip }) => (
+const LinkedTrip: FC<{ trip: Trip }> = ({ trip }) => (
   <Link href={`/trips/${trip.id}`}>
     <InlineTrip trip={trip} showDate showDriver />
   </Link>
@@ -22,12 +20,12 @@ const LinkedTrip: FC<Props> = ({ trip }) => (
 const UpcomingTripsSection = () => {
   const { t } = useTranslation('home');
   const { lg } = Grid.useBreakpoint();
-  const fetcher = useAuthorizedFetcher();
-  const { data, error, isLoading } = useSWRImmutable(
+  const fetcher = usePublicFetcher();
+  const { data, error, isLoading } = useSWRImmutable<Trip[]>(
     '/trips/upcoming/',
     fetcher
   );
-  if (isLoading || error) {
+  if (isLoading || error || !data) {
     return null;
   }
   if (data.length < 3) {
@@ -49,7 +47,7 @@ const UpcomingTripsSection = () => {
       {lg ? (
         <div className="content">
           <Row gutter={15}>
-            {data.map((trip: Trip) => (
+            {data.map((trip) => (
               <Col key={trip.id} lg={8}>
                 <LinkedTrip trip={trip} />
               </Col>
@@ -58,7 +56,7 @@ const UpcomingTripsSection = () => {
         </div>
       ) : (
         <Carousel showArrows={false} showStatus={false} showThumbs={false}>
-          {data.map((trip: Trip) => (
+          {data.map((trip) => (
             <div className={styles.tripWrapper} key={trip.id}>
               <LinkedTrip trip={trip} />
             </div>
