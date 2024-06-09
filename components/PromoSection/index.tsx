@@ -1,10 +1,11 @@
-import { useTranslation, Trans } from 'next-i18next';
-import { Row, Col } from 'antd';
+import { Col, Row } from 'antd';
+import { Trans, useTranslation } from 'next-i18next';
+
+import Checkmark from '../../assets/checkmark-circle-svgrepo-com.svg';
+import Safety from '../../assets/shield-alt-1-svgrepo-com.svg';
+import Wallet from '../../assets/wallet-svgrepo-com.svg';
 import PromoBlock from './PromoBlock';
-import Money from '../../assets/money.svg';
-import Cup from '../../assets/cup.svg';
-import ThumbUp from '../../assets/thumbUp.svg';
-import styles from '../../styles/PromoSection.module.css';
+import styles from './PromoSection.module.css';
 
 const PromoSection = () => {
   const { t } = useTranslation('home');
@@ -20,29 +21,29 @@ const PromoSection = () => {
             {t('sectionOne.title')}
           </Trans>
         </h2>
-        <Row gutter={[40, 40]}>
+        <Row gutter={[30, 30]}>
           <Col md={8}>
             <PromoBlock
               title={t('sectionOne.blocks.0.title')}
-              icon={<Money width={40} height="100%" />}
+              icon={<Checkmark />}
             >
-              {t('sectionOne.blocks.0.text')}
+              {t('sectionOne.blocks.0.content')}
             </PromoBlock>
           </Col>
           <Col md={8}>
             <PromoBlock
               title={t('sectionOne.blocks.1.title')}
-              icon={<Cup width={40} height="100%" />}
+              icon={<Safety />}
             >
-              {t('sectionOne.blocks.1.text')}
+              {t('sectionOne.blocks.1.content')}
             </PromoBlock>
           </Col>
           <Col md={8}>
             <PromoBlock
               title={t('sectionOne.blocks.2.title')}
-              icon={<ThumbUp width={40} height="100%" />}
+              icon={<Wallet />}
             >
-              {t('sectionOne.blocks.2.text')}
+              {t('sectionOne.blocks.2.content')}
             </PromoBlock>
           </Col>
         </Row>
