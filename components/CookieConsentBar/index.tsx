@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { CSSProperties } from 'react';
 import CookieConsent from 'react-cookie-consent';
 
+import { GA_DISABLE_PROPERTY } from '../../utils/constants';
 import styles from './CookieConsentBar.module.css';
 
 const containerStyle: CSSProperties = {
@@ -37,8 +38,11 @@ const CookieConsentBar: React.FC = () => {
       flipButtons
       buttonText={t('cookie_consent.accept')}
       declineButtonText={t('cookie_consent.decline')}
+      onAccept={() => {
+        window[GA_DISABLE_PROPERTY] = false;
+      }}
       onDecline={() => {
-        window['ga-disable-GA_MEASUREMENT_ID'] = true;
+        window[GA_DISABLE_PROPERTY] = true;
       }}
       style={containerStyle}
       contentClasses={styles.content}

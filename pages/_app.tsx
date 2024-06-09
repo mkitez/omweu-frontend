@@ -1,5 +1,5 @@
 import { StyleProvider } from '@ant-design/cssinjs';
-import { GoogleTagManager } from '@next/third-parties/google';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import { App as AntApp, ConfigProvider } from 'antd';
 import 'antd/dist/reset.css';
 import type { Locale } from 'antd/lib/locale';
@@ -24,7 +24,7 @@ import AuthWrapper from '../components/AuthWrapper';
 import CookieConsentBar from '../components/CookieConsentBar';
 import '../styles/globals.css';
 import theme from '../theme';
-import { GTM_ID } from '../utils/constants';
+import { GA_DISABLE_PROPERTY, GTM_ID } from '../utils/constants';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -53,7 +53,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
     const consentValue = getCookieConsentValue();
     if (consentValue !== 'true') {
-      window['ga-disable-GA_MEASUREMENT_ID'] = true;
+      window[GA_DISABLE_PROPERTY] = true;
     }
   }, []);
 
@@ -77,7 +77,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
               getLayout(<Component {...pageProps} />, pageProps)
             )}
             <CookieConsentBar />
-            <GoogleTagManager gtmId={GTM_ID} />
+            <GoogleAnalytics gaId={GTM_ID} />
           </StyleProvider>
         </AntApp>
       </ConfigProvider>
