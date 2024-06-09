@@ -18,7 +18,7 @@ const acceptButtonStyle: CSSProperties = {
   background: '#294a54',
   borderRadius: '0.3rem',
   padding: '0.5rem 1rem',
-  margin: '0 0 0.5rem 1rem',
+  margin: '0 0.5rem',
 };
 
 const declineButtonStyle: CSSProperties = {
@@ -27,7 +27,7 @@ const declineButtonStyle: CSSProperties = {
   border: '1px solid #294a54',
   borderRadius: '0.3rem',
   padding: '0.5rem 1rem',
-  margin: '0 0.5rem',
+  margin: '0 0 0.5rem 1rem',
 };
 
 const CookieConsentBar: React.FC = () => {
@@ -35,7 +35,6 @@ const CookieConsentBar: React.FC = () => {
   return (
     <CookieConsent
       enableDeclineButton
-      flipButtons
       buttonText={t('cookie_consent.accept')}
       declineButtonText={t('cookie_consent.decline')}
       onAccept={() => {
