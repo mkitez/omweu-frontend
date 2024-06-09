@@ -1,8 +1,9 @@
-import { Row, Col } from 'antd';
-import PopularTrip from './PopularTrip';
-import { Trans, useTranslation } from 'next-i18next';
+import { Col, Row } from 'antd';
 import dayjs from 'dayjs';
-import styles from '../../styles/PopularTripsSection.module.css';
+import { Trans, useTranslation } from 'next-i18next';
+
+import PopularTrip from './PopularTrip';
+import styles from './PopularTripsSection.module.css';
 
 const data = [
   {
@@ -19,7 +20,7 @@ const data = [
   },
 ];
 
-const PopularTripsSection = () => {
+const PopularTripsSection: React.FC = () => {
   const { t } = useTranslation('home');
   const date = dayjs().format('YYYY-MM-DD');
 

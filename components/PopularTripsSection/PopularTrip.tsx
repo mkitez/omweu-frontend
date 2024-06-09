@@ -1,10 +1,10 @@
-import { FC } from 'react';
-import Link from 'next/link';
-import { Button } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import Location from '../../assets/location.svg';
-import styles from '../../styles/PopularTrip.module.css';
+import { Button } from 'antd';
 import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
+
+import Location from '../../assets/location.svg';
+import styles from './PopularTrip.module.css';
 
 interface Props {
   originLabel: string;
@@ -12,7 +12,7 @@ interface Props {
   link: string;
 }
 
-const PopularTrip: FC<Props> = ({ originLabel, destLabel, link }) => {
+const PopularTrip: React.FC<Props> = ({ originLabel, destLabel, link }) => {
   const { t } = useTranslation('home');
   return (
     <div className={styles.root}>

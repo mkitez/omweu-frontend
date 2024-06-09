@@ -1,8 +1,9 @@
+import { Col, Row } from 'antd';
+import { Trans, useTranslation } from 'next-i18next';
 import Link from 'next/link';
-import { useTranslation, Trans } from 'next-i18next';
-import { Row, Col } from 'antd';
+
 import ForWhoBlock from './ForWhoBlock';
-import styles from '../../styles/HowItWorksSection.module.css';
+import styles from './HowItWorksSection.module.css';
 
 const HowItWorksSection = () => {
   const { t } = useTranslation('home');
@@ -18,7 +19,7 @@ const HowItWorksSection = () => {
             {t('sectionTwo.title')}
           </Trans>
         </h2>
-        <Row>
+        <Row gutter={[30, 30]} className={styles.steps}>
           <Col md={12} lg={6}>
             <ForWhoBlock title="01">
               {t('sectionTwo.blocks.stepOne')}

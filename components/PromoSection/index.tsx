@@ -10,7 +10,7 @@ import styles from './PromoSection.module.css';
 const PromoSection = () => {
   const { t } = useTranslation('home');
   return (
-    <section className={styles.container}>
+    <section className={styles.root}>
       <div className="content">
         <h2>
           <Trans
@@ -21,7 +21,7 @@ const PromoSection = () => {
             {t('sectionOne.title')}
           </Trans>
         </h2>
-        <Row gutter={[30, 30]}>
+        <Row gutter={[40, 40]} className={styles.container}>
           <Col md={8}>
             <PromoBlock
               title={t('sectionOne.blocks.0.title')}
