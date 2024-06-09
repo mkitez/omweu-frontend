@@ -1,4 +1,5 @@
 import { StyleProvider } from '@ant-design/cssinjs';
+import { GoogleTagManager } from '@next/third-parties/google';
 import { App as AntApp, ConfigProvider } from 'antd';
 import 'antd/dist/reset.css';
 import type { Locale } from 'antd/lib/locale';
@@ -15,12 +16,15 @@ import { appWithTranslation } from 'next-i18next';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode, useEffect } from 'react';
+import { getCookieConsentValue } from 'react-cookie-consent';
 
 import AppLayout from '../components/AppLayout';
 import AuthWrapper from '../components/AuthWrapper';
+import CookieConsentBar from '../components/CookieConsentBar';
 import '../styles/globals.css';
 import theme from '../theme';
+import { GTM_ID } from '../utils/constants';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -46,8 +50,16 @@ type AppPropsWithLayout = AppProps &
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const { locale } = useRouter();
+  useEffect(() => {
+    const consentValue = getCookieConsentValue();
+    if (consentValue !== 'true') {
+      window['ga-disable-GA_MEASUREMENT_ID'] = true;
+    }
+  }, []);
+
   const getLayout =
     Component.getLayout ?? ((page) => <AppLayout>{page}</AppLayout>);
+
   return (
     <SessionProvider session={pageProps.session}>
       <ConfigProvider locale={locales[locale as string]} theme={theme}>
@@ -64,6 +76,8 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             ) : (
               getLayout(<Component {...pageProps} />, pageProps)
             )}
+            <CookieConsentBar />
+            <GoogleTagManager gtmId={GTM_ID} />
           </StyleProvider>
         </AntApp>
       </ConfigProvider>

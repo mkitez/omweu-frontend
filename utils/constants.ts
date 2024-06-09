@@ -11,5 +11,6 @@ export const API_URL = `${BASE_URL}/api/v1`;
 export const HERE_API_KEY = process.env.NEXT_PUBLIC_HERE_API_KEY;
 export const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 export const STRAPI_ACCESS_TOKEN = process.env.STRAPI_ACCESS_TOKEN;
+export const GTM_ID = 'G-0ZVVNHC0SN';
 
 export const REVALIDATE_INTERVAL = 60;
