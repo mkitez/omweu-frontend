@@ -1,16 +1,15 @@
 import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
 import { CSSProperties } from 'react';
 import CookieConsent from 'react-cookie-consent';
+
+import styles from './CookieConsentBar.module.css';
 
 const containerStyle: CSSProperties = {
   background: 'white',
   color: 'rgba(0, 0, 0, 0.75)',
-  fontSize: '0.9rem',
+  fontSize: '0.8rem',
   boxShadow: '0px 0px 15px 0px hsla(0, 0%, 0%, 0.2)',
-};
-
-const contentStyle: CSSProperties = {
-  margin: '1rem',
 };
 
 const acceptButtonStyle: CSSProperties = {
@@ -42,11 +41,14 @@ const CookieConsentBar: React.FC = () => {
         window['ga-disable-GA_MEASUREMENT_ID'] = true;
       }}
       style={containerStyle}
-      contentStyle={contentStyle}
+      contentClasses={styles.content}
       buttonStyle={acceptButtonStyle}
       declineButtonStyle={declineButtonStyle}
     >
-      {t('cookie_consent.content')}
+      {t('cookie_consent.content')}{' '}
+      <Link href="/privacy-policy" className={styles.privacy}>
+        {t('footer.privacy')}
+      </Link>
     </CookieConsent>
   );
 };
