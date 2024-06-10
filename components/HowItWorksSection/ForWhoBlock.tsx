@@ -1,5 +1,6 @@
 import { FC, PropsWithChildren } from 'react';
-import styles from '../../styles/ForWhoBlock.module.css';
+
+import styles from './HowItWorksSection.module.css';
 
 interface Props extends PropsWithChildren {
   title: string;
@@ -7,9 +8,9 @@ interface Props extends PropsWithChildren {
 
 const PromoBlock: FC<Props> = ({ title, children }) => {
   return (
-    <div className={styles.root}>
+    <div className={styles.step}>
       <h3>{title}</h3>
-      <div className={styles.content}>{children}</div>
+      <div>{children}</div>
     </div>
   );
 };

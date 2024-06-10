@@ -1,10 +1,10 @@
-import { FC } from 'react';
-import Link from 'next/link';
 import { Button } from 'antd';
-import { ArrowRightOutlined } from '@ant-design/icons';
-import Location from '../../assets/location.svg';
-import styles from '../../styles/PopularTrip.module.css';
 import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
+
+import ArrowRight from '../../assets/arrow-right-svgrepo-com.svg';
+import Pin from '../../assets/pin-svgrepo-com.svg';
+import styles from './PopularTrip.module.css';
 
 interface Props {
   originLabel: string;
@@ -12,26 +12,28 @@ interface Props {
   link: string;
 }
 
-const PopularTrip: FC<Props> = ({ originLabel, destLabel, link }) => {
+const PopularTrip: React.FC<Props> = ({ originLabel, destLabel, link }) => {
   const { t } = useTranslation('home');
   return (
-    <div className={styles.root}>
+    <>
       <div className={styles.destContainer}>
-        <div className={styles.location}>
-          <Location height="100%" />
+        <div className={styles.origin}>
+          <div className={styles.pin}>
+            <Pin />
+          </div>
+          {originLabel}
         </div>
-        {originLabel}
         <div className={styles.arrow}>
-          <ArrowRightOutlined />
+          <ArrowRight />
         </div>
-        {destLabel}
+        <div>{destLabel}</div>
       </div>
       <div className={styles.btnContainer}>
         <Link href={link} passHref legacyBehavior>
           <Button type="primary">{t('sectionFour.findTrip')}</Button>
         </Link>
       </div>
-    </div>
+    </>
   );
 };
 

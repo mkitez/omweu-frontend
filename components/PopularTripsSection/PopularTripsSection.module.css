@@ -1,16 +1,10 @@
 .root {
-  min-height: 300px;
   padding: 2rem 0;
 }
 
 .root h2 {
-  font-size: 40px;
+  font-size: 2rem;
   text-align: center;
-  margin: 0 auto;
-}
-
-.link {
-  text-decoration: underline dotted;
 }
 
 @media screen and (max-width: 767px) {

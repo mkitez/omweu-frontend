@@ -12,22 +12,10 @@
 }
 
 .root h2 {
-  font-size: 40px;
+  font-size: 2rem;
   text-align: center;
 }
 
 .tripWrapper {
   margin: 0 0.8rem 2rem;
-}
-
-@media screen and (max-width: 767px) {
-  .root h2 {
-    font-size: 32px;
-  }
-}
-
-@media screen and (min-width: 768px) and (max-width: 1199px) {
-  .root h2 {
-    font-size: 28px;
-  }
 }

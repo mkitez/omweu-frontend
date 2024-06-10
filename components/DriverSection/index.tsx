@@ -1,8 +1,9 @@
+import { Button, Col, Row } from 'antd';
+import { Trans, useTranslation } from 'next-i18next';
 import Link from 'next/link';
-import { Row, Col, Button } from 'antd';
-import { useTranslation, Trans } from 'next-i18next';
-import DriverSectionImage from '../assets/driverSectionImg.svg';
-import styles from '../styles/DriverSection.module.css';
+
+import DriverSectionImage from '../../assets/driverSectionImg.svg';
+import styles from './DriverSection.module.css';
 
 const DriverSection = () => {
   const { t } = useTranslation(['home', 'common']);

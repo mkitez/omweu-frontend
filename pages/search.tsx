@@ -15,11 +15,18 @@ import styles from '../styles/Search.module.css';
 import { formatDate } from '../utils/formatDate';
 import { NextPageWithLayout } from './_app';
 
+type SearchResult = {
+  count: number;
+  next: number | null;
+  previous: number | null;
+  results: Trip[];
+};
+
 const SearchPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { t, i18n } = useTranslation('common');
   const fetcher = usePublicFetcher();
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading } = useSWR<SearchResult>(
     `/trips/search/?origin_id=${router.query.from}&dest_id=${router.query.to}&date=${router.query.date}`,
     fetcher
   );
@@ -40,8 +47,10 @@ const SearchPage: NextPageWithLayout = () => {
       <Head>
         <title>{title}</title>
       </Head>
-      <div className={styles.root}>
+      <div className={styles.searchContainer}>
         <TripSearch />
+      </div>
+      <div className={styles.root}>
         <div className={styles.result}>
           <h2>
             {t('tripsFound')} {formattedDate}
@@ -55,12 +64,12 @@ const SearchPage: NextPageWithLayout = () => {
                 <div className={styles.statusText}>{t('errors.common')}</div>
               );
             }
-            if (data.results.length === 0) {
+            if (data?.results.length === 0) {
               return (
                 <div className={styles.statusText}>{t('tripsNotFound')}</div>
               );
             }
-            return data.results.map((trip: Trip) => (
+            return data?.results.map((trip: Trip) => (
               <Link href={`/trips/${trip.id}`} key={trip.id}>
                 <InlineTrip trip={trip} showPrice showDriver />
               </Link>

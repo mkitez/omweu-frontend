@@ -1,0 +1,22 @@
+.root {
+  padding: 2rem 0;
+}
+
+.root h2 {
+  font-size: 2rem;
+  text-align: center;
+  margin: 0 auto 1.5rem;
+}
+
+.steps {
+  margin-bottom: 1rem;
+}
+
+.step h3 {
+  font-weight: 800;
+  font-size: 1.75rem;
+}
+
+.link {
+  text-decoration: underline dotted;
+}

@@ -65,8 +65,7 @@ const AppHeader = () => {
                 passHref
                 legacyBehavior
               >
-                <Button type="text">
-                  <PlusCircleOutlined />{' '}
+                <Button type="text" icon={<PlusCircleOutlined />} shape="round">
                   <span className={styles.offerTripText}>{t('offerTrip')}</span>
                 </Button>
               </Link>
