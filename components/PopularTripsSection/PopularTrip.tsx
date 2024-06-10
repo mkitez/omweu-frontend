@@ -1,9 +1,9 @@
-import { ArrowRightOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 
-import Location from '../../assets/location.svg';
+import ArrowRight from '../../assets/arrow-right-svgrepo-com.svg';
+import Pin from '../../assets/pin-svgrepo-com.svg';
 import styles from './PopularTrip.module.css';
 
 interface Props {
@@ -15,23 +15,25 @@ interface Props {
 const PopularTrip: React.FC<Props> = ({ originLabel, destLabel, link }) => {
   const { t } = useTranslation('home');
   return (
-    <div className={styles.root}>
+    <>
       <div className={styles.destContainer}>
-        <div className={styles.location}>
-          <Location height="100%" />
+        <div className={styles.origin}>
+          <div className={styles.pin}>
+            <Pin />
+          </div>
+          {originLabel}
         </div>
-        {originLabel}
         <div className={styles.arrow}>
-          <ArrowRightOutlined />
+          <ArrowRight />
         </div>
-        {destLabel}
+        <div>{destLabel}</div>
       </div>
       <div className={styles.btnContainer}>
         <Link href={link} passHref legacyBehavior>
           <Button type="primary">{t('sectionFour.findTrip')}</Button>
         </Link>
       </div>
-    </div>
+    </>
   );
 };
 

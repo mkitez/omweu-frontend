@@ -16,7 +16,7 @@ const data = [
   },
   {
     originId: 'here:cm:namedplace:20674800',
-    destId: 'here:cm:namedplace:20627780',
+    destId: 'here:cm:namedplace:20628730',
   },
 ];
 
