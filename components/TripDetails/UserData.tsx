@@ -1,3 +1,5 @@
+import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 
 import PhoneIcon from '../../assets/phone-svgrepo-com.svg';
@@ -12,15 +14,22 @@ type Props = {
 };
 
 const UserData: React.FC<Props> = ({ user }) => {
+  const session = useSession();
+  const { t } = useTranslation('trip');
+
   const { phone_number, telegram_username, whatsapp_number } = user;
   const hasContacts = phone_number || telegram_username || whatsapp_number;
 
   return (
     <div className={styles.userData}>
       <div className={styles.driver}>
-        <UserAvatar user={user} />
+        <UserAvatar user={user} altText={t('driver') as string} />
         <div className={styles.driverName}>
-          <Link href={`/users/${user.id}`}>{user.first_name}</Link>
+          {session.status === 'authenticated' ? (
+            <Link href={`/users/${user.id}`}>{user.first_name}</Link>
+          ) : (
+            user.first_name
+          )}
         </div>
       </div>
       {hasContacts && (

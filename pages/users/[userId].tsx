@@ -61,7 +61,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     user = response.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
-      if (e.response?.status && [403, 404].includes(e.response?.status))
+      if (e.response?.status && [401, 404].includes(e.response?.status))
         notFound = true;
     }
   }
