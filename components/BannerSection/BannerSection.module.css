@@ -7,3 +7,9 @@
   padding: 0 0.5rem;
   max-width: 900px;
 }
+
+@media screen and (max-width: 767px) {
+  .root {
+    padding-bottom: 1rem;
+  }
+}
