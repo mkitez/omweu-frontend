@@ -76,6 +76,7 @@ export interface Trip {
   car: InlineCar | null;
   free_seats: number | null;
   has_pending_bookings?: boolean;
+  last_updated: string;
 }
 
 export interface InlineBooking extends Booking {
