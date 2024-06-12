@@ -8,6 +8,7 @@ import useSWR from 'swr';
 
 import InlineTrip from '../components/InlineTrip';
 import NotifyMe from '../components/NotifyMe';
+import SearchFooter from '../components/SearchFooter';
 import type { Trip } from '../components/Trips';
 import TripSearch from '../components/TripSearch';
 import { usePublicFetcher } from '../hooks/usePublicFetcher';
@@ -31,21 +32,23 @@ const SearchPage: NextPageWithLayout = () => {
     fetcher
   );
 
-  const title = `${t('searchTitle')}${
-    router.query.from_input && router.query.to_input
-      ? ` ${router.query.from_input} – ${router.query.to_input}`
-      : ''
-  } | EUbyCar.com`;
-
   const formattedDate = formatDate(
     new Date(router.query.date as string),
     i18n.language
   );
 
+  const route = `${router.query.from_input} – ${router.query.to_input}`;
+  const title = `${t('searchTitle')}${
+    router.query.from_input && router.query.to_input
+      ? ` ${route} ${formattedDate}`
+      : ''
+  } | EUbyCar.com`;
+
   return (
     <>
       <Head>
         <title>{title}</title>
+        <meta name="description" content={t('search_description') as string} />
       </Head>
       <div className={styles.searchContainer}>
         <TripSearch />
@@ -69,7 +72,7 @@ const SearchPage: NextPageWithLayout = () => {
                 <div className={styles.statusText}>{t('tripsNotFound')}</div>
               );
             }
-            return data?.results.map((trip: Trip) => (
+            return data?.results.map((trip) => (
               <Link href={`/trips/${trip.id}`} key={trip.id}>
                 <InlineTrip trip={trip} showPrice showDriver />
               </Link>
@@ -78,6 +81,7 @@ const SearchPage: NextPageWithLayout = () => {
           <NotifyMe />
         </div>
       </div>
+      <SearchFooter route={route} date={formattedDate} />
     </>
   );
 };
