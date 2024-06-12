@@ -11,6 +11,9 @@ export const API_URL = `${BASE_URL}/api/v1`;
 export const HERE_API_KEY = process.env.NEXT_PUBLIC_HERE_API_KEY;
 export const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 export const STRAPI_ACCESS_TOKEN = process.env.STRAPI_ACCESS_TOKEN;
+export const STAFF_USER_EMAIL = process.env.STAFF_USER_EMAIL;
+export const STAFF_USER_PASSWORD = process.env.STAFF_USER_PASSWORD;
+
 export const GTM_ID = 'G-0ZVVNHC0SN';
 export const GA_DISABLE_PROPERTY = `ga-disable-${GTM_ID}`
 

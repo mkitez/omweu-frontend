@@ -4,6 +4,8 @@ import { Destination, Trip } from "../components/Trips";
 import cmsApi from '../services/cmsApi';
 import { getDestinationApi } from "../services/serverSide/destinationApi";
 import dayjs from 'dayjs'
+import { AxiosBasicCredentials } from "axios";
+import { STAFF_USER_EMAIL, STAFF_USER_PASSWORD } from '../utils/constants'
 
 const BASE_URL = 'https://eubycar.com'
 
@@ -94,10 +96,14 @@ const SiteMap = () => { }
 export const getServerSideProps: GetServerSideProps = async ({ res, locale }) => {
   const tripApi = getTripApi(null, locale)
   const destApi = getDestinationApi(null, locale)
+  const auth: AxiosBasicCredentials = {
+    username: STAFF_USER_EMAIL || '',
+    password: STAFF_USER_PASSWORD || '',
+  }
 
   let trips: Trip[] = [];
   try {
-    const tripsResponse = await tripApi.getTripsForNextMonth()
+    const tripsResponse = await tripApi.getTripsForNextMonth(auth)
     trips = tripsResponse.data;
   }
   catch (e) {
@@ -106,7 +112,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res, locale }) =>
 
   let destinations: Destination[] = [];
   try {
-    const destResponse = await destApi.getAllDestinations()
+    const destResponse = await destApi.getAllDestinations(auth)
     destinations = destResponse.data;
   }
   catch (e) {
