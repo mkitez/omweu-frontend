@@ -11,11 +11,12 @@ import { getUserApi } from '../../services/serverSide/userApi';
 
 import PublicUserProfile from '../../components/PublicUserProfile';
 import type { User } from '../../components/Trips';
+import { NextPageWithLayout } from '../_app';
 import { authOptions } from '../api/auth/[...nextauth]';
 
-const PublicUserProfilePage = ({
-  user,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+type PageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+const PublicUserProfilePage: NextPageWithLayout<PageProps> = ({ user }) => {
   const { t } = useTranslation('profile');
 
   if (user === null) {
@@ -26,6 +27,7 @@ const PublicUserProfilePage = ({
     <>
       <Head>
         <title>{`${t('title')} ${user.first_name} | EUbyCar.com`}</title>
+        <meta name="robots" content="noindex" />
       </Head>
       <div className="container">
         <PublicUserProfile user={user} />
@@ -61,7 +63,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     user = response.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
-      if (e.response?.status && [403, 404].includes(e.response?.status))
+      if (e.response?.status && [401, 404].includes(e.response?.status))
         notFound = true;
     }
   }

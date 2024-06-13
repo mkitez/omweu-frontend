@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -8,6 +9,7 @@ import useSWR from 'swr';
 
 import InlineTrip from '../components/InlineTrip';
 import NotifyMe from '../components/NotifyMe';
+import PreFooter from '../components/PreFooter';
 import type { Trip } from '../components/Trips';
 import TripSearch from '../components/TripSearch';
 import { usePublicFetcher } from '../hooks/usePublicFetcher';
@@ -31,21 +33,29 @@ const SearchPage: NextPageWithLayout = () => {
     fetcher
   );
 
-  const title = `${t('searchTitle')}${
-    router.query.from_input && router.query.to_input
-      ? ` ${router.query.from_input} – ${router.query.to_input}`
-      : ''
-  } | EUbyCar.com`;
-
-  const formattedDate = formatDate(
+  const formattedDateWeekday = formatDate(
     new Date(router.query.date as string),
     i18n.language
   );
+  const formattedDateFull = dayjs(router.query.date as string)
+    .locale(i18n.language)
+    .format('ll');
+
+  const route = `${router.query.from_input} – ${router.query.to_input}`;
+  const title = `${t('search_title')}${
+    router.query.from_input && router.query.to_input
+      ? ` ${route} ${formattedDateWeekday}`
+      : ''
+  } | EUbyCar.com`;
 
   return (
     <>
       <Head>
         <title>{title}</title>
+        <meta
+          name="description"
+          content={`${t('search_description', { route, date: formattedDateFull })}`}
+        />
       </Head>
       <div className={styles.searchContainer}>
         <TripSearch />
@@ -53,7 +63,7 @@ const SearchPage: NextPageWithLayout = () => {
       <div className={styles.root}>
         <div className={styles.result}>
           <h2>
-            {t('tripsFound')} {formattedDate}
+            {t('tripsFound')} {formattedDateWeekday}
           </h2>
           {(() => {
             if (isLoading) {
@@ -69,7 +79,7 @@ const SearchPage: NextPageWithLayout = () => {
                 <div className={styles.statusText}>{t('tripsNotFound')}</div>
               );
             }
-            return data?.results.map((trip: Trip) => (
+            return data?.results.map((trip) => (
               <Link href={`/trips/${trip.id}`} key={trip.id}>
                 <InlineTrip trip={trip} showPrice showDriver />
               </Link>
@@ -78,6 +88,9 @@ const SearchPage: NextPageWithLayout = () => {
           <NotifyMe />
         </div>
       </div>
+      <PreFooter>
+        {t('search_footer', { route, date: formattedDateFull })}
+      </PreFooter>
     </>
   );
 };

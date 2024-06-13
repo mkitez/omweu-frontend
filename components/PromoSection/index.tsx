@@ -21,7 +21,7 @@ const PromoSection = () => {
             {t('sectionOne.title')}
           </Trans>
         </h2>
-        <Row gutter={[40, 40]} className={styles.container}>
+        <Row gutter={[40, 30]} className={styles.container}>
           <Col md={8}>
             <PromoBlock
               title={t('sectionOne.blocks.0.title')}

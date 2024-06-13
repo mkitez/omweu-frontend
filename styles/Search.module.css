@@ -18,7 +18,7 @@
 }
 
 .result {
-  margin-bottom: 3rem;
+  min-height: 70vh;
   text-align: center;
 }
 
