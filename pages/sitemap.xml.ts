@@ -64,7 +64,7 @@ const generateSiteMap = (
   const routes = getRouteCombinations(destinations);
   const returnRoutes = routes.map(([start, end]) => [end, start] as Route);
 
-  const days = Array.from({ length: 30 }, (_, i) => dayjs().add(i, 'day'));
+  const days = Array.from({ length: 15 }, (_, i) => dayjs().add(i * 2, 'day'));
 
   return `<?xml version="1.0" encoding="UTF-8"?>
    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
