@@ -12,7 +12,7 @@ const SearchFooter: React.FC<Props> = ({ route, date }) => {
   return (
     <div className={styles.root}>
       <div className={styles.content}>
-        <Trans values={{ route, date }}>{t('search_description')}</Trans>
+        <Trans values={{ route, date }}>{t('search_footer')}</Trans>
       </div>
     </div>
   );

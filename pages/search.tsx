@@ -1,5 +1,6 @@
+import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
-import { useTranslation } from 'next-i18next';
+import { Trans, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -32,15 +33,18 @@ const SearchPage: NextPageWithLayout = () => {
     fetcher
   );
 
-  const formattedDate = formatDate(
+  const formattedDateWeekday = formatDate(
     new Date(router.query.date as string),
     i18n.language
   );
+  const formattedDateFull = dayjs(router.query.date as string)
+    .locale(i18n.language)
+    .format('ll');
 
   const route = `${router.query.from_input} – ${router.query.to_input}`;
-  const title = `${t('searchTitle')}${
+  const title = `${t('search_title')}${
     router.query.from_input && router.query.to_input
-      ? ` ${route} ${formattedDate}`
+      ? ` ${route} ${formattedDateWeekday}`
       : ''
   } | EUbyCar.com`;
 
@@ -48,7 +52,10 @@ const SearchPage: NextPageWithLayout = () => {
     <>
       <Head>
         <title>{title}</title>
-        <meta name="description" content={t('search_description') as string} />
+        <meta
+          name="description"
+          content={`${t('search_description')} ${route} ${formattedDateFull}`}
+        />
       </Head>
       <div className={styles.searchContainer}>
         <TripSearch />
@@ -56,7 +63,7 @@ const SearchPage: NextPageWithLayout = () => {
       <div className={styles.root}>
         <div className={styles.result}>
           <h2>
-            {t('tripsFound')} {formattedDate}
+            {t('tripsFound')} {formattedDateWeekday}
           </h2>
           {(() => {
             if (isLoading) {
@@ -81,7 +88,7 @@ const SearchPage: NextPageWithLayout = () => {
           <NotifyMe />
         </div>
       </div>
-      <SearchFooter route={route} date={formattedDate} />
+      <SearchFooter route={route} date={formattedDateFull} />
     </>
   );
 };
