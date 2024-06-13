@@ -30,7 +30,7 @@ const NewTrip: NextPageWithLayout<PageProps> = ({
     const newTripResponse = await api.createTrip(data);
     const newTrip: Trip = newTripResponse.data;
     message.success(t('notifications.new_trip'));
-    router.push(`/trips/${newTrip.id}`);
+    router.push(`/trips/${newTrip.slug}`);
   };
 
   return (

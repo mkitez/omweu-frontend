@@ -59,7 +59,7 @@ const TripEdit = () => {
                 );
                 const tripData = tripResponse.data;
                 message.success(t('notifications.trip_update'));
-                router.push(`/trips/${tripData.id}`);
+                router.push(`/trips/${tripData.slug}`);
               }}
             />
           );

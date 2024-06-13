@@ -276,7 +276,7 @@ const TripEditForm: React.FC<Props> = ({ data, submitValue, submit }) => {
         <Button
           disabled={false}
           onClick={() => {
-            const url = data?.id ? `/trips/${data.id}` : '/dashboard/trips';
+            const url = data?.id ? `/trips/${data.slug}` : '/dashboard/trips';
             router.push(url);
           }}
         >

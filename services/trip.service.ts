@@ -1,4 +1,5 @@
 import { AxiosBasicCredentials } from 'axios';
+
 import BaseService from './baseService';
 
 export interface TripInputData {
@@ -21,11 +22,15 @@ class TripService extends BaseService {
   }
 
   getTripsForNextMonth(auth?: AxiosBasicCredentials) {
-    return this.api.get('/trips/nextmonth/', { auth })
+    return this.api.get('/trips/nextmonth/', { auth });
   }
 
   getTrip(tripId: number) {
     return this.api.get(`/trips/${tripId}/`);
+  }
+
+  getTripBySlug(slug: string) {
+    return this.api.get(`/trips/${slug}/`);
   }
 
   createTrip(data: TripInputData) {
