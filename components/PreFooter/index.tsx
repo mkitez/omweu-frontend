@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { PropsWithChildren } from 'react';
 
-import styles from './SearchFooter.module.css';
+import styles from './PreFooter.module.css';
 
 const PreFooter: React.FC<PropsWithChildren> = ({ children }) => {
   const { t } = useTranslation('common');

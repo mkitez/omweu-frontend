@@ -1,3 +1,7 @@
+.root {
+  min-height: 72.5vh;
+}
+
 .root h1 {
   text-align: center;
 }

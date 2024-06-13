@@ -15,6 +15,7 @@ import { getTripApi } from '../../services/serverSide/tripApi';
 
 import InlineBooking from '../../components/InlineBooking';
 import InlineBookings from '../../components/InlineBookings';
+import PreFooter from '../../components/PreFooter';
 import TripDetails from '../../components/TripDetails';
 import type { Trip } from '../../components/Trips';
 import { useIsAuthenticatedUser } from '../../hooks/useIsAuthenticatedUser';
@@ -124,6 +125,11 @@ const TripDetailsPage = ({
           )}
         </div>
       </div>
+      {!isDriver && (
+        <PreFooter>
+          {t('footer_text', { route, date: formattedDateFull })}
+        </PreFooter>
+      )}
     </>
   );
 };
