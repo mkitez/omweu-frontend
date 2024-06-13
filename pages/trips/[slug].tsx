@@ -158,7 +158,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   let notFound = false;
   let trip: Trip | null = null;
   try {
-    const tripResponse = await tripApi.getTrip(Number(params?.tripId));
+    const tripResponse = await tripApi.getTripBySlug(String(params?.slug));
     trip = tripResponse.data;
   } catch (e) {
     if (axios.isAxiosError(e) && e.response?.status === 404) {

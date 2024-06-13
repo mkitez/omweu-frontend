@@ -49,7 +49,7 @@ const TripCopy = ({
             const newTripResponse = await api.createTrip(data);
             const newTrip = newTripResponse.data;
             message.success(t('notifications.new_trip'));
-            router.push(`/trips/${newTrip.id}`);
+            router.push(`/trips/${newTrip.slug}`);
           }}
         />
       </div>

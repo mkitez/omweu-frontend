@@ -12,7 +12,7 @@ import { Trip } from '../Trips';
 import styles from './UpcomingTripsSection.module.css';
 
 const LinkedTrip: FC<{ trip: Trip }> = ({ trip }) => (
-  <Link href={`/trips/${trip.id}`}>
+  <Link href={`/trips/${trip.slug}`}>
     <InlineTrip trip={trip} showDate showDriver />
   </Link>
 );

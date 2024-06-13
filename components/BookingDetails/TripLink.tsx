@@ -1,16 +1,17 @@
-import Link from 'next/link';
 import { ExportOutlined } from '@ant-design/icons';
-import styles from './BookingDetails.module.css';
 import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
+
+import styles from './BookingDetails.module.css';
 
 type Props = {
-  tripId: number;
+  tripSlug: string;
 };
 
-const TripLink: React.FC<Props> = ({ tripId }) => {
+const TripLink: React.FC<Props> = ({ tripSlug }) => {
   const { t } = useTranslation('booking');
 
-  const tripPath = `/trips/${tripId}`;
+  const tripPath = `/trips/${tripSlug}`;
   return (
     <div className={styles.tripLinkContainer}>
       <Link href={tripPath}>

@@ -64,6 +64,7 @@ export interface InlineCar {
 
 export interface Trip {
   id: number;
+  slug: string;
   origin: Destination;
   dest: Destination;
   date: string;
@@ -130,7 +131,7 @@ const Trips = () => {
           <div>
             {tripsAndBookingsSorted.map((entity) => {
               const isBooking = 'booking_id' in entity;
-              const entityId = isBooking ? entity.booking_id : entity.id;
+              const entityId = isBooking ? entity.booking_id : entity.slug;
               const entityPath = isBooking
                 ? `/bookings/${entityId}`
                 : `/trips/${entityId}`;

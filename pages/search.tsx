@@ -80,7 +80,7 @@ const SearchPage: NextPageWithLayout = () => {
               );
             }
             return data?.results.map((trip) => (
-              <Link href={`/trips/${trip.id}`} key={trip.id}>
+              <Link href={`/trips/${trip.slug}`} key={trip.id}>
                 <InlineTrip trip={trip} showPrice showDriver />
               </Link>
             ));

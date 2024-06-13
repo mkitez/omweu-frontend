@@ -1,11 +1,11 @@
 import { Booking } from '../../pages/bookings/[bookingId]';
 import TripData from '../TripDetails/TripData';
 import UserData from '../TripDetails/UserData';
-import { BookingStatus } from './BookingStatus';
-import BookingMessage from './BookingMessage';
-import TripLink from './TripLink';
-import PassengerActions from './PassengerActions';
 import styles from './BookingDetails.module.css';
+import BookingMessage from './BookingMessage';
+import { BookingStatus } from './BookingStatus';
+import PassengerActions from './PassengerActions';
+import TripLink from './TripLink';
 
 type Props = {
   booking: Booking;
@@ -19,7 +19,7 @@ const PassengerBookingView: React.FC<Props> = ({ booking }) => {
       <UserData user={booking.driver} />
       <BookingMessage content={booking.booking_message} />
       <PassengerActions booking={booking} />
-      <TripLink tripId={booking.trip.id} />
+      <TripLink tripSlug={booking.trip.slug} />
     </div>
   );
 };
