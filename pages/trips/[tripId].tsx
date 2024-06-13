@@ -53,11 +53,13 @@ const TripDetailsPage = ({
     return <Error statusCode={500} />;
   }
 
-  const formattedDate = formatDate(
+  const formattedDateWeekday = formatDate(
     new Date(trip.date),
     i18n.language,
     trip.origin.time_zone
   );
+  const formattedDateFull = dayjs(trip.date).locale(i18n.language).format('ll');
+
   const isTripInPast = dayjs(trip.date) < dayjs();
   const showBookingButton = !isDriver && status === 'authenticated';
   const getDisabledText = () => {
@@ -69,18 +71,28 @@ const TripDetailsPage = ({
     }
     return;
   };
+  const route = [
+    trip.origin.name,
+    ...trip.route_stops.map((stop) => stop.name),
+    trip.dest.name,
+  ].join(' – ');
+
   return (
     <>
       <Head>
         <title>{`${t('title')} ${trip.origin.name} – ${
           trip.dest.name
-        } ${formattedDate} | EUbyCar.com`}</title>
+        } ${formattedDateWeekday} | EUbyCar.com`}</title>
+        <meta
+          name="description"
+          content={`${t('description_text', { date: formattedDateFull, route })}`}
+        />
       </Head>
       <div className="container">
         <div className={styles.root}>
           <BackButton trip={trip} />
           <h1>
-            {t('title')} {formattedDate}
+            {t('title')} {formattedDateWeekday}
           </h1>
           <TripDetails trip={trip} />
           {isDriver ? (

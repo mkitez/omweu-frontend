@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
-import { Trans, useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -54,7 +54,7 @@ const SearchPage: NextPageWithLayout = () => {
         <title>{title}</title>
         <meta
           name="description"
-          content={`${t('search_description')} ${route} ${formattedDateFull}`}
+          content={`${t('search_description', { route, date: formattedDateFull })}`}
         />
       </Head>
       <div className={styles.searchContainer}>
@@ -89,9 +89,7 @@ const SearchPage: NextPageWithLayout = () => {
         </div>
       </div>
       <PreFooter>
-        <Trans values={{ route, date: formattedDateFull }}>
-          {t('search_footer')}
-        </Trans>
+        {t('search_footer', { route, date: formattedDateFull })}
       </PreFooter>
     </>
   );

@@ -5,6 +5,9 @@ export const formatDate = (date: Date, lang: string, timeZone?: string) => {
     month: 'long',
     timeZone,
   }).formatToParts(date);
+  if (lang === 'ru') {
+    weekday.value = weekday.value.toLowerCase()
+  }
   return [rest.map((v) => v.value).join(''), comma.value, weekday.value].join(
     ''
   );
