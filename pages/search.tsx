@@ -9,7 +9,7 @@ import useSWR from 'swr';
 
 import InlineTrip from '../components/InlineTrip';
 import NotifyMe from '../components/NotifyMe';
-import SearchFooter from '../components/SearchFooter';
+import PreFooter from '../components/PreFooter';
 import type { Trip } from '../components/Trips';
 import TripSearch from '../components/TripSearch';
 import { usePublicFetcher } from '../hooks/usePublicFetcher';
@@ -88,7 +88,11 @@ const SearchPage: NextPageWithLayout = () => {
           <NotifyMe />
         </div>
       </div>
-      <SearchFooter route={route} date={formattedDateFull} />
+      <PreFooter>
+        <Trans values={{ route, date: formattedDateFull }}>
+          {t('search_footer')}
+        </Trans>
+      </PreFooter>
     </>
   );
 };
