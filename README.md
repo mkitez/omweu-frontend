@@ -1,34 +1,34 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# omweu-frontend
 
-## Getting Started
+This frontend is built with React and Next.js.
 
-First, run the development server:
+## Development
+
+Install project dependencies as:
+```bash
+yarn
+```
+
+To start a local development server, run:
 
 ```bash
-npm run dev
-# or
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Or you can use the VSCode launch preset.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. Code changes will be applied immediately, except for changes in translation files.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Environment variables
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+The following environment variables are required for proper functioning of all fo the app features:
+```
+NEXT_PUBLIC_HERE_API_KEY=... # access key to here.com API
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=... # Google recaptcha site key, used for reginstration
+NEXTAUTH_SECRET=... # NextAuth secret, use for authentication, can be any arbitrary value
+STRAPI_ACCESS_TOKEN=... # access token to Strapi CMS, used for FAQ content access
+STAFF_USER_EMAIL=... # staff user credentials, used to generate sitemap.xml
+STAFF_USER_PASSWORD=...
+```
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+You can create a file called `.env.local` to store the variable values.
