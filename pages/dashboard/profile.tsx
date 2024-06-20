@@ -40,7 +40,10 @@ const Profile = () => {
             </div>
           );
         }
-        return <UserProfileForm data={data as User} onSubmit={mutate} />;
+        if (!data) {
+          return null;
+        }
+        return <UserProfileForm data={data} onSubmit={mutate} />;
       })()}
     </div>
   );
