@@ -105,9 +105,10 @@ const SignupForm: React.FC<Props> = ({ onSuccess }) => {
         name="email"
         label={t('registration.email')}
         rules={[
-          { required: true, message: t('errors.enterEmail') as string },
-          { type: 'email' },
+          { required: true, message: t('errors.enterEmail') || '' },
+          { type: 'email', message: t('errors.invalidEmail') || '' },
         ]}
+        validateTrigger={['onBlur']}
         {...getValidationProps('email')}
       >
         <Input
