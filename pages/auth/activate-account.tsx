@@ -17,7 +17,7 @@ type Status = 'loading' | 'success' | 'activationError' | 'error';
 const ActivateAccount = () => {
   const router = useRouter();
   const { t } = useTranslation(['auth', 'common']);
-  const [status, setStatus] = useState<Status>('success');
+  const [status, setStatus] = useState<Status>('loading');
   const [countdown, setCountdown] = useState<number | null>(null);
 
   const startCountdown = (count: number) => {
