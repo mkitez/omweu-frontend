@@ -37,7 +37,7 @@ const TripSearch: React.FC = () => {
     if (router.query.search === 'true') {
       fromRef?.current?.focus();
     }
-  });
+  }, [router.query.search]);
 
   const submitForm: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
