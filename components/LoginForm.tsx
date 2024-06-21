@@ -1,10 +1,11 @@
-import { useState } from 'react';
 import { Alert, Button, Col, Form, Input, Row } from 'antd';
-import { useTranslation, Trans } from 'next-i18next';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import styles from '../styles/LoginForm.module.css';
+import { Trans, useTranslation } from 'next-i18next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+
+import styles from '../styles/LoginForm.module.css';
 
 interface FormData {
   email: string;
@@ -30,7 +31,7 @@ const LoginForm = () => {
       redirect: false,
     });
     if (authResponse?.ok) {
-      router.replace(callbackUrl);
+      router.push(callbackUrl);
       return;
     }
     setLoading(false);
@@ -41,6 +42,9 @@ const LoginForm = () => {
     }
   };
 
+  const callbackUrlEncoded = encodeURIComponent(
+    String(router.query?.callbackUrl || '')
+  );
   return (
     <>
       <Form
@@ -79,7 +83,10 @@ const LoginForm = () => {
           <div className={styles.signup}>
             <Trans
               components={[
-                <Link key={0} href="/auth/signup">
+                <Link
+                  key={0}
+                  href={`/auth/signup${callbackUrlEncoded ? `?callbackUrl=${callbackUrlEncoded}` : ''}`}
+                >
                   x
                 </Link>,
               ]}

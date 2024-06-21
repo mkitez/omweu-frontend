@@ -1,15 +1,16 @@
-import Head from 'next/head';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { Result } from 'antd';
+import { GetServerSideProps } from 'next';
+import { unstable_getServerSession } from 'next-auth';
 import { signIn } from 'next-auth/react';
 import { Trans, useTranslation } from 'next-i18next';
-import { GetServerSideProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { Alert } from 'antd';
-import styles from '../../styles/ActivateAccount.module.css';
+import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+
 import ResendLinkButton from '../../components/ResendLinkButton';
-import { unstable_getServerSession } from 'next-auth';
+import styles from '../../styles/ActivateAccount.module.css';
 import { authOptions } from '../api/auth/[...nextauth]';
 
 type Status = 'loading' | 'success' | 'activationError' | 'error';
@@ -23,17 +24,19 @@ const ActivateAccount = () => {
       return;
     }
     const { uid: uidb64, token } = router.query;
-    signIn('account-activation', { uidb64, token, redirect: false }).then(
-      (response) => {
-        if (response?.ok) {
-          setStatus('success');
-        } else if (response?.status === 401) {
-          setStatus('activationError');
-        } else {
-          setStatus('error');
-        }
+    signIn('account-activation', {
+      uidb64,
+      token,
+      redirect: false,
+    }).then((response) => {
+      if (response?.ok) {
+        setStatus('success');
+      } else if (response?.status === 401) {
+        setStatus('activationError');
+      } else {
+        setStatus('error');
       }
-    );
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady]);
 
@@ -43,14 +46,12 @@ const ActivateAccount = () => {
         <title>{`${t('activation.title')} | EUbyCar.com`}</title>
       </Head>
       <div className={styles.root}>
-        <h1>{t('activation.title')}</h1>
         <div className={styles.content}>
           {status === 'success' && (
-            <Alert
-              type="success"
-              showIcon
-              className={styles.success}
-              message={
+            <Result
+              status="success"
+              title={t('activation.title')}
+              subTitle={
                 <Trans
                   components={[
                     <Link key={0} href="/dashboard">
@@ -64,22 +65,17 @@ const ActivateAccount = () => {
             />
           )}
           {status === 'activationError' && (
-            <>
-              <Alert
-                type="error"
-                showIcon
-                className={styles.error}
-                message={t('errors.activationTokenInvalid')}
-              />
-              <ResendLinkButton />
-            </>
+            <Result
+              status="error"
+              title={t('errors.activationTokenInvalid')}
+              extra={<ResendLinkButton />}
+            />
           )}
           {status === 'error' && (
-            <Alert
-              type="error"
-              showIcon
+            <Result
+              status="error"
               className={styles.error}
-              message={t('errors.common', { ns: 'common' })}
+              title={t('errors.common', { ns: 'common' })}
             />
           )}
         </div>

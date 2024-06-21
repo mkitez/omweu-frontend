@@ -12,6 +12,7 @@ import {
 import axios from 'axios';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 
@@ -47,6 +48,7 @@ type Props = {
 const SignupForm: React.FC<Props> = ({ onSuccess }) => {
   const { t, i18n } = useTranslation(['auth', 'common']);
   const userApi = useUserApi();
+  const router = useRouter();
 
   const [form] = Form.useForm<UserFormData>();
 
@@ -70,6 +72,7 @@ const SignupForm: React.FC<Props> = ({ onSuccess }) => {
 
   const onFinish = async (formData: UserFormData) => {
     const { birth_date, password_confirmation, ...data } = formData;
+    const { callbackUrl } = router.query;
     const birthDateFormatted = dayjs(
       birth_date,
       dateFormats[i18n.language]
@@ -79,6 +82,7 @@ const SignupForm: React.FC<Props> = ({ onSuccess }) => {
       await userApi.createUser({
         ...data,
         birth_date: birthDateFormatted,
+        callback_url: callbackUrl && String(callbackUrl),
       });
       onSuccess();
     } catch (e) {
