@@ -10,9 +10,10 @@ import type { ReactElement } from 'react';
 
 import DashboardLayout from '../../components/DashboardLayout';
 import Trips from '../../components/Trips';
+import { NextPageWithLayout } from '../_app';
 import { authOptions } from '../api/auth/[...nextauth]';
 
-const TripsPage = () => {
+const TripsPage: NextPageWithLayout = () => {
   const { t } = useTranslation('dashboard');
   return (
     <div>

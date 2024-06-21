@@ -3,7 +3,7 @@ import { DefaultOptionType, RefSelectProps } from 'antd/es/select';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { FormEventHandler, useRef, useState } from 'react';
+import { FormEventHandler, useEffect, useRef, useState } from 'react';
 
 import Calendar from '../../assets/calendar-svgrepo-com.svg';
 import Location from '../../assets/circle-xxs-svgrepo-com.svg';
@@ -32,6 +32,12 @@ const TripSearch: React.FC = () => {
 
   const fromRef = useRef<RefSelectProps>(null);
   const toRef = useRef<RefSelectProps>(null);
+
+  useEffect(() => {
+    if (router.query.search === 'true') {
+      fromRef?.current?.focus();
+    }
+  });
 
   const submitForm: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
