@@ -1,9 +1,10 @@
+import { Alert, Button } from 'antd';
 import axios from 'axios';
-import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { Alert, Button } from 'antd';
-import api from '../services/api';
+import { useState } from 'react';
+
+import { useUserApi } from '../hooks/api/useUserApi';
 import styles from '../styles/ResendLinkButton.module.css';
 
 type Status =
@@ -15,20 +16,17 @@ type Status =
   | 'error';
 
 const ResendLinkButton = () => {
-  const { t, i18n } = useTranslation(['auth', 'common']);
+  const { t } = useTranslation(['auth', 'common']);
   const [status, setStatus] = useState<Status>('idle');
+  const userApi = useUserApi();
   const router = useRouter();
 
   const handleClick = async () => {
     setStatus('loading');
     try {
-      const response = await api.post(
-        '/users/send-activation-link',
-        {
-          uidb64: router.query.uid,
-        },
-        { headers: { 'Accept-Language': i18n.language } }
-      );
+      const response = await userApi.sendActivationLink({
+        uidb64: router.query.uid as string,
+      });
       if (response?.status === 200) {
         setStatus('success');
       }

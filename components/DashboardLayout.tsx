@@ -4,7 +4,7 @@ import {
   LogoutOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme } from 'antd';
+import { Button, Layout, Menu, Modal, theme } from 'antd';
 import { signOut } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
@@ -21,7 +21,10 @@ const DashboardLayout: React.FC<PropsWithChildren> = ({ children }) => {
     token: { borderRadius },
   } = theme.useToken();
   const router = useRouter();
+
   const [selectedKey, setSelectedKey] = useState<string>();
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+
   const { t } = useTranslation('dashboard');
   useEffect(() => {
     setSelectedKey(router.pathname.split('/').slice(-1)[0]);
@@ -61,7 +64,7 @@ const DashboardLayout: React.FC<PropsWithChildren> = ({ children }) => {
               <Button
                 type="text"
                 icon={<LogoutOutlined />}
-                onClick={() => signOut({ callbackUrl: '/' })}
+                onClick={() => setLogoutModalOpen(true)}
               >
                 <span className={styles.logoutBtnLabel}>{t('logout')}</span>
               </Button>
@@ -70,6 +73,16 @@ const DashboardLayout: React.FC<PropsWithChildren> = ({ children }) => {
           <Content className={styles.content}>{children}</Content>
         </Layout>
       </div>
+      <Modal
+        open={logoutModalOpen}
+        title={t('modals.logout.title')}
+        okText={t('modals.logout.confirm')}
+        cancelText={t('modals.logout.dismiss')}
+        onOk={() => signOut({ callbackUrl: '/' })}
+        onCancel={() => setLogoutModalOpen(false)}
+      >
+        {t('modals.logout.body')}
+      </Modal>
     </AppLayout>
   );
 };

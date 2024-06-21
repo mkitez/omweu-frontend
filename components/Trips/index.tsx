@@ -1,7 +1,7 @@
 import { ExclamationCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
 import dayjs from 'dayjs';
-import { useTranslation } from 'next-i18next';
+import { Trans, useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import useSWR from 'swr';
 
@@ -10,13 +10,13 @@ import {
   Car,
   CarBrandOrModel,
   CarColor,
-} from '../services/car.service';
+} from '../../services/car.service';
 
-import { useAuthorizedFetcher } from '../hooks/useAuthorizedFetcher';
-import { Booking } from '../pages/bookings/[bookingId]';
-import styles from '../styles/Trips.module.css';
-import DashboardBooking from './DashboardBooking';
-import InlineTrip from './InlineTrip';
+import { useAuthorizedFetcher } from '../../hooks/useAuthorizedFetcher';
+import { Booking } from '../../pages/bookings/[bookingId]';
+import DashboardBooking from '../DashboardBooking';
+import InlineTrip from '../InlineTrip';
+import styles from './Trips.module.css';
 
 export interface DriverPreferences {
   smoking_allowed: boolean;
@@ -116,7 +116,19 @@ const Trips = () => {
           );
         }
         if (trips?.length === 0 && bookings?.length === 0) {
-          return <div>{t('trips.noTrips')}</div>;
+          return (
+            <div className={styles.noTrips}>
+              <Trans
+                components={[
+                  <Link key={0} href="/?search=true">
+                    x
+                  </Link>,
+                ]}
+              >
+                {t('trips.noTrips')}
+              </Trans>
+            </div>
+          );
         }
         const tripsAndBookings = [...(trips || []), ...(bookings || [])];
         const tripsAndBookingsSorted = tripsAndBookings.sort(
@@ -127,40 +139,36 @@ const Trips = () => {
           }
         );
 
-        return (
-          <div>
-            {tripsAndBookingsSorted.map((entity) => {
-              const isBooking = 'booking_id' in entity;
-              const entityId = isBooking ? entity.booking_id : entity.slug;
-              const entityPath = isBooking
-                ? `/bookings/${entityId}`
-                : `/trips/${entityId}`;
-              return (
-                <Link key={entityId} href={entityPath}>
-                  {isBooking ? (
-                    <DashboardBooking booking={entity} />
-                  ) : (
-                    <InlineTrip
-                      trip={entity}
-                      showDate
-                      footer={
-                        entity.has_pending_bookings ? (
-                          <Tag
-                            className={styles.pendingBookings}
-                            color="warning"
-                            icon={<ExclamationCircleOutlined />}
-                          >
-                            {t('trips.pending_bookings')}
-                          </Tag>
-                        ) : undefined
-                      }
-                    />
-                  )}
-                </Link>
-              );
-            })}
-          </div>
-        );
+        return tripsAndBookingsSorted.map((entity) => {
+          const isBooking = 'booking_id' in entity;
+          const entityId = isBooking ? entity.booking_id : entity.slug;
+          const entityPath = isBooking
+            ? `/bookings/${entityId}`
+            : `/trips/${entityId}`;
+          return (
+            <Link key={entityId} href={entityPath}>
+              {isBooking ? (
+                <DashboardBooking booking={entity} />
+              ) : (
+                <InlineTrip
+                  trip={entity}
+                  showDate
+                  footer={
+                    entity.has_pending_bookings ? (
+                      <Tag
+                        className={styles.pendingBookings}
+                        color="warning"
+                        icon={<ExclamationCircleOutlined />}
+                      >
+                        {t('trips.pending_bookings')}
+                      </Tag>
+                    ) : undefined
+                  }
+                />
+              )}
+            </Link>
+          );
+        });
       })()}
     </div>
   );

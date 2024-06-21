@@ -9,6 +9,11 @@ export interface SignupData {
   phone_number: string;
   birth_date: string;
   captcha: string;
+  callback_url?: string;
+}
+
+interface ActivationLinkData {
+  uidb64: string;
 }
 
 class UserService extends BaseService {
@@ -38,6 +43,10 @@ class UserService extends BaseService {
 
   getUser(userId: string) {
     return this.api.get(`/users/${userId}/`);
+  }
+
+  sendActivationLink(data: ActivationLinkData) {
+    return this.api.post('/users/send-activation-link', data)
   }
 }
 

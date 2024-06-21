@@ -1,15 +1,15 @@
-import Head from 'next/head';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { signIn } from 'next-auth/react';
-import { Trans, useTranslation } from 'next-i18next';
+import { Result } from 'antd';
 import { GetServerSideProps } from 'next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { Alert } from 'antd';
-import styles from '../../styles/ActivateAccount.module.css';
-import Link from 'next/link';
-import ResendLinkButton from '../../components/ResendLinkButton';
 import { unstable_getServerSession } from 'next-auth';
+import { signIn } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+
+import ResendLinkButton from '../../components/ResendLinkButton';
+import styles from '../../styles/ActivateAccount.module.css';
 import { authOptions } from '../api/auth/[...nextauth]';
 
 type Status = 'loading' | 'success' | 'activationError' | 'error';
@@ -18,22 +18,49 @@ const ActivateAccount = () => {
   const router = useRouter();
   const { t } = useTranslation(['auth', 'common']);
   const [status, setStatus] = useState<Status>('loading');
+  const [countdown, setCountdown] = useState<number | null>(null);
+
+  const startCountdown = (count: number) => {
+    const { callbackUrl } = router.query;
+    const redirectUrl =
+      (callbackUrl && String(callbackUrl)) || '/dashboard/profile';
+    return setInterval(() => {
+      setCountdown((prev) => {
+        if (prev === null) {
+          return count;
+        }
+        if (prev === 1) {
+          router.push(redirectUrl);
+          return prev;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
   useEffect(() => {
     if (!router.isReady) {
       return;
     }
     const { uid: uidb64, token } = router.query;
-    signIn('account-activation', { uidb64, token, redirect: false }).then(
-      (response) => {
-        if (response?.ok) {
-          setStatus('success');
-        } else if (response?.status === 401) {
-          setStatus('activationError');
-        } else {
-          setStatus('error');
-        }
+    let timer: ReturnType<typeof setInterval>;
+    signIn('account-activation', {
+      uidb64,
+      token,
+      redirect: false,
+    }).then((response) => {
+      if (response?.ok) {
+        setStatus('success');
+        timer = startCountdown(3);
+      } else if (response?.status === 401) {
+        setStatus('activationError');
+      } else {
+        setStatus('error');
       }
-    );
+    });
+    return () => {
+      clearInterval(timer);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady]);
 
@@ -43,43 +70,29 @@ const ActivateAccount = () => {
         <title>{`${t('activation.title')} | EUbyCar.com`}</title>
       </Head>
       <div className={styles.root}>
-        <h1>{t('activation.title')}</h1>
         <div className={styles.content}>
           {status === 'success' && (
-            <Alert
-              type="success"
-              showIcon
-              className={styles.success}
-              message={
-                <Trans
-                  components={[
-                    <Link key={0} href="/dashboard">
-                      x
-                    </Link>,
-                  ]}
-                >
-                  {t('activation.success')}
-                </Trans>
+            <Result
+              status="success"
+              title={t('activation.success')}
+              subTitle={
+                countdown !== null &&
+                t('activation.successSubtitle', { sec: countdown })
               }
             />
           )}
           {status === 'activationError' && (
-            <>
-              <Alert
-                type="error"
-                showIcon
-                className={styles.error}
-                message={t('errors.activationTokenInvalid')}
-              />
-              <ResendLinkButton />
-            </>
+            <Result
+              status="error"
+              title={t('errors.activationTokenInvalid')}
+              extra={<ResendLinkButton />}
+            />
           )}
           {status === 'error' && (
-            <Alert
-              type="error"
-              showIcon
+            <Result
+              status="error"
               className={styles.error}
-              message={t('errors.common', { ns: 'common' })}
+              title={t('errors.common', { ns: 'common' })}
             />
           )}
         </div>

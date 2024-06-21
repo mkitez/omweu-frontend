@@ -1,7 +1,8 @@
-import { Trip } from '../Trips';
-import TripOutline from '../TripOutline';
 import { useTranslation } from 'next-i18next';
+
 import { InBookingTrip } from '../../pages/bookings/[bookingId]';
+import TripOutline from '../TripOutline';
+import { Trip } from '../Trips';
 import styles from './TripDetails.module.css';
 import TripTime from './TripTime';
 

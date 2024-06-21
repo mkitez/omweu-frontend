@@ -58,6 +58,7 @@ const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
       disabled={loading}
       className={styles.root}
     >
+      <AvatarUpload initialImageUrl={data.photo} onUpload={onSubmit} />
       <Row>
         <Col xs={24} lg={12}>
           <Item
@@ -146,7 +147,6 @@ const UserProfileForm: React.FC<Props> = ({ data, onSubmit }) => {
           </Item>
         </Col>
       </Row>
-      <AvatarUpload initialImageUrl={data.photo} onUpload={onSubmit} />
       <h3>{t('driver_preferences.title')}</h3>
       <DriverPreferencesFormFields />
       <CarsSection cars={data.cars} />
