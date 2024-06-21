@@ -25,7 +25,7 @@ const SignupPage: NextPageWithLayout = () => {
       <div className={styles.root}>
         {success ? (
           <Result
-            status="success"
+            status="info"
             title={t('registration.complete')}
             subTitle={t('registration.success')}
           />
