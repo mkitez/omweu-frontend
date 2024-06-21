@@ -13,6 +13,7 @@ import {
   Upload,
   type UploadProps,
 } from 'antd';
+import ImgCrop from 'antd-img-crop';
 import { RcFile } from 'antd/es/upload';
 import axios from 'axios';
 import { useTranslation } from 'next-i18next';
@@ -37,15 +38,19 @@ const AvatarUpload: React.FC<Props> = ({ initialImageUrl, onUpload }) => {
 
   const beforeUpload: UploadProps['beforeUpload'] = useCallback(
     (file: RcFile) => {
-      const isJpgOrPng = ['image/jpeg', 'image/png'].includes(file.type);
-      if (!isJpgOrPng) {
-        message.error(t('errors.imageFormatConstraint') + ' PNG, JPG');
+      const isSupportedFormat = [
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+      ].includes(file.type);
+      if (!isSupportedFormat) {
+        message.error(t('errors.imageFormatConstraint') + ' PNG, JPG, WEBP');
       }
       const isSmallerThan2Mb = file.size / 1024 / 1024 < 2;
       if (!isSmallerThan2Mb) {
         message.error(t('errors.imageSizeConstraint'));
       }
-      return isJpgOrPng && isSmallerThan2Mb;
+      return isSupportedFormat && isSmallerThan2Mb;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [i18n.language]
@@ -103,35 +108,37 @@ const AvatarUpload: React.FC<Props> = ({ initialImageUrl, onUpload }) => {
       </Col>
       <Col>
         <div className={styles.avatarActions}>
-          <Upload
-            name="file"
-            showUploadList={false}
-            customRequest={async ({ file, onSuccess, onError }) => {
-              const formData = new FormData();
-              formData.append('file', file);
-              let response;
-              try {
-                response = await api.uploadPhoto(formData);
-                if (onSuccess) {
-                  onSuccess(response.data);
+          <ImgCrop modalTitle={t('modals.image_crop') || ''}>
+            <Upload
+              name="file"
+              showUploadList={false}
+              customRequest={async ({ file, onSuccess, onError }) => {
+                const formData = new FormData();
+                formData.append('file', file);
+                let response;
+                try {
+                  response = await api.uploadPhoto(formData);
+                  if (onSuccess) {
+                    onSuccess(response.data);
+                  }
+                } catch (e) {
+                  if (onError && axios.isAxiosError(e)) {
+                    onError(e, response);
+                  }
                 }
-              } catch (e) {
-                if (onError && axios.isAxiosError(e)) {
-                  onError(e, response);
-                }
-              }
-            }}
-            beforeUpload={beforeUpload}
-            onChange={handleChange}
-          >
-            <Button
-              icon={<UploadOutlined />}
-              loading={loading}
-              disabled={loading}
+              }}
+              beforeUpload={beforeUpload}
+              onChange={handleChange}
             >
-              {t('profile.upload_image')}
-            </Button>
-          </Upload>
+              <Button
+                icon={<UploadOutlined />}
+                loading={loading}
+                disabled={loading}
+              >
+                {t('profile.upload_image')}
+              </Button>
+            </Upload>
+          </ImgCrop>
           {imageUrl && (
             <Button
               danger
