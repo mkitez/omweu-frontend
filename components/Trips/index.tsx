@@ -86,8 +86,7 @@ export interface InlineBooking extends Booking {
 
 const Trips = () => {
   const { t } = useTranslation(['dashboard', 'common']);
-  // const fetcher = useAuthorizedFetcher();
-  const fetcher = () => Promise.resolve([]);
+  const fetcher = useAuthorizedFetcher();
   const {
     data: trips,
     error: tripsError,

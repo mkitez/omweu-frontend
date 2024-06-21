@@ -16,7 +16,7 @@ import { authOptions } from '../api/auth/[...nextauth]';
 const TripsPage: NextPageWithLayout = () => {
   const { t } = useTranslation('dashboard');
   return (
-    <div>
+    <>
       <Head>
         <title>{`${t('trips.title')} | EUbyCar.com`}</title>
       </Head>
@@ -25,7 +25,7 @@ const TripsPage: NextPageWithLayout = () => {
       <Link href="/newtrip" passHref legacyBehavior>
         <Button icon={<PlusCircleOutlined />}>{t('trips.createTrip')}</Button>
       </Link>
-    </div>
+    </>
   );
 };
 
