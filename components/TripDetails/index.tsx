@@ -47,7 +47,10 @@ const TripDetails: React.FC<Props> = ({ trip }) => {
                 >
                   x
                 </Link>,
-                <Link key={1} href="/auth/signup">
+                <Link
+                  key={1}
+                  href={`/auth/signup?callbackUrl=${encodeURIComponent(asPath)}`}
+                >
                   x
                 </Link>,
               ]}
