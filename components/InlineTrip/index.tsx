@@ -26,9 +26,6 @@ const InlineTrip: React.FC<Props> = ({
   footer,
 }) => {
   const { t, i18n } = useTranslation('trip');
-  const routeStops = trip.route_stops.length
-    ? [trip.route_stops.map((stop) => stop.name).join(' — ')]
-    : [];
   return (
     <div className={styles.root}>
       {header && <div className={styles.header}>{header}</div>}
@@ -44,9 +41,9 @@ const InlineTrip: React.FC<Props> = ({
       <div className={styles.tripDetails}>
         <TripTime trip={trip} />
         <TripOutline
-          origin={trip.origin.name}
-          dest={trip.dest.name}
-          routeStops={routeStops}
+          origin={trip.origin}
+          dest={trip.dest}
+          routeStops={trip.route_stops}
           inline={true}
         />
         {showPrice &&
