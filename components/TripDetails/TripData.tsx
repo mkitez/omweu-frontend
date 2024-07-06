@@ -16,9 +16,9 @@ const TripData: React.FC<Props> = ({ trip }) => {
     <div className={styles.tripDetails}>
       <TripTime trip={trip} />
       <TripOutline
-        origin={trip.origin.name}
-        dest={trip.dest.name}
-        routeStops={trip.route_stops.map((stop) => stop.name)}
+        origin={trip.origin}
+        dest={trip.dest}
+        routeStops={trip.route_stops}
       />
       <div className={styles.price}>
         &euro;
