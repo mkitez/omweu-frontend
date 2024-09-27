@@ -1,0 +1,11 @@
+.chat {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.5rem;
+}
+
+.message {
+  border: 1px solid #eee;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}

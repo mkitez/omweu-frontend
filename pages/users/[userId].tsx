@@ -1,3 +1,4 @@
+import { Button } from 'antd';
 import axios from 'axios';
 import { InferGetServerSidePropsType } from 'next';
 import { GetServerSideProps } from 'next';
@@ -6,11 +7,13 @@ import { SSRConfig, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Error from 'next/error';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 import { getUserApi } from '../../services/serverSide/userApi';
 
 import PublicUserProfile from '../../components/PublicUserProfile';
 import type { User } from '../../components/Trips';
+import { useChatApi } from '../../hooks/api/useChatApi';
 import { NextPageWithLayout } from '../_app';
 import { authOptions } from '../api/auth/[...nextauth]';
 
@@ -18,6 +21,8 @@ type PageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const PublicUserProfilePage: NextPageWithLayout<PageProps> = ({ user }) => {
   const { t } = useTranslation('profile');
+  const router = useRouter();
+  const chatApi = useChatApi();
 
   if (user === null) {
     return <Error statusCode={500} />;
@@ -31,6 +36,18 @@ const PublicUserProfilePage: NextPageWithLayout<PageProps> = ({ user }) => {
       </Head>
       <div className="container">
         <PublicUserProfile user={user} />
+        <div>
+          <Button
+            onClick={async () => {
+              const response = await chatApi.startChat({
+                user_id: String(user.id),
+              });
+              router.push(`/chat/${response.data.id}`);
+            }}
+          >
+            Start chat
+          </Button>
+        </div>
       </div>
     </>
   );
