@@ -1,11 +1,33 @@
 .chat {
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 0.5rem;
+  font-weight: 300;
 }
 
-.message {
+.msgWrapper {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.userMsgWrapper {
+  justify-content: right;
+}
+
+.msg {
   border: 1px solid #eee;
   padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
+  max-width: 90%;
+}
+
+.userMsgWrapper .msg {
+  border: none;
+  color: #fff;
+  background-color: #f18383;
+}
+
+.inputContainer {
+  width: 100%;
+}
+
+.inputContainer .sendBtn {
+  width: 4rem;
 }

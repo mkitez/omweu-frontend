@@ -1,9 +1,12 @@
-import { Button, Input } from 'antd';
+import { SendOutlined } from '@ant-design/icons';
+import { Button, Input, Space } from 'antd';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import { useChatApi } from '../../hooks/api/useChatApi';
 import { useChatWebSocket } from '../../hooks/useChatWebsocket';
+import { User } from '../Trips';
 import styles from './Chat.module.css';
 
 export interface Message {
@@ -20,7 +23,9 @@ interface Props {
 }
 
 const Chat: React.FC<Props> = ({ chatId }) => {
+  const { t } = useTranslation('chat');
   const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState<Partial<User>[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const chatApi = useChatApi();
@@ -28,7 +33,7 @@ const Chat: React.FC<Props> = ({ chatId }) => {
   const { sendJsonMessage } = useChatWebSocket(chatId, {
     onMessage: (e) => {
       const data = JSON.parse(e.data) as Message;
-      setMessages((prev) => [data, ...prev]);
+      setMessages((prev) => [...prev, data]);
     },
   });
 
@@ -36,8 +41,8 @@ const Chat: React.FC<Props> = ({ chatId }) => {
     setLoading(true);
     chatApi.getChat(chatId as string).then((response) => {
       setMessages(response.data.messages);
+      setUsers(response.data.participants);
       setLoading(false);
-      console.log(response.data);
     });
   }, [chatApi, chatId]);
 
@@ -50,30 +55,30 @@ const Chat: React.FC<Props> = ({ chatId }) => {
       <div className={styles.chat}>
         {messages.map((message) => (
           <div
-            className={styles.message}
-            style={{
-              textAlign:
-                Number(session?.user.id) === message.from_user
-                  ? 'right'
-                  : undefined,
-            }}
+            className={`${styles.msgWrapper} ${Number(session?.user.id) === message.from_user ? styles.userMsgWrapper : ''}`}
             key={message.id}
           >
-            {message.from_user}: {message.content}
+            <div className={styles.msg}>{message.content}</div>
           </div>
         ))}
       </div>
-      <div>
-        <Input value={input} onChange={(e) => setInput(e.target.value)} />
+      <Space.Compact className={styles.inputContainer}>
+        <Input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder={t('enterMessage') as string}
+        />
         <Button
+          type="primary"
+          disabled={!input}
+          className={styles.sendBtn}
           onClick={() => {
             sendJsonMessage({ message: input });
             setInput('');
           }}
-        >
-          Send
-        </Button>
-      </div>
+          icon={<SendOutlined />}
+        />
+      </Space.Compact>
     </div>
   );
 };

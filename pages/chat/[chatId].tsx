@@ -37,6 +37,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 }) => {
   const translations = await serverSideTranslations(locale as string, [
     'common',
+    'chat',
   ]);
   const session = await unstable_getServerSession(req, res, authOptions);
 
