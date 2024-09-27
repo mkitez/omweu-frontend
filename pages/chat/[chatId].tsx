@@ -6,7 +6,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import Chat from '../../components/ChatComponent';
+import Chat from '../../components/Chat';
 import { authOptions } from '../api/auth/[...nextauth]';
 
 type PageProps = InferGetServerSidePropsType<typeof getServerSideProps>;

@@ -5,9 +5,10 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import { useChatApi } from '../../hooks/api/useChatApi';
-import { useChatWebSocket } from '../../hooks/useChatWebsocket';
+import { useChatWebSocket } from '../../hooks/useChatWebSocket';
 import { User } from '../Trips';
 import styles from './Chat.module.css';
+import ChatHeader from './ChatHeader';
 
 export interface Message {
   id: string;
@@ -24,16 +25,18 @@ interface Props {
 
 const Chat: React.FC<Props> = ({ chatId }) => {
   const { t } = useTranslation('chat');
+
   const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState<Partial<User>[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+
   const chatApi = useChatApi();
   const { data: session } = useSession();
   const { sendJsonMessage } = useChatWebSocket(chatId, {
     onMessage: (e) => {
       const data = JSON.parse(e.data) as Message;
-      setMessages((prev) => [...prev, data]);
+      setMessages((prev) => [data, ...prev]);
     },
   });
 
@@ -51,7 +54,10 @@ const Chat: React.FC<Props> = ({ chatId }) => {
   }
 
   return (
-    <div>
+    <div className={styles.root}>
+      <ChatHeader
+        user={users.find((user) => user.id !== Number(session?.user.id))}
+      />
       <div className={styles.chat}>
         {messages.map((message) => (
           <div
@@ -67,6 +73,15 @@ const Chat: React.FC<Props> = ({ chatId }) => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={t('enterMessage') as string}
+          onKeyUp={(e) => {
+            if (!input) {
+              return;
+            }
+            if (e.key === 'Enter') {
+              sendJsonMessage({ message: input });
+              setInput('');
+            }
+          }}
         />
         <Button
           type="primary"
