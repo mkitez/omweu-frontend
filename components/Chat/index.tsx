@@ -1,7 +1,8 @@
-import { SendOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, SendOutlined } from '@ant-design/icons';
 import { Button, Input, Space } from 'antd';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { useChatApi } from '../../hooks/api/useChatApi';
@@ -55,6 +56,17 @@ const Chat: React.FC<Props> = ({ chatId }) => {
 
   return (
     <div className={styles.root}>
+      <div>
+        <Link href="/chats" passHref legacyBehavior>
+          <Button
+            icon={<ArrowLeftOutlined />}
+            type="text"
+            className={styles.backBtn}
+          >
+            {t('backToChats')}
+          </Button>
+        </Link>
+      </div>
       <ChatHeader
         user={users.find((user) => user.id !== Number(session?.user.id))}
       />

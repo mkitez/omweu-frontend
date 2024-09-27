@@ -11,8 +11,15 @@
   font-weight: 500;
 }
 
+.backBtn {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.55);
+}
+
 .chat {
-  padding: 0.5rem 0;
+  padding: 0.5rem;
   font-weight: 300;
   display: flex;
   height: 400px;
@@ -22,7 +29,7 @@
 
 .msgWrapper {
   display: flex;
-  margin: 0.25rem 0;
+  margin: 0.2rem 0;
 }
 
 .userMsgWrapper {
