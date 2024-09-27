@@ -36,18 +36,6 @@ const PublicUserProfilePage: NextPageWithLayout<PageProps> = ({ user }) => {
       </Head>
       <div className="container">
         <PublicUserProfile user={user} />
-        <div>
-          <Button
-            onClick={async () => {
-              const response = await chatApi.startChat({
-                user_id: String(user.id),
-              });
-              router.push(`/chat/${response.data.id}`);
-            }}
-          >
-            Start chat
-          </Button>
-        </div>
       </div>
     </>
   );

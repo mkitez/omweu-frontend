@@ -2,6 +2,7 @@ import { ArrowLeftOutlined, SendOutlined } from '@ant-design/icons';
 import { Button, Input, Space } from 'antd';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -54,8 +55,12 @@ const Chat: React.FC<Props> = ({ chatId }) => {
     return null;
   }
 
+  const otherUser = users.find((user) => user.id !== Number(session?.user.id));
   return (
     <div className={styles.root}>
+      <Head>
+        <title>{`${t('title')} ${otherUser?.first_name} | EUbyCar.com`}</title>
+      </Head>
       <div>
         <Link href="/chats" passHref legacyBehavior>
           <Button
@@ -67,13 +72,11 @@ const Chat: React.FC<Props> = ({ chatId }) => {
           </Button>
         </Link>
       </div>
-      <ChatHeader
-        user={users.find((user) => user.id !== Number(session?.user.id))}
-      />
+      <ChatHeader user={otherUser} />
       <div className={styles.chat}>
         {messages.map((message) => (
           <div
-            className={`${styles.msgWrapper} ${Number(session?.user.id) === message.from_user ? styles.userMsgWrapper : ''}`}
+            className={`${styles.msgWrapper} ${message.from_user === otherUser?.id ? '' : styles.userMsgWrapper}`}
             key={message.id}
           >
             <div className={styles.msg}>{message.content}</div>
