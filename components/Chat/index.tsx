@@ -11,6 +11,7 @@ import { useChatWebSocket } from '../../hooks/useChatWebSocket';
 import { User } from '../Trips';
 import styles from './Chat.module.css';
 import ChatHeader from './ChatHeader';
+import ChatWindow from './ChatWindow';
 
 export interface Message {
   id: string;
@@ -55,6 +56,11 @@ const Chat: React.FC<Props> = ({ chatId }) => {
     return null;
   }
 
+  const sendMessage = () => {
+    sendJsonMessage({ message: input });
+    setInput('');
+  };
+
   const otherUser = users.find((user) => user.id !== Number(session?.user.id));
   return (
     <div className={styles.root}>
@@ -93,8 +99,7 @@ const Chat: React.FC<Props> = ({ chatId }) => {
               return;
             }
             if (e.key === 'Enter') {
-              sendJsonMessage({ message: input });
-              setInput('');
+              sendMessage();
             }
           }}
         />
@@ -102,10 +107,7 @@ const Chat: React.FC<Props> = ({ chatId }) => {
           type="primary"
           disabled={!input}
           className={styles.sendBtn}
-          onClick={() => {
-            sendJsonMessage({ message: input });
-            setInput('');
-          }}
+          onClick={sendMessage}
           icon={<SendOutlined />}
         />
       </Space.Compact>

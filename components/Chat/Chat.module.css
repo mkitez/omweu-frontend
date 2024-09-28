@@ -26,6 +26,14 @@
   overflow: scroll;
 }
 
+.noMessages {
+  height: 400px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.55);
+  padding: 1rem;
+}
+
 .msgWrapper {
   display: flex;
   margin: 0.2rem 0;
