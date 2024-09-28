@@ -1,3 +1,10 @@
+.noChats {
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.55);
+  padding: 0.5rem 0;
+}
+
 .link:hover {
   color: unset;
 }
