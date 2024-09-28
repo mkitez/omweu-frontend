@@ -9,7 +9,7 @@ export interface Chat {
 }
 
 interface StartChatInputData {
-  user_id: string
+  user_id: number
 }
 
 class ChatService extends BaseService {

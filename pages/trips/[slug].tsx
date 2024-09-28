@@ -13,6 +13,7 @@ import Link from 'next/link';
 
 import { getTripApi } from '../../services/serverSide/tripApi';
 
+import ContactUser from '../../components/ContactUser';
 import InlineBooking from '../../components/InlineBooking';
 import InlineBookings from '../../components/InlineBookings';
 import PreFooter from '../../components/PreFooter';
@@ -115,13 +116,16 @@ const TripDetailsPage = ({
               </div>
             </>
           ) : (
-            showBookingButton && (
-              <InlineBooking
-                tripId={trip.id}
-                disabled={isTripInPast || !trip.free_seats}
-                disabledText={getDisabledText()}
-              />
-            )
+            <>
+              {showBookingButton && (
+                <InlineBooking
+                  tripId={trip.id}
+                  disabled={isTripInPast || !trip.free_seats}
+                  disabledText={getDisabledText()}
+                />
+              )}
+              <ContactUser userId={trip.driver.id} label={t('contactDriver')} />
+            </>
           )}
         </div>
       </div>
