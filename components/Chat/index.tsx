@@ -62,7 +62,7 @@ const Chat: React.FC<Props> = ({ chatId }) => {
         <title>{`${t('title')} ${otherUser?.first_name} | EUbyCar.com`}</title>
       </Head>
       <div>
-        <Link href="/chats" passHref legacyBehavior>
+        <Link href="/dashboard/chats" passHref legacyBehavior>
           <Button
             icon={<ArrowLeftOutlined />}
             type="text"
