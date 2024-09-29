@@ -1,5 +1,6 @@
 import { SendOutlined } from '@ant-design/icons';
-import { Button, Input, Skeleton, Space } from 'antd';
+import { Alert, Button, Input, Skeleton, Space } from 'antd';
+import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
@@ -32,9 +33,10 @@ interface Props {
 }
 
 const Chat: React.FC<Props> = ({ chatId }) => {
-  const { t } = useTranslation('chat');
+  const { t } = useTranslation(['chat', 'common']);
 
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>();
   const [data, setData] = useState<ChatData>();
   const [input, setInput] = useState('');
 
@@ -56,17 +58,28 @@ const Chat: React.FC<Props> = ({ chatId }) => {
   });
 
   useEffect(() => {
-    chatApi.getChat(chatId as string).then((response) => {
-      const { messages, participants } = response.data;
-      setData({ messages, participants });
-      setLoading(false);
-    });
-  }, [chatApi, chatId]);
+    chatApi
+      .getChat(chatId as string)
+      .then((response) => {
+        const { messages, participants } = response.data;
+        setData({ messages, participants });
+        setLoading(false);
+      })
+      .catch((e) => {
+        if (axios.isAxiosError(e)) {
+          setError(t('errors.common', { ns: 'common' }) as string);
+        }
+      });
+  }, [chatApi, chatId, t]);
 
   const sendMessage = () => {
     sendJsonMessage({ message: input });
     setInput('');
   };
+
+  if (error) {
+    return <Alert type="error" message={error} />;
+  }
 
   const otherUser = data?.participants.find(
     (user) => user.id !== Number(session?.user.id)
