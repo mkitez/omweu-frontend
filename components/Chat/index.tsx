@@ -1,14 +1,14 @@
-import { ArrowLeftOutlined, SendOutlined } from '@ant-design/icons';
-import { Button, Input, Space } from 'antd';
+import { SendOutlined } from '@ant-design/icons';
+import { Button, Input, Skeleton, Space } from 'antd';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { useChatApi } from '../../hooks/api/useChatApi';
 import { useChatWebSocket } from '../../hooks/useChatWebSocket';
 import { User } from '../Trips';
+import BackToChats from './BackToChats';
 import styles from './Chat.module.css';
 import ChatHeader from './ChatHeader';
 import ChatWindow from './ChatWindow';
@@ -22,6 +22,11 @@ export interface Message {
   timestamp: string;
 }
 
+interface ChatData {
+  messages: Message[];
+  participants: User[];
+}
+
 interface Props {
   chatId: string;
 }
@@ -29,79 +34,79 @@ interface Props {
 const Chat: React.FC<Props> = ({ chatId }) => {
   const { t } = useTranslation('chat');
 
-  const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState<User[]>([]);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<ChatData>();
   const [input, setInput] = useState('');
 
   const chatApi = useChatApi();
   const { data: session } = useSession();
   const { sendJsonMessage } = useChatWebSocket(chatId, {
     onMessage: (e) => {
-      const data = JSON.parse(e.data) as Message;
-      setMessages((prev) => [data, ...prev]);
+      if (loading) {
+        return;
+      }
+      const message = JSON.parse(e.data) as Message;
+      setData((prev) => {
+        if (!prev?.messages) {
+          return prev;
+        }
+        return { ...prev, messages: [message, ...prev.messages] };
+      });
     },
   });
 
   useEffect(() => {
-    setLoading(true);
     chatApi.getChat(chatId as string).then((response) => {
-      setMessages(response.data.messages);
-      setUsers(response.data.participants);
+      const { messages, participants } = response.data;
+      setData({ messages, participants });
       setLoading(false);
     });
   }, [chatApi, chatId]);
-
-  if (loading) {
-    return null;
-  }
 
   const sendMessage = () => {
     sendJsonMessage({ message: input });
     setInput('');
   };
 
-  const otherUser = users.find((user) => user.id !== Number(session?.user.id));
+  const otherUser = data?.participants.find(
+    (user) => user.id !== Number(session?.user.id)
+  );
   return (
     <div className={styles.root}>
       <Head>
         <title>{`${t('title')} ${otherUser?.first_name} | EUbyCar.com`}</title>
       </Head>
-      <div>
-        <Link href="/dashboard/chats" passHref legacyBehavior>
-          <Button
-            icon={<ArrowLeftOutlined />}
-            type="text"
-            className={styles.backBtn}
-          >
-            {t('backToChats')}
-          </Button>
-        </Link>
-      </div>
-      <ChatHeader user={otherUser} />
-      <ChatWindow messages={messages} otherUser={otherUser} />
-      <Space.Compact className={styles.inputContainer}>
-        <Input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder={t('enterMessage') as string}
-          onKeyUp={(e) => {
-            if (!input) {
-              return;
-            }
-            if (e.key === 'Enter') {
-              sendMessage();
-            }
-          }}
-        />
-        <Button
-          type="primary"
-          disabled={!input}
-          className={styles.sendBtn}
-          onClick={sendMessage}
-          icon={<SendOutlined />}
-        />
-      </Space.Compact>
+      <BackToChats />
+      {loading ? (
+        <Skeleton avatar paragraph={{ rows: 5 }} className={styles.loading} />
+      ) : (
+        <>
+          <ChatHeader user={otherUser} />
+          <ChatWindow messages={data?.messages || []} otherUser={otherUser} />
+          <Space.Compact className={styles.inputContainer}>
+            <Input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder={t('enterMessage') as string}
+              onKeyUp={(e) => {
+                if (!input) {
+                  return;
+                }
+                if (e.key === 'Enter') {
+                  sendMessage();
+                }
+              }}
+            />
+            <Button
+              type="primary"
+              disabled={!input}
+              className={styles.sendBtn}
+              onClick={sendMessage}
+              icon={<SendOutlined />}
+            />
+          </Space.Compact>
+        </>
+      )}
     </div>
   );
 };
