@@ -72,6 +72,20 @@
   background-color: #f18383;
 }
 
+.timestamp {
+  position: relative;
+  float: right;
+  font-size: 0.7rem;
+  top: 0.5rem;
+  margin-left: 0.5rem;
+  margin-right: -0.3rem;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.userMsgWrapper .timestamp {
+  color: rgba(255, 255, 255, 0.6);
+}
+
 .inputContainer {
   width: 100%;
   padding: 1rem 0;

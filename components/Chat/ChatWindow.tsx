@@ -42,7 +42,14 @@ const ChatWindow: React.FC<Props> = ({ messages, otherUser }) => {
                 className={`${styles.msgWrapper} ${message.from_user === otherUser?.id ? '' : styles.userMsgWrapper}`}
                 key={message.id}
               >
-                <div className={styles.msg}>{message.content}</div>
+                <div className={styles.msg}>
+                  {message.content}{' '}
+                  <span className={styles.timestamp}>
+                    {dayjs(message.timestamp)
+                      .locale(i18n.language)
+                      .format('LT')}
+                  </span>
+                </div>
               </div>
             ))}
             <div className={styles.dateWrapper}>
