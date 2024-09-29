@@ -73,6 +73,7 @@
 }
 
 .timestamp {
+  height: 1.2rem;
   position: relative;
   float: right;
   font-size: 0.7rem;
