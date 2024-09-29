@@ -79,16 +79,7 @@ const Chat: React.FC<Props> = ({ chatId }) => {
         </Link>
       </div>
       <ChatHeader user={otherUser} />
-      <div className={styles.chat}>
-        {messages.map((message) => (
-          <div
-            className={`${styles.msgWrapper} ${message.from_user === otherUser?.id ? '' : styles.userMsgWrapper}`}
-            key={message.id}
-          >
-            <div className={styles.msg}>{message.content}</div>
-          </div>
-        ))}
-      </div>
+      <ChatWindow messages={messages} otherUser={otherUser} />
       <Space.Compact className={styles.inputContainer}>
         <Input
           value={input}
