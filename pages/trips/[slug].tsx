@@ -22,6 +22,7 @@ import type { Trip } from '../../components/Trips';
 import { useIsAuthenticatedUser } from '../../hooks/useIsAuthenticatedUser';
 import styles from '../../styles/Trip.module.css';
 import { formatDate } from '../../utils/formatDate';
+import { NextPageWithLayout } from '../_app';
 import { authOptions } from '../api/auth/[...nextauth]';
 
 const BackButton = ({ trip }: { trip: Trip }) => {
@@ -44,9 +45,9 @@ const BackButton = ({ trip }: { trip: Trip }) => {
   );
 };
 
-const TripDetailsPage = ({
-  trip,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+type PageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+const TripDetailsPage: NextPageWithLayout<PageProps> = ({ trip }) => {
   const { t, i18n } = useTranslation(['trip', 'common']);
   const { status } = useSession();
   const isDriver = useIsAuthenticatedUser(trip?.driver);
@@ -63,7 +64,7 @@ const TripDetailsPage = ({
   const formattedDateFull = dayjs(trip.date).locale(i18n.language).format('ll');
 
   const isTripInPast = dayjs(trip.date) < dayjs();
-  const showBookingButton = !isDriver && status === 'authenticated';
+  const showPassengerActions = !isDriver && status === 'authenticated';
   const getDisabledText = () => {
     if (isTripInPast) {
       return t('disabled_text.past');
@@ -116,16 +117,19 @@ const TripDetailsPage = ({
               </div>
             </>
           ) : (
-            <>
-              {showBookingButton && (
+            showPassengerActions && (
+              <>
                 <InlineBooking
                   tripId={trip.id}
                   disabled={isTripInPast || !trip.free_seats}
                   disabledText={getDisabledText()}
                 />
-              )}
-              <ContactUser userId={trip.driver.id} label={t('contactDriver')} />
-            </>
+                <ContactUser
+                  userId={trip.driver.id}
+                  label={t('contactDriver')}
+                />
+              </>
+            )
           )}
         </div>
       </div>
