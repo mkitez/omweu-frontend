@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import { Chat } from '../../services/chat.service';
 
+import { formatDate } from '../../utils/formatDate';
 import styles from './ChatList.module.css';
 import InlineChat from './InlineChat';
 
@@ -13,7 +14,7 @@ interface Props {
 }
 
 const ChatList: React.FC<Props> = ({ data: chats }) => {
-  const { t } = useTranslation('dashboard');
+  const { t, i18n } = useTranslation('dashboard');
 
   if (chats.length === 0) {
     return (
@@ -28,13 +29,43 @@ const ChatList: React.FC<Props> = ({ data: chats }) => {
     );
   }
 
+  const chatsByTrip = chats.reduce(
+    (chatGroups: Record<number, Chat[]>, chat) => {
+      const dataKey = chat.trip.id;
+      if (!chatGroups[dataKey]) {
+        chatGroups[dataKey] = [];
+      }
+      chatGroups[dataKey].push(chat);
+      return chatGroups;
+    },
+    {}
+  );
+
   return (
-    <div>
-      {chats.map((chat) => (
-        <Link href={`/chat/${chat.id}`} key={chat.id} className={styles.link}>
-          <InlineChat chat={chat} />
-        </Link>
-      ))}
+    <div className={styles.root}>
+      {Object.entries(chatsByTrip).map(([tripId, chats]) => {
+        const [{ trip }] = chats;
+        const formattedDate = formatDate(
+          new Date(trip.date),
+          i18n.language,
+          trip.origin.time_zone
+        );
+        const groupTitle = `${trip.origin.name} – ${trip.dest.name} ${formattedDate}`;
+        return (
+          <div key={tripId} className={styles.chatGroup}>
+            <h3>{groupTitle}</h3>
+            {chats.map((chat) => (
+              <Link
+                href={`/chat/${chat.id}`}
+                key={chat.id}
+                className={styles.link}
+              >
+                <InlineChat chat={chat} />
+              </Link>
+            ))}
+          </div>
+        );
+      })}
     </div>
   );
 };

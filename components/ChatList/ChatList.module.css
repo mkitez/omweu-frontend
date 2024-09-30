@@ -1,3 +1,12 @@
+.root h3 {
+  color: rgba(0, 0, 0, 0.75);
+  font-size: 1.1rem;
+}
+
+.chatGroup {
+  margin-bottom: 1rem;
+}
+
 .noChats {
   text-align: center;
   font-size: 0.9rem;
