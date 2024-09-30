@@ -3,6 +3,6 @@ import { User } from '../components/Trips';
 
 export const useIsAuthenticatedUser = (driver?: User | null) => {
   const { data: session } = useSession();
-  const isDriver = driver?.id.toString() === session?.user.id?.toString();
+  const isDriver = String(driver?.id) === String(session?.user.id);
   return isDriver;
 };

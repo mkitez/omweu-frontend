@@ -1,0 +1,102 @@
+.loading {
+  height: 400px;
+  padding: 1rem;
+}
+
+.header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.headerUserName {
+  font-weight: 500;
+}
+
+.backBtn {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.chat {
+  padding: 0.5rem;
+  font-weight: 300;
+  display: flex;
+  height: 400px;
+  flex-direction: column-reverse;
+  overflow: scroll;
+}
+
+.noMessages {
+  height: 400px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.55);
+  padding: 1rem;
+}
+
+.dateWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  margin-bottom: 0.2rem;
+}
+
+.dateWrapper:last-child {
+  margin-top: 0.2rem;
+}
+
+.date {
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.msgWrapper {
+  display: flex;
+  margin: 0.1rem 0;
+}
+
+.userMsgWrapper {
+  justify-content: right;
+}
+
+.msg {
+  border: 1px solid #eee;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  max-width: 90%;
+}
+
+.userMsgWrapper .msg {
+  border: none;
+  color: #fff;
+  background-color: #f18383;
+}
+
+.timestamp {
+  height: 1.2rem;
+  position: relative;
+  float: right;
+  font-size: 0.7rem;
+  top: 0.5rem;
+  margin-left: 0.5rem;
+  margin-right: -0.3rem;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.userMsgWrapper .timestamp {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.inputContainer {
+  width: 100%;
+  padding: 1rem 0;
+}
+
+.inputContainer .sendBtn {
+  width: 4rem;
+}

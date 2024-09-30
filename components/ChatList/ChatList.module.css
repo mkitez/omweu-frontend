@@ -1,0 +1,52 @@
+.noChats {
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.55);
+  padding: 0.5rem 0;
+}
+
+.link:hover {
+  color: unset;
+}
+
+.chat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.2rem;
+  transition: background-color 0.2s;
+}
+
+.chat:hover {
+  border: none;
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.avatarContainer {
+  flex: 0 0 0;
+}
+
+.contentContainer {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.participantName {
+  font-weight: 500;
+  padding: 0.2rem 0;
+}
+
+.lastMessage {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0.2rem 0;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.fromMe {
+  color: rgba(0, 0, 0, 0.45);
+  padding-right: 0.2rem;
+}

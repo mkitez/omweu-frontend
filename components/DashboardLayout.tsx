@@ -2,6 +2,7 @@ import {
   BellOutlined,
   CalendarOutlined,
   LogoutOutlined,
+  MessageOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, Modal, theme } from 'antd';
@@ -35,6 +36,11 @@ const DashboardLayout: React.FC<PropsWithChildren> = ({ children }) => {
       key: 'trips',
       icon: <CalendarOutlined />,
       label: <Link href="/dashboard/trips">{t('trips.label')}</Link>,
+    },
+    {
+      key: 'chats',
+      icon: <MessageOutlined />,
+      label: <Link href="/dashboard/chats">{t('chats.label')}</Link>,
     },
     {
       key: 'profile',
