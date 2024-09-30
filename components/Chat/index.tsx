@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 
 import { useChatApi } from '../../hooks/api/useChatApi';
 import { useChatWebSocket } from '../../hooks/useChatWebSocket';
-import { User } from '../Trips';
+import { Trip, User } from '../Trips';
 import BackToChats from './BackToChats';
 import styles from './Chat.module.css';
 import ChatHeader from './ChatHeader';
@@ -24,6 +24,7 @@ export interface Message {
 }
 
 interface ChatData {
+  trip: Trip;
   messages: Message[];
   participants: User[];
 }
@@ -61,8 +62,8 @@ const Chat: React.FC<Props> = ({ chatId }) => {
     chatApi
       .getChat(chatId as string)
       .then((response) => {
-        const { messages, participants } = response.data;
-        setData({ messages, participants });
+        const { trip, messages, participants } = response.data;
+        setData({ trip, messages, participants });
         setLoading(false);
       })
       .catch((e) => {

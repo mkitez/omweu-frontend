@@ -126,6 +126,7 @@ const TripDetailsPage: NextPageWithLayout<PageProps> = ({ trip }) => {
                 />
                 <ContactUser
                   userId={trip.driver.id}
+                  tripId={trip.id}
                   label={t('contactDriver')}
                 />
               </>
