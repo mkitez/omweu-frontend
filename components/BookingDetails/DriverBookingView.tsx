@@ -5,7 +5,6 @@ import ContactUser from '../ContactUser';
 import TripData from '../TripDetails/TripData';
 import UserData from '../TripDetails/UserData';
 import styles from './BookingDetails.module.css';
-import BookingMessage from './BookingMessage';
 import DriverActions from './DriverActions';
 import TripLink from './TripLink';
 
@@ -19,7 +18,6 @@ const DriverBookingView: React.FC<Props> = ({ booking }) => {
     <div className={styles.bookingView}>
       <TripData trip={booking.trip} />
       <UserData user={booking.passenger} />
-      <BookingMessage content={booking.booking_message} />
       <DriverActions booking={booking} />
       <ContactUser
         userId={booking.passenger.id}
