@@ -53,7 +53,7 @@ const ChatList: React.FC<Props> = ({ data: chats }) => {
         const groupTitle = `${trip.origin.name} – ${trip.dest.name} ${formattedDate}`;
         return (
           <div key={tripId} className={styles.chatGroup}>
-            <h3>{groupTitle}</h3>
+            <h3 className={styles.groupTitle}>{groupTitle}</h3>
             {chats.map((chat) => (
               <Link
                 href={`/chat/${chat.id}`}

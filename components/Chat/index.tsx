@@ -1,6 +1,7 @@
 import { SendOutlined } from '@ant-design/icons';
 import { Alert, Button, Input, Skeleton, Space } from 'antd';
 import axios from 'axios';
+import dayjs from 'dayjs';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
@@ -85,6 +86,7 @@ const Chat: React.FC<Props> = ({ chatId }) => {
   const otherUser = data?.participants.find(
     (user) => user.id !== Number(session?.user.id)
   );
+  const isTripInPast = dayjs(data?.trip.date) < dayjs();
   return (
     <div className={styles.root}>
       <Head>
@@ -95,11 +97,16 @@ const Chat: React.FC<Props> = ({ chatId }) => {
         <Skeleton avatar paragraph={{ rows: 5 }} className={styles.loading} />
       ) : (
         <>
-          <ChatHeader user={otherUser} />
-          <ChatWindow messages={data?.messages || []} otherUser={otherUser} />
+          <ChatHeader user={otherUser} trip={data?.trip} />
+          <ChatWindow
+            messages={data?.messages || []}
+            otherUser={otherUser}
+            disabled={isTripInPast}
+          />
           <Space.Compact className={styles.inputContainer}>
             <Input
               value={input}
+              disabled={isTripInPast}
               onChange={(e) => setInput(e.target.value)}
               placeholder={t('enterMessage') as string}
               onKeyUp={(e) => {
