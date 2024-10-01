@@ -5,14 +5,14 @@
 
 .cancelBtnContainer {
   text-align: center;
-  margin: 1rem auto;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .tripLinkContainer {
   font-size: 0.9rem;
   text-align: center;
   color: rgba(0, 0, 0, 0.55);
-  margin-top: 1rem;
 }
 
 .driverActions {

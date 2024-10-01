@@ -124,10 +124,13 @@ const TripDetailsPage: NextPageWithLayout<PageProps> = ({ trip }) => {
                   disabled={isTripInPast || !trip.free_seats}
                   disabledText={getDisabledText()}
                 />
-                <ContactUser
-                  userId={trip.driver.id}
-                  label={t('contactDriver')}
-                />
+                {!isTripInPast && (
+                  <ContactUser
+                    userId={trip.driver.id}
+                    tripId={trip.id}
+                    label={t('contactDriver')}
+                  />
+                )}
               </>
             )
           )}

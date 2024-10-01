@@ -12,9 +12,10 @@ const extractDate = (dateStr: string) =>
 interface Props {
   messages: Message[];
   otherUser: User | undefined;
+  disabled?: boolean;
 }
 
-const ChatWindow: React.FC<Props> = ({ messages, otherUser }) => {
+const ChatWindow: React.FC<Props> = ({ messages, otherUser, disabled }) => {
   const { t, i18n } = useTranslation('chat');
   const formatDate = useCallback(
     (dateStr: string) => {
@@ -49,30 +50,27 @@ const ChatWindow: React.FC<Props> = ({ messages, otherUser }) => {
 
   return (
     <div className={styles.chat}>
-      {Object.entries(groupedMessages).map(([date, messages]) => {
-        return (
-          <>
-            {messages.map((message) => (
-              <div
-                className={`${styles.msgWrapper} ${message.from_user === otherUser?.id ? '' : styles.userMsgWrapper}`}
-                key={message.id}
-              >
-                <div className={styles.msg}>
-                  {message.content}{' '}
-                  <span className={styles.timestamp}>
-                    {dayjs(message.timestamp)
-                      .locale(i18n.language)
-                      .format('LT')}
-                  </span>
-                </div>
+      {disabled && <div className={styles.disabled}>{t('chatDisabled')}</div>}
+      {Object.entries(groupedMessages).map(([date, messages]) => (
+        <>
+          {messages.map((message) => (
+            <div
+              className={`${styles.msgWrapper} ${message.from_user === otherUser?.id ? '' : styles.userMsgWrapper}`}
+              key={message.id}
+            >
+              <div className={styles.msg}>
+                {message.content}{' '}
+                <span className={styles.timestamp}>
+                  {dayjs(message.timestamp).locale(i18n.language).format('LT')}
+                </span>
               </div>
-            ))}
-            <div className={styles.dateWrapper}>
-              <div className={styles.date}>{formatDate(date)}</div>
             </div>
-          </>
-        );
-      })}
+          ))}
+          <div className={styles.dateWrapper}>
+            <div className={styles.date}>{formatDate(date)}</div>
+          </div>
+        </>
+      ))}
     </div>
   );
 };

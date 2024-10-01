@@ -1,15 +1,17 @@
 import { Message } from '../components/Chat';
-import { User } from '../components/Trips';
+import { Trip, User } from '../components/Trips';
 import BaseService from './baseService';
 
 export interface Chat {
   id: string;
+  trip: Trip;
   participants: User[];
   last_message: Message;
 }
 
 interface StartChatInputData {
-  user_id: number
+  user_id: number;
+  trip_id: number;
 }
 
 class ChatService extends BaseService {

@@ -11,8 +11,16 @@
   border-bottom: 1px solid #eee;
 }
 
+.avatar {
+  flex: 0 0 0;
+}
+
 .headerUserName {
   font-weight: 500;
+}
+
+.tripName {
+  color: rgba(0, 0, 0, 0.55);
 }
 
 .backBtn {
@@ -37,6 +45,13 @@
   font-size: 0.9rem;
   color: rgba(0, 0, 0, 0.55);
   padding: 1rem;
+}
+
+.disabled {
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.55);
+  margin-top: 0.5rem;
 }
 
 .dateWrapper {

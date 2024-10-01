@@ -10,10 +10,11 @@ import styles from './ContactUser.module.css';
 
 interface Props {
   userId: number;
+  tripId: number;
   label: string;
 }
 
-const ContactUser: React.FC<Props> = ({ userId, label }) => {
+const ContactUser: React.FC<Props> = ({ userId, tripId, label }) => {
   const { t } = useTranslation(['trip', 'common']);
   const [loading, setLoading] = useState(false);
   const chatApi = useChatApi();
@@ -22,7 +23,10 @@ const ContactUser: React.FC<Props> = ({ userId, label }) => {
   const handleClick = async () => {
     setLoading(true);
     try {
-      const response = await chatApi.startChat({ user_id: userId });
+      const response = await chatApi.startChat({
+        user_id: userId,
+        trip_id: tripId,
+      });
       router.push(`/chat/${response.data.id}`);
     } catch (e) {
       if (axios.isAxiosError(e)) {
