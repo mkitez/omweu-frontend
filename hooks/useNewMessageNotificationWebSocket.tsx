@@ -39,7 +39,7 @@ export const useNewMessageNotificationWebSocket = () => {
         duration: 0,
         onClick: () => {
           router.push(`/chat/${data.message.conversation_id}`);
-          api.destroy(key);
+          api.destroy();
         },
       });
     },
