@@ -1,7 +1,7 @@
 import { type Message } from '.';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { useCallback } from 'react';
+import { Fragment, useCallback } from 'react';
 
 import { User } from '../Trips';
 import styles from './Chat.module.css';
@@ -52,7 +52,7 @@ const ChatWindow: React.FC<Props> = ({ messages, otherUser, disabled }) => {
     <div className={styles.chat}>
       {disabled && <div className={styles.disabled}>{t('chatDisabled')}</div>}
       {Object.entries(groupedMessages).map(([date, messages]) => (
-        <>
+        <Fragment key={date}>
           {messages.map((message) => (
             <div
               className={`${styles.msgWrapper} ${message.from_user === otherUser?.id ? '' : styles.userMsgWrapper}`}
@@ -69,7 +69,7 @@ const ChatWindow: React.FC<Props> = ({ messages, otherUser, disabled }) => {
           <div className={styles.dateWrapper}>
             <div className={styles.date}>{formatDate(date)}</div>
           </div>
-        </>
+        </Fragment>
       ))}
     </div>
   );
