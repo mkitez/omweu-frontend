@@ -24,6 +24,11 @@ export interface Message {
   timestamp: string;
 }
 
+interface MessageData {
+  type: string;
+  message: Message;
+}
+
 interface ChatData {
   trip: Trip;
   messages: Message[];
@@ -49,7 +54,8 @@ const Chat: React.FC<Props> = ({ chatId }) => {
       if (loading) {
         return;
       }
-      const message = JSON.parse(e.data) as Message;
+      const messageData = JSON.parse(e.data) as MessageData;
+      const { message } = messageData;
       setData((prev) => {
         if (!prev?.messages) {
           return prev;
