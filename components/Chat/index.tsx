@@ -22,11 +22,13 @@ export interface Message {
   to_user: number;
   from_user: number;
   timestamp: string;
+  is_read: boolean;
 }
 
 interface MessageData {
-  type: string;
+  type: 'chat_message' | 'read_messages';
   message: Message;
+  user_id: number;
 }
 
 interface ChatData {
@@ -55,13 +57,22 @@ const Chat: React.FC<Props> = ({ chatId }) => {
         return;
       }
       const messageData = JSON.parse(e.data) as MessageData;
-      const { message } = messageData;
-      setData((prev) => {
-        if (!prev?.messages) {
-          return prev;
-        }
-        return { ...prev, messages: [message, ...prev.messages] };
-      });
+      if (messageData.type === 'chat_message') {
+        const { message } = messageData;
+        setData((prev) => {
+          if (!prev?.messages) {
+            return prev;
+          }
+          return { ...prev, messages: [message, ...prev.messages] };
+        });
+      }
+      if (messageData.type == 'read_messages') {
+        data?.messages
+          .filter((message) => message.to_user === messageData.user_id)
+          .forEach((message) => {
+            message.is_read = true;
+          });
+      }
     },
   });
 
@@ -72,16 +83,23 @@ const Chat: React.FC<Props> = ({ chatId }) => {
         const { trip, messages, participants } = response.data;
         setData({ trip, messages, participants });
         setLoading(false);
+        sendJsonMessage({ type: 'read_messages' });
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible') {
+            sendJsonMessage({ type: 'read_messages' });
+          }
+        });
+        document.dispatchEvent(new Event('visibilitychange'));
       })
       .catch((e) => {
         if (axios.isAxiosError(e)) {
           setError(t('errors.common', { ns: 'common' }) as string);
         }
       });
-  }, [chatApi, chatId, t]);
+  }, [chatApi, chatId, sendJsonMessage, t]);
 
   const sendMessage = () => {
-    sendJsonMessage({ message: input });
+    sendJsonMessage({ type: 'chat_message', message: input });
     setInput('');
   };
 
@@ -132,6 +150,9 @@ const Chat: React.FC<Props> = ({ chatId }) => {
               icon={<SendOutlined />}
             />
           </Space.Compact>
+          <Button onClick={() => sendJsonMessage({ type: 'read_messages' })}>
+            Read
+          </Button>
         </>
       )}
     </div>

@@ -7,6 +7,7 @@ export interface Chat {
   trip: Trip;
   participants: User[];
   last_message: Message;
+  unread_messages: number;
 }
 
 interface StartChatInputData {
