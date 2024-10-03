@@ -5,7 +5,7 @@ import {
   MessageOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, Modal, theme } from 'antd';
+import { Badge, Button, Grid, Layout, Menu, Modal, theme } from 'antd';
 import { signOut } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
@@ -21,6 +21,7 @@ const DashboardLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const {
     token: { borderRadius },
   } = theme.useToken();
+  const { md } = Grid.useBreakpoint();
   const router = useRouter();
 
   const [selectedKey, setSelectedKey] = useState<string>();

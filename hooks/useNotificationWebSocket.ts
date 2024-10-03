@@ -5,6 +5,6 @@ export const useNotificationWebSocket = (options: Options) => {
   const { data: session } = useSession();
   return useWebSocket(
     session?.user ? `ws://127.0.0.1:8000/ws/notifications/?token=${session?.accessToken}` : null,
-    { shouldReconnect: () => true, ...options }
+    { shouldReconnect: () => true, share: true, ...options }
   );
 }

@@ -1,3 +1,4 @@
+import { Badge } from 'antd';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 
@@ -36,6 +37,9 @@ const InlineChat: React.FC<Props> = ({ chat }) => {
             {chat.last_message.content}
           </span>
         </div>
+      </div>
+      <div className={styles.unreadCount}>
+        <Badge count={chat.unread_count} />
       </div>
     </div>
   );

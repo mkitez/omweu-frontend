@@ -59,3 +59,7 @@
   color: rgba(0, 0, 0, 0.45);
   padding-right: 0.2rem;
 }
+
+.unreadCount {
+  padding: 0 0.75rem;
+}
