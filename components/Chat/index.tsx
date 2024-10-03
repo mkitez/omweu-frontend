@@ -150,9 +150,6 @@ const Chat: React.FC<Props> = ({ chatId }) => {
               icon={<SendOutlined />}
             />
           </Space.Compact>
-          <Button onClick={() => sendJsonMessage({ type: 'read_messages' })}>
-            Read
-          </Button>
         </>
       )}
     </div>
