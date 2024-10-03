@@ -84,12 +84,6 @@ const Chat: React.FC<Props> = ({ chatId }) => {
         setData({ trip, messages, participants });
         setLoading(false);
         sendJsonMessage({ type: 'read_messages' });
-        document.addEventListener('visibilitychange', () => {
-          if (document.visibilityState === 'visible') {
-            sendJsonMessage({ type: 'read_messages' });
-          }
-        });
-        document.dispatchEvent(new Event('visibilitychange'));
       })
       .catch((e) => {
         if (axios.isAxiosError(e)) {
@@ -97,6 +91,34 @@ const Chat: React.FC<Props> = ({ chatId }) => {
         }
       });
   }, [chatApi, chatId, sendJsonMessage, t]);
+
+  useEffect(() => {
+    let readTimeout: ReturnType<typeof setTimeout> | undefined;
+    const readHanlder = () => {
+      if (readTimeout) {
+        return;
+      }
+      readTimeout = setTimeout(() => {
+        sendJsonMessage({ type: 'read_messages' });
+        readTimeout = undefined;
+      }, 2000);
+    };
+    const eventNames = [
+      'scroll',
+      'click',
+      'keypress',
+      'mousemove',
+      'touchstart',
+    ];
+    eventNames.forEach((eventName) =>
+      document.addEventListener(eventName, readHanlder)
+    );
+    return () => {
+      eventNames.forEach((eventName) => {
+        document.removeEventListener(eventName, readHanlder);
+      });
+    };
+  }, [sendJsonMessage]);
 
   const sendMessage = () => {
     sendJsonMessage({ type: 'chat_message', message: input });
