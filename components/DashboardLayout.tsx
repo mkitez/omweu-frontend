@@ -10,24 +10,26 @@ import { signOut } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, useContext, useEffect, useState } from 'react';
 
 import styles from '../styles/DashboardLayout.module.css';
 import AppLayout from './AppLayout';
+import { UnreadChatsContext } from './NotificationProvider';
 
 const { Content, Sider } = Layout;
 
 const DashboardLayout: React.FC<PropsWithChildren> = ({ children }) => {
+  const { t } = useTranslation('dashboard');
+  const router = useRouter();
   const {
     token: { borderRadius },
   } = theme.useToken();
   const { md } = Grid.useBreakpoint();
-  const router = useRouter();
 
   const [selectedKey, setSelectedKey] = useState<string>();
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
-  const { t } = useTranslation('dashboard');
+  const unreadChats = useContext(UnreadChatsContext);
   useEffect(() => {
     setSelectedKey(router.pathname.split('/').slice(-1)[0]);
   }, [router.pathname]);
@@ -40,7 +42,11 @@ const DashboardLayout: React.FC<PropsWithChildren> = ({ children }) => {
     },
     {
       key: 'chats',
-      icon: <MessageOutlined />,
+      icon: (
+        <Badge dot={unreadChats.size > 0} offset={md ? undefined : [0, 10]}>
+          <MessageOutlined />
+        </Badge>
+      ),
       label: <Link href="/dashboard/chats">{t('chats.label')}</Link>,
     },
     {
