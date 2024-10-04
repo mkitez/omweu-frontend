@@ -12,9 +12,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { PropsWithChildren, useContext, useEffect, useState } from 'react';
 
+import UnreadChatsContext from '../contexts/UnreadChatsContext';
 import styles from '../styles/DashboardLayout.module.css';
 import AppLayout from './AppLayout';
-import { UnreadChatsContext } from './NotificationProvider';
 
 const { Content, Sider } = Layout;
 

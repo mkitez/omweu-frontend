@@ -1,8 +1,9 @@
 import { notification } from 'antd';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { createContext, PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
+import UnreadChatsContext from '../contexts/UnreadChatsContext';
 import { useChatApi } from '../hooks/api/useChatApi';
 import { useNotificationWebSocket } from '../hooks/useNotificationWebSocket';
 import { Message } from './Chat';
@@ -24,8 +25,6 @@ type NotificationData =
   | MessageNotificationData
   | UnreadChatsCountNotificationData;
 
-export const UnreadChatsContext = createContext<Set<string>>(new Set());
-
 const NotificationProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [unreadChats, setUnreadChats] = useState<Set<string>>(new Set());
   const { status } = useSession();
@@ -34,10 +33,9 @@ const NotificationProvider: React.FC<PropsWithChildren> = ({ children }) => {
     if (status !== 'authenticated') {
       return;
     }
-    chatApi.getUnreadChats().then((response) => {
-      console.log(response.data);
-      setUnreadChats(new Set(response.data.chats));
-    });
+    chatApi
+      .getUnreadChats()
+      .then((response) => setUnreadChats(new Set(response.data.chats)));
   }, [chatApi, status]);
   const router = useRouter();
   const [api, contextHolder] = notification.useNotification();
@@ -78,7 +76,6 @@ const NotificationProvider: React.FC<PropsWithChildren> = ({ children }) => {
         setUnreadChats(data.chats);
       }
     },
-    share: true,
   });
 
   return (
