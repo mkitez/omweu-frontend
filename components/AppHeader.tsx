@@ -1,5 +1,5 @@
 import { PlusCircleOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Badge, Button, Layout, theme } from 'antd';
+import { Avatar, Badge, Button, Layout, Skeleton, theme } from 'antd';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
@@ -43,8 +43,14 @@ const AppHeader = () => {
         </Link>
       </div>
       {(() => {
-        if (status === 'loading') return null;
-        if (status === 'unauthenticated' || session?.error)
+        if (status === 'loading') {
+          return (
+            <div className={styles.skeletonContainer}>
+              <Skeleton.Avatar size="large" active />
+            </div>
+          );
+        }
+        if (status === 'unauthenticated' || session?.error) {
           return (
             <div className={styles.authButtons}>
               <Button
@@ -58,7 +64,8 @@ const AppHeader = () => {
               </Link>
             </div>
           );
-        if (status === 'authenticated')
+        }
+        if (status === 'authenticated') {
           return (
             <div className={styles.navButtons}>
               <Link
@@ -91,6 +98,7 @@ const AppHeader = () => {
               </Link>
             </div>
           );
+        }
       })()}
     </Header>
   );
