@@ -40,6 +40,27 @@ const NotificationProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
   const [api, contextHolder] = notification.useNotification();
 
+  const showNotification = (data: MessageNotificationData) => {
+    api.open({
+      message: (
+        <div className="notification-message">
+          <UserAvatar user={data.from_user} small />
+          <div>{data.from_user.first_name}</div>
+        </div>
+      ),
+      description: (
+        <div className="notification-description">{data.message.content}</div>
+      ),
+      placement: 'bottomRight',
+      className: 'notification',
+      key: data.message.id,
+      duration: 0,
+      onClick: () => {
+        router.push(`/chat/${data.message.conversation_id}`);
+        api.destroy();
+      },
+    });
+  };
   useNotificationWebSocket({
     onMessage: (e) => {
       const data = JSON.parse(e.data) as NotificationData;
@@ -49,28 +70,7 @@ const NotificationProvider: React.FC<PropsWithChildren> = ({ children }) => {
         if (router.query.chatId === chatId) {
           return;
         }
-        const { id: key } = data.message;
-        api.open({
-          message: (
-            <div className="notification-message">
-              <UserAvatar user={data.from_user} small />
-              <div>{data.from_user.first_name}</div>
-            </div>
-          ),
-          description: (
-            <div className="notification-description">
-              {data.message.content}
-            </div>
-          ),
-          placement: 'bottomRight',
-          className: 'notification',
-          key,
-          duration: 0,
-          onClick: () => {
-            router.push(`/chat/${data.message.conversation_id}`);
-            api.destroy();
-          },
-        });
+        showNotification(data);
       }
       if (data.type === 'unread_chats') {
         setUnreadChats(data.chats);
