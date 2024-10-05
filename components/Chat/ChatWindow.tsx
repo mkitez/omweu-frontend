@@ -1,7 +1,7 @@
 import { type Message } from '.';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { useCallback } from 'react';
+import { Fragment, useCallback } from 'react';
 
 import { User } from '../Trips';
 import styles from './Chat.module.css';
@@ -52,24 +52,32 @@ const ChatWindow: React.FC<Props> = ({ messages, otherUser, disabled }) => {
     <div className={styles.chat}>
       {disabled && <div className={styles.disabled}>{t('chatDisabled')}</div>}
       {Object.entries(groupedMessages).map(([date, messages]) => (
-        <>
-          {messages.map((message) => (
-            <div
-              className={`${styles.msgWrapper} ${message.from_user === otherUser?.id ? '' : styles.userMsgWrapper}`}
-              key={message.id}
-            >
-              <div className={styles.msg}>
-                {message.content}{' '}
-                <span className={styles.timestamp}>
-                  {dayjs(message.timestamp).locale(i18n.language).format('LT')}
-                </span>
+        <Fragment key={date}>
+          {messages.map((message) => {
+            let className = styles.msgWrapper;
+            if (message.from_user !== otherUser?.id) {
+              className += ` ${styles.myMsgWrapper}`;
+            }
+            if (!message.is_read) {
+              className += ` ${styles.unread}`;
+            }
+            return (
+              <div className={className} key={message.id}>
+                <div className={styles.msg}>
+                  {message.content}{' '}
+                  <span className={styles.timestamp}>
+                    {dayjs(message.timestamp)
+                      .locale(i18n.language)
+                      .format('LT')}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
           <div className={styles.dateWrapper}>
             <div className={styles.date}>{formatDate(date)}</div>
           </div>
-        </>
+        </Fragment>
       ))}
     </div>
   );

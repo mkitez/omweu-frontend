@@ -1,7 +1,9 @@
-import api from '../../../services/api';
 import NextAuth, { NextAuthOptions, User } from 'next-auth';
-import VkProvider from 'next-auth/providers/vk';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import VkProvider from 'next-auth/providers/vk';
+
+import api from '../../../services/api';
+
 import { isJwtExpired } from '../../../utils/commonUtils';
 
 const generateUserFromAuthResponse = (
@@ -49,7 +51,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, account, user }) {
+    async jwt({ token, account, user, trigger, session }) {
       // first sign in
       if (account && user) {
         if (account.provider === 'vk') {

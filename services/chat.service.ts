@@ -7,6 +7,7 @@ export interface Chat {
   trip: Trip;
   participants: User[];
   last_message: Message;
+  unread_count: number;
 }
 
 interface StartChatInputData {
@@ -25,6 +26,10 @@ class ChatService extends BaseService {
 
   getChat(chatId: string) {
     return this.api.get(`/conversations/${chatId}/`);
+  }
+
+  getUnreadChats() {
+    return this.api.get('/conversations/unread_chats/')
   }
 }
 

@@ -22,6 +22,7 @@ import { getCookieConsentValue } from 'react-cookie-consent';
 import AppLayout from '../components/AppLayout';
 import AuthWrapper from '../components/AuthWrapper';
 import CookieConsentBar from '../components/CookieConsentBar';
+import NotificationProvider from '../components/NotificationProvider';
 import '../styles/globals.css';
 import theme from '../theme';
 import { GA_DISABLE_PROPERTY, GTM_ID } from '../utils/constants';
@@ -69,13 +70,15 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
               <title>EUbyCar.com</title>
               <link rel="icon" href="/favicon.png" />
             </Head>
-            {Component.auth ? (
-              <AuthWrapper>
-                {getLayout(<Component {...pageProps} />, pageProps)}
-              </AuthWrapper>
-            ) : (
-              getLayout(<Component {...pageProps} />, pageProps)
-            )}
+            <NotificationProvider>
+              {Component.auth ? (
+                <AuthWrapper>
+                  {getLayout(<Component {...pageProps} />, pageProps)}
+                </AuthWrapper>
+              ) : (
+                getLayout(<Component {...pageProps} />, pageProps)
+              )}
+            </NotificationProvider>
             <CookieConsentBar />
             <GoogleAnalytics gaId={GTM_ID} />
           </StyleProvider>

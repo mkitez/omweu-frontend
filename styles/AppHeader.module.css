@@ -33,6 +33,10 @@
   align-items: center;
 }
 
+.skeletonContainer {
+  padding: 0.85rem 0.25rem;
+}
+
 .offerTripBtn {
   margin: 0 5px;
 }

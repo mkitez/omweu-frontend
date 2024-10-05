@@ -1,23 +1,25 @@
 import { PlusCircleOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Layout, theme } from 'antd';
+import { Avatar, Badge, Button, Layout, Skeleton, theme } from 'antd';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 
 import Logo from '../assets/logo.svg';
 import LogoXs from '../assets/logoXs.svg';
+import UnreadChatsContext from '../contexts/UnreadChatsContext';
 import styles from '../styles/AppHeader.module.css';
 
 const { Header } = Layout;
 
 const AppHeader = () => {
+  const { t } = useTranslation('common');
+  const { status, data: session } = useSession();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  const { status, data: session } = useSession();
-  const { t } = useTranslation('common');
+  const unreadChats = useContext(UnreadChatsContext);
 
   useEffect(() => {
     if (session?.error) {
@@ -41,8 +43,14 @@ const AppHeader = () => {
         </Link>
       </div>
       {(() => {
-        if (status === 'loading') return null;
-        if (status === 'unauthenticated' || session?.error)
+        if (status === 'loading') {
+          return (
+            <div className={styles.skeletonContainer}>
+              <Skeleton.Avatar size="large" active />
+            </div>
+          );
+        }
+        if (status === 'unauthenticated' || session?.error) {
           return (
             <div className={styles.authButtons}>
               <Button
@@ -56,7 +64,8 @@ const AppHeader = () => {
               </Link>
             </div>
           );
-        if (status === 'authenticated')
+        }
+        if (status === 'authenticated') {
           return (
             <div className={styles.navButtons}>
               <Link
@@ -70,23 +79,26 @@ const AppHeader = () => {
                 </Button>
               </Link>
               <Link href="/dashboard" className={styles.profileBtn}>
-                <Avatar
-                  size="large"
-                  icon={<UserOutlined />}
-                  src={
-                    session.user.image && (
-                      <Image
-                        src={session.user.image}
-                        alt="user photo"
-                        height={100}
-                        width={100}
-                      />
-                    )
-                  }
-                />
+                <Badge dot={unreadChats.size > 0} offset={[-5, 5]}>
+                  <Avatar
+                    size="large"
+                    icon={<UserOutlined />}
+                    src={
+                      session.user.image && (
+                        <Image
+                          src={session.user.image}
+                          alt="user photo"
+                          height={100}
+                          width={100}
+                        />
+                      )
+                    }
+                  />
+                </Badge>
               </Link>
             </div>
           );
+        }
       })()}
     </Header>
   );

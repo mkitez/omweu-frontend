@@ -1,6 +1,6 @@
 .root h3 {
   color: rgba(0, 0, 0, 0.75);
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .chatGroup {
@@ -58,4 +58,8 @@
 .fromMe {
   color: rgba(0, 0, 0, 0.45);
   padding-right: 0.2rem;
+}
+
+.unreadCount {
+  padding: 0 0.75rem;
 }

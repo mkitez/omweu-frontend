@@ -22,6 +22,13 @@ export interface Message {
   to_user: number;
   from_user: number;
   timestamp: string;
+  is_read: boolean;
+}
+
+interface MessageData {
+  type: 'chat_message' | 'read_messages';
+  message: Message;
+  user_id: number;
 }
 
 interface ChatData {
@@ -49,13 +56,23 @@ const Chat: React.FC<Props> = ({ chatId }) => {
       if (loading) {
         return;
       }
-      const message = JSON.parse(e.data) as Message;
-      setData((prev) => {
-        if (!prev?.messages) {
-          return prev;
-        }
-        return { ...prev, messages: [message, ...prev.messages] };
-      });
+      const messageData = JSON.parse(e.data) as MessageData;
+      if (messageData.type === 'chat_message') {
+        const { message } = messageData;
+        setData((prev) => {
+          if (!prev?.messages) {
+            return prev;
+          }
+          return { ...prev, messages: [message, ...prev.messages] };
+        });
+      }
+      if (messageData.type == 'read_messages') {
+        data?.messages
+          .filter((message) => message.to_user === messageData.user_id)
+          .forEach((message) => {
+            message.is_read = true;
+          });
+      }
     },
   });
 
@@ -66,16 +83,45 @@ const Chat: React.FC<Props> = ({ chatId }) => {
         const { trip, messages, participants } = response.data;
         setData({ trip, messages, participants });
         setLoading(false);
+        sendJsonMessage({ type: 'read_messages' });
       })
       .catch((e) => {
         if (axios.isAxiosError(e)) {
           setError(t('errors.common', { ns: 'common' }) as string);
         }
       });
-  }, [chatApi, chatId, t]);
+  }, [chatApi, chatId, sendJsonMessage, t]);
+
+  useEffect(() => {
+    let readTimeout: ReturnType<typeof setTimeout> | undefined;
+    const readHanlder = () => {
+      if (readTimeout) {
+        return;
+      }
+      readTimeout = setTimeout(() => {
+        sendJsonMessage({ type: 'read_messages' });
+        readTimeout = undefined;
+      }, 2000);
+    };
+    const eventNames = [
+      'scroll',
+      'click',
+      'keypress',
+      'mousemove',
+      'touchstart',
+    ];
+    eventNames.forEach((eventName) =>
+      document.addEventListener(eventName, readHanlder)
+    );
+    return () => {
+      eventNames.forEach((eventName) => {
+        document.removeEventListener(eventName, readHanlder);
+      });
+    };
+  }, [sendJsonMessage]);
 
   const sendMessage = () => {
-    sendJsonMessage({ message: input });
+    sendJsonMessage({ type: 'chat_message', message: input });
     setInput('');
   };
 
