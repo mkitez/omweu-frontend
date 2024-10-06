@@ -17,7 +17,7 @@ import ChatWindow from './ChatWindow';
 
 export interface Message {
   id: string;
-  conversation_id: string;
+  conversation: { id: string; trip_slug: string };
   content: string;
   to_user: number;
   from_user: number;
@@ -32,16 +32,18 @@ interface MessageData {
 }
 
 interface ChatData {
+  id: string;
   trip: Trip;
   messages: Message[];
   participants: User[];
 }
 
 interface Props {
-  chatId: string;
+  tripSlug: string;
+  userId: number;
 }
 
-const Chat: React.FC<Props> = ({ chatId }) => {
+const Chat: React.FC<Props> = ({ tripSlug, userId }) => {
   const { t } = useTranslation(['chat', 'common']);
 
   const [loading, setLoading] = useState(true);
@@ -51,7 +53,7 @@ const Chat: React.FC<Props> = ({ chatId }) => {
 
   const chatApi = useChatApi();
   const { data: session } = useSession();
-  const { sendJsonMessage } = useChatWebSocket(chatId, {
+  const { sendJsonMessage } = useChatWebSocket(data?.id || null, {
     onMessage: (e) => {
       if (loading) {
         return;
@@ -78,10 +80,9 @@ const Chat: React.FC<Props> = ({ chatId }) => {
 
   useEffect(() => {
     chatApi
-      .getChat(chatId as string)
+      .getChat(tripSlug, userId)
       .then((response) => {
-        const { trip, messages, participants } = response.data;
-        setData({ trip, messages, participants });
+        setData(response.data);
         setLoading(false);
         sendJsonMessage({ type: 'read_messages' });
       })
@@ -90,7 +91,7 @@ const Chat: React.FC<Props> = ({ chatId }) => {
           setError(t('errors.common', { ns: 'common' }) as string);
         }
       });
-  }, [chatApi, chatId, sendJsonMessage, t]);
+  }, [chatApi, sendJsonMessage, t, tripSlug, userId]);
 
   useEffect(() => {
     let readTimeout: ReturnType<typeof setTimeout> | undefined;

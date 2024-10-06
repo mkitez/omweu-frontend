@@ -56,7 +56,8 @@ const NotificationProvider: React.FC<PropsWithChildren> = ({ children }) => {
       key: data.message.id,
       duration: 0,
       onClick: () => {
-        router.push(`/chat/${data.message.conversation_id}`);
+        const { conversation, from_user: fromUser } = data.message;
+        router.push(`/chat/${conversation.trip_slug}/${fromUser}`);
         api.destroy();
       },
     });
@@ -65,9 +66,9 @@ const NotificationProvider: React.FC<PropsWithChildren> = ({ children }) => {
     onMessage: (e) => {
       const data = JSON.parse(e.data) as NotificationData;
       if (data.type === 'message_notification') {
-        const { conversation_id: chatId } = data.message;
-        setUnreadChats((prev) => new Set(prev).add(chatId));
-        if (router.query.chatId === chatId) {
+        const { conversation, from_user: fromUser } = data.message;
+        setUnreadChats((prev) => new Set(prev).add(conversation.id));
+        if (router.asPath === `/chat/${conversation.trip_slug}/${fromUser}`) {
           return;
         }
         showNotification(data);

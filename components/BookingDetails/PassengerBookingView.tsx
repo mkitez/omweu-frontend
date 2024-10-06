@@ -23,7 +23,7 @@ const PassengerBookingView: React.FC<Props> = ({ booking }) => {
       <UserData user={booking.driver} />
       <PassengerActions booking={booking} />
       <ContactUser
-        tripId={booking.trip.id}
+        tripSlug={booking.trip.slug}
         userId={booking.driver.id}
         label={t('goToChat')}
       />
