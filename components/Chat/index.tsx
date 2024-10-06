@@ -5,17 +5,17 @@ import dayjs from 'dayjs';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { useChatApi } from '../../hooks/api/useChatApi';
-import { useTripApi } from '../../hooks/api/useTripApi';
-import { useUserApi } from '../../hooks/api/useUserApi';
 import { useChatWebSocket } from '../../hooks/useChatWebSocket';
-import { Trip, User } from '../Trips';
+import { User } from '../Trips';
 import BackToChats from './BackToChats';
 import styles from './Chat.module.css';
 import ChatHeader from './ChatHeader';
 import ChatWindow from './ChatWindow';
+import { useChatData } from './useChatData';
+import { useReadMessagesHandler } from './useReadMessagesHandler';
 
 export interface Message {
   id: string;
@@ -33,13 +33,6 @@ interface MessageData {
   user_id: number;
 }
 
-interface ChatData {
-  chatId?: string;
-  trip: Trip;
-  messages: Message[];
-  otherUser: User;
-}
-
 interface Props {
   tripSlug: string;
   userId: number;
@@ -47,18 +40,17 @@ interface Props {
 
 const Chat: React.FC<Props> = ({ tripSlug, userId }) => {
   const { t } = useTranslation(['chat', 'common']);
+  const { data: session } = useSession();
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>();
-  const [data, setData] = useState<ChatData>();
+  const chatApi = useChatApi();
+
   const [input, setInput] = useState('');
   const [chatCreating, setChatCreating] = useState(false);
 
-  const userApi = useUserApi();
-  const tripApi = useTripApi();
-
-  const chatApi = useChatApi();
-  const { data: session } = useSession();
+  const { data, loading, error, update, setError } = useChatData({
+    tripSlug,
+    userId,
+  });
   const { sendJsonMessage } = useChatWebSocket(data?.chatId || null, {
     onMessage: (e) => {
       if (loading) {
@@ -67,7 +59,7 @@ const Chat: React.FC<Props> = ({ tripSlug, userId }) => {
       const messageData = JSON.parse(e.data) as MessageData;
       if (messageData.type === 'chat_message') {
         const { message } = messageData;
-        setData((prev) => {
+        update((prev) => {
           if (!prev?.messages) {
             return prev;
           }
@@ -84,80 +76,11 @@ const Chat: React.FC<Props> = ({ tripSlug, userId }) => {
     },
   });
 
-  useEffect(() => {
-    chatApi
-      .getChat(tripSlug, userId)
-      .then((response) => {
-        if (response.data) {
-          const { id, trip, participants, messages } = response.data;
-          const otherUser = participants.find(
-            (user: User) => user.id !== Number(session?.user.id)
-          );
-          setData({ chatId: id, trip, messages, otherUser });
-          setLoading(false);
-          sendJsonMessage({ type: 'read_messages' });
-        } else {
-          return Promise.all([
-            userApi.getUser(String(userId)),
-            tripApi.getTripBySlug(tripSlug),
-          ]);
-        }
-      })
-      .then((responses) => {
-        if (!responses) {
-          return;
-        }
-        const [userResponse, tripResponse] = responses;
-        setData({
-          trip: tripResponse.data,
-          messages: [],
-          otherUser: userResponse.data,
-        });
-        setLoading(false);
-      })
-      .catch((e) => {
-        if (axios.isAxiosError(e)) {
-          setError(t('errors.common', { ns: 'common' }) as string);
-        }
-      });
-  }, [
-    chatApi,
-    sendJsonMessage,
-    session?.user.id,
-    t,
-    tripApi,
-    tripSlug,
-    userApi,
-    userId,
-  ]);
-
-  useEffect(() => {
-    let readTimeout: ReturnType<typeof setTimeout> | undefined;
-    const readHanlder = () => {
-      if (readTimeout) {
-        return;
-      }
-      readTimeout = setTimeout(() => {
-        sendJsonMessage({ type: 'read_messages' });
-        readTimeout = undefined;
-      }, 2000);
-    };
-    const eventNames = [
-      'scroll',
-      'click',
-      'keypress',
-      'mousemove',
-      'touchstart',
-    ];
-    eventNames.forEach((eventName) =>
-      document.addEventListener(eventName, readHanlder)
-    );
-    return () => {
-      eventNames.forEach((eventName) => {
-        document.removeEventListener(eventName, readHanlder);
-      });
-    };
-  }, [sendJsonMessage]);
+  const readMessagesCallback = useCallback(
+    () => sendJsonMessage({ type: 'read_messages' }),
+    [sendJsonMessage]
+  );
+  useReadMessagesHandler(data?.chatId ? readMessagesCallback : null);
 
   const sendMessage = data?.chatId
     ? () => {
@@ -176,7 +99,7 @@ const Chat: React.FC<Props> = ({ tripSlug, userId }) => {
           const otherUser = participants.find(
             (user: User) => user.id !== Number(session?.user.id)
           );
-          setData({ chatId: id, trip, messages, otherUser });
+          update({ chatId: id, trip, messages, otherUser });
         } catch (e) {
           if (axios.isAxiosError(e)) {
             setError(t('errors.common', { ns: 'common' }) as string);

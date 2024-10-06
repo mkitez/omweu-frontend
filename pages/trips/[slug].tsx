@@ -127,7 +127,7 @@ const TripDetailsPage: NextPageWithLayout<PageProps> = ({ trip }) => {
                 {!isTripInPast && (
                   <ContactUser
                     userId={trip.driver.id}
-                    tripSlug={trip.id}
+                    tripSlug={trip.slug}
                     label={t('contactDriver')}
                   />
                 )}
