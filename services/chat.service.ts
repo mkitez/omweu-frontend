@@ -12,7 +12,8 @@ export interface Chat {
 
 interface StartChatInputData {
   user_id: number;
-  trip_id: number;
+  trip_slug: string;
+  message: string;
 }
 
 class ChatService extends BaseService {
@@ -24,8 +25,8 @@ class ChatService extends BaseService {
     return this.api.get('/conversations/');
   }
 
-  getChat(chatId: string) {
-    return this.api.get(`/conversations/${chatId}/`);
+  getChat(tripSlug: string, userId: number) {
+    return this.api.get(`/trips/${tripSlug}/chat/${userId}/`);
   }
 
   getUnreadChats() {
