@@ -12,7 +12,8 @@ export interface Chat {
 
 interface StartChatInputData {
   user_id: number;
-  trip_id: number;
+  trip_slug: string;
+  message: string;
 }
 
 class ChatService extends BaseService {
