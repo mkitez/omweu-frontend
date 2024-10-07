@@ -1,5 +1,6 @@
 import { createContext } from 'react';
+import { PendingActionsState } from '../components/NotificationProvider';
 
-const UnreadChatsContext = createContext<Set<string>>(new Set());
+const PendingActionsContext = createContext<PendingActionsState>({ chats: new Set(), bookings: new Set() });
 
-export default UnreadChatsContext;
+export default PendingActionsContext;

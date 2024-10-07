@@ -1,9 +1,10 @@
 import { notification } from 'antd';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { PropsWithChildren, useEffect, useState } from 'react';
 
-import UnreadChatsContext from '../contexts/UnreadChatsContext';
+import PendingActionsContext from '../contexts/UnreadChatsContext';
 import { useChatApi } from '../hooks/api/useChatApi';
 import { useNotificationWebSocket } from '../hooks/useNotificationWebSocket';
 import { Message } from './Chat';
@@ -16,31 +17,59 @@ interface MessageNotificationData {
   message: Message;
 }
 
-interface UnreadChatsCountNotificationData {
+interface BookingNotificationData {
+  type: 'booking_notification';
+  action:
+    | 'NEW_BOOKING'
+    | 'BOOKING_CONFIRMED'
+    | 'BOOKING_REJECTED'
+    | 'BOOKING_CANCELLED';
+  booking_id: string;
+}
+
+interface UnreadChatsNotificationData {
   type: 'unread_chats';
-  chats: Set<string>;
+  chats: string[];
+}
+
+interface PendingBookingsNotificationData {
+  type: 'pending_bookings';
+  bookings: string[];
 }
 
 type NotificationData =
   | MessageNotificationData
-  | UnreadChatsCountNotificationData;
+  | UnreadChatsNotificationData
+  | PendingBookingsNotificationData
+  | BookingNotificationData;
+
+export interface PendingActionsState {
+  chats: Set<string>;
+  bookings: Set<string>;
+}
 
 const NotificationProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [unreadChats, setUnreadChats] = useState<Set<string>>(new Set());
+  const { t } = useTranslation('common');
+  const router = useRouter();
+  const [api, contextHolder] = notification.useNotification();
   const { status } = useSession();
   const chatApi = useChatApi();
+
+  const [pendingActions, setPendingActions] = useState<PendingActionsState>({
+    chats: new Set(),
+    bookings: new Set(),
+  });
   useEffect(() => {
     if (status !== 'authenticated') {
       return;
     }
-    chatApi
-      .getUnreadChats()
-      .then((response) => setUnreadChats(new Set(response.data.chats)));
+    chatApi.getUnreadChats().then((response) => {
+      const { chats, bookings } = response.data;
+      setPendingActions({ chats: new Set(chats), bookings: new Set(bookings) });
+    });
   }, [chatApi, status]);
-  const router = useRouter();
-  const [api, contextHolder] = notification.useNotification();
 
-  const showNotification = (data: MessageNotificationData) => {
+  const showMessageNotification = (data: MessageNotificationData) => {
     api.open({
       message: (
         <div className="notification-message">
@@ -54,36 +83,77 @@ const NotificationProvider: React.FC<PropsWithChildren> = ({ children }) => {
       placement: 'bottomRight',
       className: 'notification',
       key: data.message.id,
-      duration: 0,
       onClick: () => {
-        const { conversation, from_user: fromUser } = data.message;
+        const { conversation, from_user: fromUser, id } = data.message;
         router.push(`/chat/${conversation.trip_slug}/${fromUser}`);
-        api.destroy();
+        api.destroy(id);
       },
     });
   };
+
+  const showBookingNotification = (data: BookingNotificationData) => {
+    const { booking_id: bookingId, action } = data;
+    api.open({
+      message: (
+        <div className="notification-message">
+          {t(`bookingNotifications.${action}`)}
+        </div>
+      ),
+      description: (
+        <div className="notification-description">
+          {t('bookingNotifications.clickForDetails')}
+        </div>
+      ),
+      placement: 'bottomRight',
+      className: 'notification',
+      key: bookingId,
+      onClick: () => {
+        router.push(`/bookings/${bookingId}`);
+        api.destroy(bookingId);
+      },
+    });
+  };
+
   useNotificationWebSocket({
     onMessage: (e) => {
       const data = JSON.parse(e.data) as NotificationData;
       if (data.type === 'message_notification') {
         const { conversation, from_user: fromUser } = data.message;
-        setUnreadChats((prev) => new Set(prev).add(conversation.id));
+        setPendingActions((prev) => ({
+          ...prev,
+          chats: new Set(prev.chats).add(conversation.id),
+        }));
         if (router.asPath === `/chat/${conversation.trip_slug}/${fromUser}`) {
           return;
         }
-        showNotification(data);
+        showMessageNotification(data);
+      }
+      if (data.type === 'booking_notification') {
+        if (data.action === 'NEW_BOOKING') {
+          setPendingActions((prev) => ({
+            ...prev,
+            bookings: new Set(prev.bookings).add(data.booking_id),
+          }));
+        }
+        showBookingNotification(data);
       }
       if (data.type === 'unread_chats') {
-        setUnreadChats(data.chats);
+        setPendingActions((prev) => ({ ...prev, chats: new Set(data.chats) }));
+      }
+      if (data.type === 'pending_bookings') {
+        setPendingActions((prev) => ({
+          ...prev,
+          bookings: new Set(data.bookings),
+        }));
       }
     },
   });
 
   return (
-    <UnreadChatsContext.Provider value={unreadChats}>
+    <PendingActionsContext.Provider value={pendingActions}>
       {contextHolder}
       {children}
-    </UnreadChatsContext.Provider>
+    </PendingActionsContext.Provider>
   );
 };
 

@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { PropsWithChildren, useContext, useEffect, useState } from 'react';
 
-import UnreadChatsContext from '../contexts/UnreadChatsContext';
+import PendingActionsContext from '../contexts/UnreadChatsContext';
 import styles from '../styles/DashboardLayout.module.css';
 import AppLayout from './AppLayout';
 
@@ -29,7 +29,7 @@ const DashboardLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const [selectedKey, setSelectedKey] = useState<string>();
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
-  const unreadChats = useContext(UnreadChatsContext);
+  const pendingActions = useContext(PendingActionsContext);
   useEffect(() => {
     setSelectedKey(router.pathname.split('/').slice(-1)[0]);
   }, [router.pathname]);
@@ -37,13 +37,23 @@ const DashboardLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const items = [
     {
       key: 'trips',
-      icon: <CalendarOutlined />,
+      icon: (
+        <Badge
+          dot={pendingActions.bookings.size > 0}
+          offset={md ? undefined : [0, 10]}
+        >
+          <CalendarOutlined />
+        </Badge>
+      ),
       label: <Link href="/dashboard/trips">{t('trips.label')}</Link>,
     },
     {
       key: 'chats',
       icon: (
-        <Badge dot={unreadChats.size > 0} offset={md ? undefined : [0, 10]}>
+        <Badge
+          dot={pendingActions.chats.size > 0}
+          offset={md ? undefined : [0, 10]}
+        >
           <MessageOutlined />
         </Badge>
       ),
