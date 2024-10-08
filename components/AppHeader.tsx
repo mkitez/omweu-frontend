@@ -8,7 +8,7 @@ import { useContext, useEffect } from 'react';
 
 import Logo from '../assets/logo.svg';
 import LogoXs from '../assets/logoXs.svg';
-import UnreadChatsContext from '../contexts/UnreadChatsContext';
+import PendingActionsContext from '../contexts/PendingActionsContext';
 import styles from '../styles/AppHeader.module.css';
 
 const { Header } = Layout;
@@ -19,7 +19,7 @@ const AppHeader = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  const unreadChats = useContext(UnreadChatsContext);
+  const pendingActions = useContext(PendingActionsContext);
 
   useEffect(() => {
     if (session?.error) {
@@ -66,6 +66,7 @@ const AppHeader = () => {
           );
         }
         if (status === 'authenticated') {
+          const { chats, bookings } = pendingActions;
           return (
             <div className={styles.navButtons}>
               <Link
@@ -79,7 +80,10 @@ const AppHeader = () => {
                 </Button>
               </Link>
               <Link href="/dashboard" className={styles.profileBtn}>
-                <Badge dot={unreadChats.size > 0} offset={[-5, 5]}>
+                <Badge
+                  dot={chats.size > 0 || bookings.size > 0}
+                  offset={[-5, 5]}
+                >
                   <Avatar
                     size="large"
                     icon={<UserOutlined />}

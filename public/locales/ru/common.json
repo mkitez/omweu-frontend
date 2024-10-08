@@ -18,6 +18,13 @@
   "tripsNotFound": "К сожалению, пока нет поездок на эту дату.",
   "backToCategories": "К списку категорий",
   "newMessage": "Новое сообщение",
+  "bookingNotifications": {
+    "clickForDetails": "Нажмите, чтобы посмотреть детали",
+    "NEW_BOOKING": "Новое бронирование",
+    "BOOKING_CONFIRMED": "Бронирование подтверждено",
+    "BOOKING_REJECTED": "Бронирование отклонено",
+    "BOOKING_CANCELLED": "Бронирование отменено"
+  },
   "response": {
     "yes": "Да",
     "no": "Нет"

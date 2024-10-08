@@ -48,6 +48,10 @@ class UserService extends BaseService {
   sendActivationLink(data: ActivationLinkData) {
     return this.api.post('/users/send-activation-link', data)
   }
+
+  getPendingActions() {
+    return this.api.get('/users/pending-actions/')
+  }
 }
 
 export default UserService;
