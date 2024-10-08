@@ -28,10 +28,6 @@ class ChatService extends BaseService {
   getChat(tripSlug: string, userId: number) {
     return this.api.get(`/trips/${tripSlug}/chat/${userId}/`);
   }
-
-  getUnreadChats() {
-    return this.api.get('/conversations/unread_chats/')
-  }
 }
 
 export default ChatService;

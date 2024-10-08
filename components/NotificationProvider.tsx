@@ -6,6 +6,7 @@ import { PropsWithChildren, useEffect, useState } from 'react';
 
 import PendingActionsContext from '../contexts/PendingActionsContext';
 import { useChatApi } from '../hooks/api/useChatApi';
+import { useUserApi } from '../hooks/api/useUserApi';
 import { useNotificationWebSocket } from '../hooks/useNotificationWebSocket';
 import { Message } from './Chat';
 import UserAvatar from './TripDetails/UserAvatar';
@@ -54,6 +55,7 @@ const NotificationProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [api, contextHolder] = notification.useNotification();
   const { status } = useSession();
   const chatApi = useChatApi();
+  const userApi = useUserApi();
 
   const [pendingActions, setPendingActions] = useState<PendingActionsState>({
     chats: new Set(),
@@ -63,11 +65,11 @@ const NotificationProvider: React.FC<PropsWithChildren> = ({ children }) => {
     if (status !== 'authenticated') {
       return;
     }
-    chatApi.getUnreadChats().then((response) => {
+    userApi.getPendingActions().then((response) => {
       const { chats, bookings } = response.data;
       setPendingActions({ chats: new Set(chats), bookings: new Set(bookings) });
     });
-  }, [chatApi, status]);
+  }, [userApi, status]);
 
   const showMessageNotification = (data: MessageNotificationData) => {
     api.open({
