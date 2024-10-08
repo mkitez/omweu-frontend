@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import { PropsWithChildren, useEffect, useState } from 'react';
 
 import PendingActionsContext from '../contexts/PendingActionsContext';
-import { useChatApi } from '../hooks/api/useChatApi';
 import { useUserApi } from '../hooks/api/useUserApi';
 import { useNotificationWebSocket } from '../hooks/useNotificationWebSocket';
 import { Message } from './Chat';
@@ -54,7 +53,6 @@ const NotificationProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
   const [api, contextHolder] = notification.useNotification();
   const { status } = useSession();
-  const chatApi = useChatApi();
   const userApi = useUserApi();
 
   const [pendingActions, setPendingActions] = useState<PendingActionsState>({
