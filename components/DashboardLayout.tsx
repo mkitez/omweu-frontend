@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { PropsWithChildren, useContext, useEffect, useState } from 'react';
 
-import PendingActionsContext from '../contexts/UnreadChatsContext';
+import PendingActionsContext from '../contexts/PendingActionsContext';
 import styles from '../styles/DashboardLayout.module.css';
 import AppLayout from './AppLayout';
 

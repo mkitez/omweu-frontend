@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { PropsWithChildren, useEffect, useState } from 'react';
 
-import PendingActionsContext from '../contexts/UnreadChatsContext';
+import PendingActionsContext from '../contexts/PendingActionsContext';
 import { useChatApi } from '../hooks/api/useChatApi';
 import { useNotificationWebSocket } from '../hooks/useNotificationWebSocket';
 import { Message } from './Chat';

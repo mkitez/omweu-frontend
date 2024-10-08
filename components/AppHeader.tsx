@@ -8,7 +8,7 @@ import { useContext, useEffect } from 'react';
 
 import Logo from '../assets/logo.svg';
 import LogoXs from '../assets/logoXs.svg';
-import PendingActionsContext from '../contexts/UnreadChatsContext';
+import PendingActionsContext from '../contexts/PendingActionsContext';
 import styles from '../styles/AppHeader.module.css';
 
 const { Header } = Layout;
