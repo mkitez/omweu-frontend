@@ -22,6 +22,6 @@ export const STAFF_USER_EMAIL = process.env.STAFF_USER_EMAIL;
 export const STAFF_USER_PASSWORD = process.env.STAFF_USER_PASSWORD;
 
 export const GTM_ID = 'G-0ZVVNHC0SN';
-export const GA_DISABLE_PROPERTY = `ga-disable-${GTM_ID}`
+export const GA_DISABLE_PROPERTY = `ga-disable-${GTM_ID}`;
 
 export const REVALIDATE_INTERVAL = 60;
